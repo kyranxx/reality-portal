@@ -1,8 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
 // These environment variables will need to be set in your Vercel project
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// Check if environment variables are set
+if (!supabaseUrl) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_URL is not set. Please check your environment variables.');
+}
+
+if (!supabaseAnonKey) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is not set. Please check your environment variables.');
+}
 
 // Create a single supabase client for interacting with your database
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
