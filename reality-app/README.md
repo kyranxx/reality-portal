@@ -7,8 +7,8 @@ Reality Portal je realitný portál pre predaj a prenájom nehnuteľností na Sl
 - Next.js
 - TypeScript
 - Tailwind CSS
-- Supabase (plánované)
-- Vercel (plánované)
+- Supabase
+- Vercel
 
 ## Štruktúra projektu
 
@@ -17,6 +17,21 @@ Reality Portal je realitný portál pre predaj a prenájom nehnuteľností na Sl
 - `/public` - Statické súbory
 
 ## Inštalácia
+
+### Nastavenie prostredia
+
+1. Skopírujte súbor `.env.example` do `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. Upravte súbor `.env.local` a pridajte vaše Supabase prihlasovacie údaje:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-url.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+### Inštalácia a spustenie
 
 ```bash
 # Inštalácia závislostí
@@ -36,4 +51,16 @@ npm run dev
 
 ## Nasadenie
 
-Projekt bude nasadený na platforme Vercel.
+Projekt je nasadený na platforme Vercel.
+
+### Nastavenie Vercel prostredia
+
+Pri nasadení na Vercel je potrebné nastaviť nasledujúce premenné prostredia v nastaveniach projektu:
+
+1. Prejdite do Vercel dashboardu
+2. Vyberte váš projekt
+3. Prejdite do "Settings" > "Environment Variables"
+4. Pridajte nasledujúce premenné:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Znovu nasaďte aplikáciu
