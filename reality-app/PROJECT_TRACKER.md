@@ -19,9 +19,9 @@
 - [DONE] Initialize Next.js project with TypeScript and Tailwind CSS
 - [DONE] Create basic project structure (pages, components, etc.)
 - [DONE] Initialize Git repository
-- [TODO] Set up GitHub repository
-- [TODO] Configure Vercel deployment
-- [TODO] Set up Supabase project and database schema
+- [DONE] Set up GitHub repository
+- [DONE] Configure Vercel deployment
+- [IN PROGRESS] Set up Supabase project and database schema
 
 ### Phase 2: Core Functionality
 - [TODO] Implement authentication (registration/login)
@@ -46,23 +46,26 @@
 - [TODO] Final review and adjustments
 
 ## Current Priority Tasks
-1. Install dependencies (npm install)
-2. Set up GitHub repository
-3. Configure Vercel deployment
-4. Set up Supabase project and database schema
+1. Complete Supabase project setup (create project and run schema.sql)
+2. Implement authentication (registration/login)
+3. Create property listing CRUD functionality
+4. Implement search and filter capabilities
 
 ## Completed Tasks
 1. Created basic Next.js project structure
 2. Created basic homepage with sample listings
 3. Created header component
 4. Initialized Git repository
+5. Created GitHub repository and pushed code (https://github.com/kyranxx/reality-portal)
+6. Deployed project to Vercel
+7. Created Supabase client configuration
+8. Designed database schema with tables, relationships, and security policies
 
 ## Issues to Resolve
-1. Fix npm install command to properly install dependencies
-2. Resolve TypeScript errors in the project
+1. Resolve TypeScript errors in the project
 
 ## Next Steps
-1. Resolve npm install issues
-2. Create GitHub repository and push code
-3. Set up Vercel deployment
-4. Create Supabase project and design database schema
+1. Create Supabase project and run the schema.sql file
+2. Update environment variables with Supabase credentials
+3. Implement authentication (registration/login)
+4. Create property listing CRUD functionality

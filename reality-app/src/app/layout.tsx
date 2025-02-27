@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
+import { AuthProvider } from '@/utils/AuthContext';
 
 export const metadata: Metadata = {
   title: 'Reality Portal - Realitný portál',
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="sk">
       <body>
-        <Header />
-        <main>{children}</main>
+        <AuthProvider>
+          <Header />
+          <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );
