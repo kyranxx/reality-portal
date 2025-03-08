@@ -64,3 +64,16 @@ Pri nasadení na Vercel je potrebné nastaviť nasledujúce premenné prostredia
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 5. Znovu nasaďte aplikáciu
+
+**Poznámka**: Ak nie sú nastavené Supabase premenné prostredia, aplikácia bude fungovať v obmedzenom režime bez autentifikácie a databázových funkcií. Toto umožňuje prehliadanie statického obsahu aj bez pripojenia k Supabase.
+
+### Riešenie problémov s nasadením
+
+Ak sa po nasadení na Vercel zobrazujú chyby "Unexpected token '<'", skontrolujte:
+
+1. Či sú správne nastavené premenné prostredia v Vercel dashboarde
+2. Či je správne nakonfigurovaný súbor `next.config.js`
+3. Skúste vyčistiť Vercel cache a znovu nasadiť aplikáciu:
+   - Prejdite do Vercel dashboardu > Váš projekt > Settings > General
+   - Scrollujte dole na "Build & Development Settings"
+   - Kliknite na "Clear build cache and redeploy"
