@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import { supabase } from './supabase';
+import { supabase, isSupabaseConfigured } from './supabase';
 
 type AuthContextType = {
   user: User | null;
@@ -23,39 +23,68 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Skip Supabase initialization if not configured
+    if (!isSupabaseConfigured) {
+      console.warn('Supabase is not configured. Authentication features will be disabled.');
+      setIsLoading(false);
+      return;
+    }
+
     // Get initial session
     const getInitialSession = async () => {
       setIsLoading(true);
       
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error('Error getting session:', error.message);
-        setError(error.message);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error.message);
+          setError(error.message);
+        }
+        
+        setSession(session);
+        setUser(session?.user ?? null);
+      } catch (err: any) {
+        console.error('Failed to get session:', err.message);
+        setError('Authentication service unavailable');
+      } finally {
+        setIsLoading(false);
       }
-      
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
     };
 
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsLoading(false);
-      }
-    );
+    let subscription: { unsubscribe: () => void } | null = null;
+    
+    try {
+      const { data } = supabase.auth.onAuthStateChange(
+        (_event, session) => {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setIsLoading(false);
+        }
+      );
+      
+      subscription = data.subscription;
+    } catch (err: any) {
+      console.error('Failed to subscribe to auth changes:', err.message);
+      setIsLoading(false);
+    }
 
     return () => {
-      subscription.unsubscribe();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     };
   }, []);
 
   const signUp = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      setError('Authentication service is not configured');
+      return;
+    }
+    
     try {
       setIsLoading(true);
       setError(null);
@@ -77,6 +106,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      setError('Authentication service is not configured');
+      return;
+    }
+    
     try {
       setIsLoading(true);
       setError(null);
@@ -98,6 +132,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    if (!isSupabaseConfigured) {
+      setError('Authentication service is not configured');
+      return;
+    }
+    
     try {
       setIsLoading(true);
       setError(null);

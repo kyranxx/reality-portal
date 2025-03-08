@@ -4,17 +4,22 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-url.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
 
+// Check if Supabase environment variables are properly set
+export const isSupabaseConfigured = 
+  process.env.NEXT_PUBLIC_SUPABASE_URL !== undefined && 
+  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder-url.supabase.co' &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== undefined &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== 'placeholder-key';
+
 // Create a single supabase client for interacting with your database
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Log a warning if environment variables are not set (only in development)
-if (process.env.NODE_ENV === 'development') {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    console.warn(
-      'Supabase environment variables are not set. Authentication and database features will not work properly. ' +
-      'Please copy .env.example to .env.local and set your Supabase credentials.'
-    );
-  }
+// Log a warning if environment variables are not set
+if (!isSupabaseConfigured) {
+  console.warn(
+    'Supabase environment variables are not set. Authentication and database features will not work properly. ' +
+    'Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in your environment.'
+  );
 }
 
 // Types for our database tables
