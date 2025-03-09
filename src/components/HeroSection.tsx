@@ -49,13 +49,18 @@ export default function HeroSection() {
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <div className="absolute inset-0 bg-cover bg-center" style={{
-              backgroundImage: `url('${property.imageUrl}')`,
-              backgroundSize: 'cover',
-              transform: 'scale(1.05)',
-              transition: 'transform 6s ease-in-out',
-              animation: index === currentSlide ? 'slowZoom 6s ease-in-out' : 'none'
-            }}></div>
+            <div className="absolute inset-0 overflow-hidden">
+              <Image 
+                src={property.imageUrl} 
+                alt={property.title}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className={`object-cover ${
+                  index === currentSlide ? 'animate-slowZoom' : ''
+                }`}
+              />
+            </div>
           </div>
         ))}
       </div>

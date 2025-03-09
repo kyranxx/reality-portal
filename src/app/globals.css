@@ -62,6 +62,10 @@ body {
   animation: slideInRight 0.8s ease-out forwards;
 }
 
+.animate-slowZoom {
+  animation: slowZoom 6s ease-in-out forwards;
+}
+
 .animation-delay-100 {
   animation-delay: 0.1s;
 }
