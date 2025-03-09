@@ -14,6 +14,8 @@ const nextConfig = {
       },
     ],
   },
+  // Explicitly set the output to be a standalone build
+  output: 'standalone',
 };
 
 module.exports = nextConfig;
