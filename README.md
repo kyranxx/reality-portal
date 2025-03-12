@@ -39,7 +39,22 @@ npm install
 
 # Spustenie vývojového servera
 npm run dev
+
+# Spustenie optimalizovaného vývojového servera (rýchlejšie)
+npm run dev:turbo
 ```
+
+### Optimalizácia vývojového prostredia
+
+Pre rýchlejší vývojový server sme implementovali nasledujúce optimalizácie:
+
+1. **Turbopack** - Rýchlejší bundler ako Webpack, spustiteľný cez `npm run dev:turbo`
+2. **SWC Minify** - Rýchlejšia alternatíva k Terser
+3. **Ignorovanie TypeScript chýb počas vývoja** - Zrýchľuje kompiláciu
+4. **Ignorovanie ESLint počas vývoja** - Zrýchľuje kompiláciu
+
+Tieto optimalizácie sú určené len pre vývojové prostredie. Pri produkčnom buildi (`npm run build`) 
+sa TypeScript a ESLint kontroly vykonajú normálne.
 
 ## Funkcie
 
