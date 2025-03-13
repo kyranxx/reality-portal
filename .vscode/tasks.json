@@ -40,6 +40,50 @@
             }
         },
         {
+            "label": "Format Code",
+            "type": "shell",
+            "command": "npm run format",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Type Check",
+            "type": "shell",
+            "command": "npm run type-check",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Clean Build Files",
+            "type": "shell",
+            "command": "npm run clean",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Analyze Bundle",
+            "type": "shell",
+            "command": "npm run analyze",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
             "label": "Kill Node Processes",
             "type": "shell",
             "command": "Stop-Process -Name node -Force -ErrorAction SilentlyContinue",
