@@ -1,0 +1,129 @@
+[21:16:36.490] Cloning github.com/kyranxx/reality-portal (Branch: master, Commit: 9b9177b)
+[21:16:36.502] Skipping build cache, deployment was triggered without cache.
+[21:16:36.889] Cloning completed: 399.000ms
+[21:16:37.840] Running build in Washington, D.C., USA (East) – iad1
+[21:16:37.993] Running "vercel build"
+[21:16:38.392] Vercel CLI 41.3.2
+[21:16:38.758] Running "install" command: `npm install`...
+[21:16:41.082] npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+[21:16:41.727] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[21:16:42.529] npm warn deprecated @supabase/auth-helpers-shared@0.7.0: This package is now deprecated - please use the @supabase/ssr package instead.
+[21:16:42.660] npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+[21:16:42.660] npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+[21:16:42.942] npm warn deprecated @supabase/auth-helpers-nextjs@0.10.0: This package is now deprecated - please use the @supabase/ssr package instead.
+[21:16:43.038] npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[21:16:45.046] npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[21:16:57.776] 
+[21:16:57.777] added 527 packages, and audited 543 packages in 19s
+[21:16:57.777] 
+[21:16:57.777] 153 packages are looking for funding
+[21:16:57.777]   run `npm fund` for details
+[21:16:57.778] 
+[21:16:57.778] found 0 vulnerabilities
+[21:16:57.838] Detected Next.js version: 14.2.24
+[21:16:57.839] Running "next build"
+[21:16:58.396] Attention: Next.js now collects completely anonymous telemetry regarding usage.
+[21:16:58.396] This information is used to shape Next.js' roadmap and prioritize features.
+[21:16:58.396] You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+[21:16:58.396] https://nextjs.org/telemetry
+[21:16:58.396] 
+[21:16:58.451]   ▲ Next.js 14.2.24
+[21:16:58.451] 
+[21:16:58.522]    Creating an optimized production build ...
+[21:17:14.354]  ✓ Compiled successfully
+[21:17:14.356]    Skipping validation of types
+[21:17:14.356]    Skipping linting
+[21:17:14.618]    Collecting page data ...
+[21:17:16.441]    Generating static pages (0/19) ...
+[21:17:16.815]    Generating static pages (4/19) 
+[21:17:16.874] Error: useAuth must be used within an AuthProvider
+[21:17:16.874]     at i (/vercel/path0/.next/server/app/dashboard/profile/page.js:1:6036)
+[21:17:16.874]     at u (/vercel/path0/.next/server/app/dashboard/profile/page.js:1:2842)
+[21:17:16.874]     at nj (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+[21:17:16.874]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+[21:17:16.875]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.875]     at nI (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011)
+[21:17:16.875]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47718)
+[21:17:16.875]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+[21:17:16.875]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.875]     at nB (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539) {
+[21:17:16.875]   digest: '2648096253'
+[21:17:16.875] }
+[21:17:16.875] 
+[21:17:16.875] Error occurred prerendering page "/dashboard/profile". Read more: https://nextjs.org/docs/messages/prerender-error
+[21:17:16.875] 
+[21:17:16.875] Error: useAuth must be used within an AuthProvider
+[21:17:16.875]     at i (/vercel/path0/.next/server/app/dashboard/profile/page.js:1:6036)
+[21:17:16.875]     at u (/vercel/path0/.next/server/app/dashboard/profile/page.js:1:2842)
+[21:17:16.876]     at nj (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+[21:17:16.876]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+[21:17:16.876]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.876]     at nI (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011)
+[21:17:16.876]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47718)
+[21:17:16.876]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+[21:17:16.876]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.876]     at nB (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539)
+[21:17:16.886] Error: useAuth must be used within an AuthProvider
+[21:17:16.887]     at i (/vercel/path0/.next/server/app/dashboard/page.js:1:5819)
+[21:17:16.887]     at l (/vercel/path0/.next/server/app/dashboard/page.js:1:2782)
+[21:17:16.887]     at nj (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+[21:17:16.887]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+[21:17:16.888]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.888]     at nI (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011)
+[21:17:16.888]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47718)
+[21:17:16.888]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+[21:17:16.889]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.890]     at nB (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539) {
+[21:17:16.891]   digest: '76065697'
+[21:17:16.891] }
+[21:17:16.891] 
+[21:17:16.891] Error occurred prerendering page "/dashboard". Read more: https://nextjs.org/docs/messages/prerender-error
+[21:17:16.891] 
+[21:17:16.892] Error: useAuth must be used within an AuthProvider
+[21:17:16.892]     at i (/vercel/path0/.next/server/app/dashboard/page.js:1:5819)
+[21:17:16.892]     at l (/vercel/path0/.next/server/app/dashboard/page.js:1:2782)
+[21:17:16.892]     at nj (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+[21:17:16.898]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+[21:17:16.898]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.900]     at nI (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011)
+[21:17:16.901]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47718)
+[21:17:16.901]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+[21:17:16.901]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:16.902]     at nB (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539)
+[21:17:16.983]    Generating static pages (9/19) 
+[21:17:17.030] Error: useAuth must be used within an AuthProvider
+[21:17:17.030]     at i (/vercel/path0/.next/server/app/dashboard/page.js:1:5819)
+[21:17:17.030]     at d (/vercel/path0/.next/server/app/admin/page.js:1:2744)
+[21:17:17.030]     at nj (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+[21:17:17.030]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+[21:17:17.030]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:17.031]     at nI (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011)
+[21:17:17.031]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47718)
+[21:17:17.031]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+[21:17:17.031]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:17.031]     at nB (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539) {
+[21:17:17.031]   digest: '353648584'
+[21:17:17.031] }
+[21:17:17.031] 
+[21:17:17.031] Error occurred prerendering page "/admin". Read more: https://nextjs.org/docs/messages/prerender-error
+[21:17:17.031] 
+[21:17:17.032] Error: useAuth must be used within an AuthProvider
+[21:17:17.032]     at i (/vercel/path0/.next/server/app/dashboard/page.js:1:5819)
+[21:17:17.032]     at d (/vercel/path0/.next/server/app/admin/page.js:1:2744)
+[21:17:17.032]     at nj (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+[21:17:17.032]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+[21:17:17.032]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:17.032]     at nI (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011)
+[21:17:17.032]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47718)
+[21:17:17.032]     at nM (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+[21:17:17.032]     at nN (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+[21:17:17.033]     at nB (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539)
+[21:17:17.089]    Generating static pages (14/19) 
+[21:17:17.137]  ✓ Generating static pages (19/19)
+[21:17:17.142] 
+[21:17:17.143] > Export encountered errors on following paths:
+[21:17:17.143] 	/admin/page: /admin
+[21:17:17.143] 	/dashboard/page: /dashboard
+[21:17:17.143] 	/dashboard/profile/page: /dashboard/profile
+[21:17:17.166] Error: Command "next build" exited with 1
+[21:17:17.493] 
