@@ -1,13 +1,57 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import HeroSection from '@/components/HeroSection';
 import SearchBar from '@/components/SearchBar';
 import SectionTitle from '@/components/SectionTitle';
 import PropertyCard from '@/components/PropertyCard';
 import CategoryCard from '@/components/CategoryCard';
-import { featuredProperties, newProperties } from '@/data/sampleProperties';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Property } from '@/utils/firebase';
+import { getFeaturedProperties, getNewProperties } from '@/utils/firestore';
 
 export default function Home() {
+  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
+  const [newProperties, setNewProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const featured = await getFeaturedProperties(7); // Get 7 featured properties
+        const newProps = await getNewProperties(3); // Get 3 new properties
+        
+        setFeaturedProperties(featured);
+        setNewProperties(newProps);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+        // Fallback to sample data if Firebase is not configured
+        import('@/data/sampleProperties').then(({ featuredProperties, newProperties }) => {
+          setFeaturedProperties(featuredProperties as unknown as Property[]);
+          setNewProperties(newProperties as unknown as Property[]);
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  if (loading || featuredProperties.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
+          <div className="text-gray-400">Načítava sa...</div>
+        </div>
+      </div>
+    );
+  }
+
+  const featuredProperty = featuredProperties[0];
+
   return (
     <>
       {/* Hero Section */}
@@ -106,7 +150,7 @@ export default function Home() {
             <div className="lg:w-1/2">
               <div className="relative rounded-2xl overflow-hidden shadow-xl">
                 <Image 
-                  src={featuredProperties[0].imageUrl}
+                  src={featuredProperty.images?.[0] || '/images/placeholder.txt'}
                   alt="Featured Property"
                   width={600}
                   height={400}
@@ -122,10 +166,9 @@ export default function Home() {
             
             <div className="lg:w-1/2">
               <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">Exkluzívna ponuka</span>
-              <h2 className="text-3xl font-bold mt-3 mb-4">{featuredProperties[0].title}</h2>
+              <h2 className="text-3xl font-bold mt-3 mb-4">{featuredProperty.title}</h2>
               <p className="text-gray-600 mb-6">
-                Luxusná nehnuteľnosť v prestížnej lokalite s výbornou dostupnosťou do centra mesta. 
-                Táto nehnuteľnosť ponúka moderné vybavenie, priestranné izby a krásny výhľad na okolie.
+                {featuredProperty.description || 'Luxusná nehnuteľnosť v prestížnej lokalite s výbornou dostupnosťou do centra mesta. Táto nehnuteľnosť ponúka moderné vybavenie, priestranné izby a krásny výhľad na okolie.'}
               </p>
               
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -138,7 +181,7 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500">Lokalita</div>
-                    <div className="font-medium">{featuredProperties[0].location}</div>
+                    <div className="font-medium">{featuredProperty.location}</div>
                   </div>
                 </div>
                 
@@ -150,7 +193,7 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500">Cena</div>
-                    <div className="font-medium">{featuredProperties[0].price.toLocaleString()} €</div>
+                    <div className="font-medium">{featuredProperty.price.toLocaleString()} €</div>
                   </div>
                 </div>
                 
@@ -162,24 +205,26 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500">Plocha</div>
-                    <div className="font-medium">{featuredProperties[0].size} m²</div>
+                    <div className="font-medium">{featuredProperty.area} m²</div>
                   </div>
                 </div>
                 
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-primary">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                    </svg>
+                {featuredProperty.rooms && (
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-primary">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Izby</div>
+                      <div className="font-medium">{featuredProperty.rooms} {featuredProperty.rooms === 1 ? 'izba' : featuredProperty.rooms < 5 ? 'izby' : 'izieb'}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Izby</div>
-                    <div className="font-medium">{featuredProperties[0].bedrooms} izby</div>
-                  </div>
-                </div>
+                )}
               </div>
               
-              <Link href={`/nehnutelnosti/${featuredProperties[0].id}`} className="btn btn-primary shadow-lg hover:shadow-xl">
+              <Link href={`/nehnutelnosti/${featuredProperty.id}`} className="btn btn-primary shadow-lg hover:shadow-xl">
                 Zobraziť detail
               </Link>
             </div>
@@ -197,7 +242,21 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProperties.slice(1, 7).map((property) => (
-              <PropertyCard key={property.id} {...property} />
+              <PropertyCard 
+                key={property.id} 
+                id={property.id}
+                title={property.title}
+                location={property.location}
+                price={property.price}
+                size={property.area}
+                bedrooms={property.rooms}
+                bathrooms={property.bathrooms}
+                landSize={property.landSize}
+                imageUrl={property.images?.[0] || '/images/placeholder.txt'}
+                isFeatured={property.isFeatured}
+                isNew={property.isNew}
+                type={property.propertyType}
+              />
             ))}
           </div>
           

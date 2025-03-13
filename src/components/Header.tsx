@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useAuth } from '@/utils/AuthContext';
+import { useAuth } from '@/utils/FirebaseAuthContext';
 import { useState, useEffect } from 'react';
 
 export default function Header() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, signInWithGoogle } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [authMenuOpen, setAuthMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   // Handle scroll effect
@@ -130,9 +131,45 @@ export default function Header() {
               )}
             </div>
           ) : (
-            <Link href="/auth/login" className="btn btn-primary">
-              Prihlásiť sa
-            </Link>
+            <div className="relative">
+              <button 
+                className="btn btn-primary flex items-center"
+                onClick={() => setAuthMenuOpen(!authMenuOpen)}
+              >
+                <span className="mr-2">Účet</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 transition-transform duration-300 ${authMenuOpen ? 'rotate-180' : ''}`}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              
+              {authMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-10 animate-fadeIn">
+                  <Link 
+                    href="/auth/login" 
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                    onClick={() => setAuthMenuOpen(false)}
+                  >
+                    Prihlásiť sa
+                  </Link>
+                  <Link 
+                    href="/auth/register" 
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                    onClick={() => setAuthMenuOpen(false)}
+                  >
+                    Registrovať sa
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      signInWithGoogle();
+                      setAuthMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                  >
+                    Prihlásiť cez Google
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
         
@@ -238,13 +275,31 @@ export default function Header() {
                   </button>
                 </>
               ) : (
-                <Link 
-                  href="/auth/login" 
-                  className="btn btn-primary w-full justify-center" 
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Prihlásiť sa
-                </Link>
+                <>
+                  <Link 
+                    href="/auth/login" 
+                    className="btn btn-primary w-full justify-center" 
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Prihlásiť sa
+                  </Link>
+                  <Link 
+                    href="/auth/register" 
+                    className="btn btn-outline w-full justify-center" 
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Registrovať sa
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      signInWithGoogle();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="btn btn-outline w-full justify-center"
+                  >
+                    Prihlásiť cez Google
+                  </button>
+                </>
               )}
             </div>
           </div>

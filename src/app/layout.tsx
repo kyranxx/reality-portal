@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { AuthProvider } from '@/utils/AuthContext';
+import { FirebaseAuthProvider } from '@/utils/FirebaseAuthContext';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({ 
@@ -25,11 +25,11 @@ export default function RootLayout({
   return (
     <html lang="sk" className={inter.variable}>
       <body className="flex flex-col min-h-screen">
-        <AuthProvider>
+        <FirebaseAuthProvider>
           <Header />
           <main className="flex-grow">{children}</main>
           <Footer />
-        </AuthProvider>
+        </FirebaseAuthProvider>
       </body>
     </html>
   );

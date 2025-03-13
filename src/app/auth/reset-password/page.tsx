@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { supabase, isSupabaseConfigured } from '@/utils/supabase';
-import { useAuth } from '@/utils/AuthContext';
+import { useAuth } from '@/utils/FirebaseAuthContext';
+import { isFirebaseConfigured } from '@/utils/firebase';
 import SectionTitle from '@/components/SectionTitle';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, resetPassword, error: authError, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -22,7 +23,30 @@ export default function ResetPasswordPage() {
     }
   }, [user, router]);
 
-  if (loading) {
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    
+    if (!email) {
+      setError('Prosím, vyplňte email');
+      return;
+    }
+    
+    try {
+      await resetPassword(email);
+      setSuccess(true);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  if (loading || authLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-pulse flex flex-col items-center">
@@ -33,7 +57,7 @@ export default function ResetPasswordPage() {
     );
   }
 
-  if (!isSupabaseConfigured) {
+  if (!isFirebaseConfigured) {
     return (
       <div className="container mx-auto px-4 py-16">
         <SectionTitle title="Obnovenie hesla" subtitle="Autentifikácia nie je nakonfigurovaná" />
@@ -44,49 +68,39 @@ export default function ResetPasswordPage() {
             </svg>
             <h3 className="font-semibold">Chyba konfigurácie</h3>
           </div>
-          <p>Supabase nie je nakonfigurovaný. Kontaktujte administrátora.</p>
+          <p>Firebase nie je nakonfigurovaný. Kontaktujte administrátora.</p>
         </div>
       </div>
     );
   }
 
-  // Custom theme for Supabase Auth UI
-  const customTheme = {
-    ...ThemeSupa,
-    default: {
-      colors: {
-        brand: '#4F46E5',
-        brandAccent: '#6366F1',
-        brandButtonText: 'white',
-        inputBackground: 'white',
-        inputBorder: '#E5E7EB',
-        inputBorderFocus: '#4F46E5',
-        inputBorderHover: '#D1D5DB',
-        inputText: '#374151',
-        inputLabelText: '#4B5563',
-        inputPlaceholder: '#9CA3AF',
-      },
-      space: {
-        buttonPadding: '10px 15px',
-        inputPadding: '10px 15px',
-      },
-      borderWidths: {
-        buttonBorderWidth: '1px',
-        inputBorderWidth: '1px',
-      },
-      radii: {
-        borderRadiusButton: '9999px',
-        buttonBorderRadius: '9999px',
-        inputBorderRadius: '0.5rem',
-      },
-      fontSizes: {
-        baseBodySize: '14px',
-        baseInputSize: '14px',
-        baseLabelSize: '14px',
-        baseButtonSize: '14px',
-      },
-    },
-  };
+  if (success) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-white">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Email odoslaný</h1>
+            <p className="text-gray-500">Skontrolujte svoj email pre inštrukcie na obnovenie hesla</p>
+          </div>
+          
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+            <p className="text-center mb-6">
+              Poslali sme vám email s inštrukciami na obnovenie hesla. Kliknite na odkaz v emaile pre nastavenie nového hesla.
+            </p>
+            
+            <Link href="/auth/login" className="w-full btn btn-primary py-2.5 block text-center">
+              Späť na prihlásenie
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -102,40 +116,36 @@ export default function ResetPasswordPage() {
         </div>
         
         <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-          <Auth
-            supabaseClient={supabase}
-            appearance={{ theme: customTheme }}
-            view="forgotten_password"
-            redirectTo={`${window.location.origin}/auth/callback`}
-            theme="default"
-            localization={{
-              variables: {
-                sign_in: {
-                  email_label: 'Email',
-                  password_label: 'Heslo',
-                  button_label: 'Prihlásiť sa',
-                  loading_button_label: 'Prihlasovanie...',
-                  social_provider_text: 'Prihlásiť sa cez {{provider}}',
-                  link_text: 'Máte už účet? Prihláste sa',
-                },
-                sign_up: {
-                  email_label: 'Email',
-                  password_label: 'Heslo',
-                  button_label: 'Registrovať sa',
-                  loading_button_label: 'Registrácia...',
-                  social_provider_text: 'Registrovať sa cez {{provider}}',
-                  link_text: 'Nemáte účet? Registrujte sa',
-                },
-                forgotten_password: {
-                  email_label: 'Email',
-                  button_label: 'Odoslať inštrukcie',
-                  loading_button_label: 'Odosielanie inštrukcií...',
-                  link_text: 'Zabudli ste heslo?',
-                  confirmation_text: 'Skontrolujte svoj email pre inštrukcie na obnovenie hesla',
-                },
-              },
-            }}
-          />
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <p>{error}</p>
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit}>
+            <div className="mb-6">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="vas@email.sk"
+                required
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full btn btn-primary py-2.5"
+              disabled={authLoading}
+            >
+              {authLoading ? 'Odosielanie...' : 'Odoslať inštrukcie'}
+            </button>
+          </form>
           
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">

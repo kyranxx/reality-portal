@@ -1,18 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { supabase, isSupabaseConfigured } from '@/utils/supabase';
-import { useAuth } from '@/utils/AuthContext';
+import { useAuth } from '@/utils/FirebaseAuthContext';
+import { isFirebaseConfigured } from '@/utils/firebase';
 import SectionTitle from '@/components/SectionTitle';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signUp, signInWithGoogle, error: authError, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -22,7 +25,40 @@ export default function RegisterPage() {
     }
   }, [user, router]);
 
-  if (loading) {
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    
+    if (!email || !password || !confirmPassword) {
+      setError('Prosím, vyplňte všetky polia');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      setError('Heslá sa nezhodujú');
+      return;
+    }
+    
+    if (password.length < 6) {
+      setError('Heslo musí mať aspoň 6 znakov');
+      return;
+    }
+    
+    try {
+      await signUp(email, password);
+      setSuccess(true);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  if (loading || authLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-pulse flex flex-col items-center">
@@ -33,7 +69,7 @@ export default function RegisterPage() {
     );
   }
 
-  if (!isSupabaseConfigured) {
+  if (!isFirebaseConfigured) {
     return (
       <div className="container mx-auto px-4 py-16">
         <SectionTitle title="Registrácia" subtitle="Autentifikácia nie je nakonfigurovaná" />
@@ -44,49 +80,39 @@ export default function RegisterPage() {
             </svg>
             <h3 className="font-semibold">Chyba konfigurácie</h3>
           </div>
-          <p>Supabase nie je nakonfigurovaný. Kontaktujte administrátora.</p>
+          <p>Firebase nie je nakonfigurovaný. Kontaktujte administrátora.</p>
         </div>
       </div>
     );
   }
 
-  // Custom theme for Supabase Auth UI
-  const customTheme = {
-    ...ThemeSupa,
-    default: {
-      colors: {
-        brand: '#4F46E5',
-        brandAccent: '#6366F1',
-        brandButtonText: 'white',
-        inputBackground: 'white',
-        inputBorder: '#E5E7EB',
-        inputBorderFocus: '#4F46E5',
-        inputBorderHover: '#D1D5DB',
-        inputText: '#374151',
-        inputLabelText: '#4B5563',
-        inputPlaceholder: '#9CA3AF',
-      },
-      space: {
-        buttonPadding: '10px 15px',
-        inputPadding: '10px 15px',
-      },
-      borderWidths: {
-        buttonBorderWidth: '1px',
-        inputBorderWidth: '1px',
-      },
-      radii: {
-        borderRadiusButton: '9999px',
-        buttonBorderRadius: '9999px',
-        inputBorderRadius: '0.5rem',
-      },
-      fontSizes: {
-        baseBodySize: '14px',
-        baseInputSize: '14px',
-        baseLabelSize: '14px',
-        baseButtonSize: '14px',
-      },
-    },
-  };
+  if (success) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-white">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Registrácia úspešná</h1>
+            <p className="text-gray-500">Skontrolujte svoj email a potvrďte registráciu</p>
+          </div>
+          
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+            <p className="text-center mb-6">
+              Poslali sme vám potvrdzovací email. Kliknite na odkaz v emaile pre dokončenie registrácie.
+            </p>
+            
+            <Link href="/auth/login" className="w-full btn btn-primary py-2.5 block text-center">
+              Prejsť na prihlásenie
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -102,41 +128,88 @@ export default function RegisterPage() {
         </div>
         
         <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-          <Auth
-            supabaseClient={supabase}
-            appearance={{ theme: customTheme }}
-            providers={['google']}
-            redirectTo={`${window.location.origin}/auth/callback`}
-            view="sign_up"
-            theme="default"
-            localization={{
-              variables: {
-                sign_in: {
-                  email_label: 'Email',
-                  password_label: 'Heslo',
-                  button_label: 'Prihlásiť sa',
-                  loading_button_label: 'Prihlasovanie...',
-                  social_provider_text: 'Prihlásiť sa cez {{provider}}',
-                  link_text: 'Máte už účet? Prihláste sa',
-                },
-                sign_up: {
-                  email_label: 'Email',
-                  password_label: 'Heslo',
-                  button_label: 'Registrovať sa',
-                  loading_button_label: 'Registrácia...',
-                  social_provider_text: 'Registrovať sa cez {{provider}}',
-                  link_text: 'Nemáte účet? Registrujte sa',
-                },
-                forgotten_password: {
-                  email_label: 'Email',
-                  password_label: 'Heslo',
-                  button_label: 'Obnoviť heslo',
-                  loading_button_label: 'Odosielanie inštrukcií...',
-                  link_text: 'Zabudli ste heslo?',
-                },
-              },
-            }}
-          />
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <p>{error}</p>
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="vas@email.sk"
+                required
+              />
+            </div>
+            
+            <div className="mb-4">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Heslo
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="••••••••"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1">Heslo musí mať aspoň 6 znakov</p>
+            </div>
+            
+            <div className="mb-6">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                Potvrďte heslo
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full btn btn-primary py-2.5"
+              disabled={authLoading}
+            >
+              {authLoading ? 'Registrácia...' : 'Registrovať sa'}
+            </button>
+          </form>
+          
+          <div className="mt-6">
+            <div className="relative flex items-center justify-center">
+              <div className="border-t border-gray-200 w-full"></div>
+              <div className="bg-white px-3 text-sm text-gray-500 absolute">alebo</div>
+            </div>
+            
+            <button
+              onClick={signInWithGoogle}
+              className="w-full mt-4 btn btn-outline flex items-center justify-center"
+              disabled={authLoading}
+            >
+              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"
+                />
+              </svg>
+              Registrovať sa cez Google
+            </button>
+          </div>
           
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">

@@ -3,7 +3,7 @@
 ## Project Overview
 - **Name**: Reality Portal
 - **Description**: Minimalistic real estate classified ads website in Slovak
-- **Tech Stack**: Next.js, Tailwind CSS, Supabase, Vercel
+- **Tech Stack**: Next.js, Tailwind CSS, Firebase, Vercel
 - **Timeline**: 7 days
 
 ## Important Rules
@@ -21,7 +21,7 @@
 - [DONE] Initialize Git repository
 - [DONE] Set up GitHub repository
 - [DONE] Configure Vercel deployment
-- [IN PROGRESS] Set up Supabase project and database schema
+- [DONE] Set up Firebase project and database schema
 
 ### Phase 2: Core Functionality
 - [DONE] Implement authentication (registration/login)
@@ -48,7 +48,7 @@
 - [TODO] Final review and adjustments
 
 ## Current Priority Tasks
-1. [DONE] Complete Supabase project setup (create project and run schema.sql)
+1. [DONE] Complete Firebase project setup (create project and configure Firestore)
 2. [DONE] Implement authentication (registration/login)
 3. Create property listing CRUD functionality
 4. Implement search and filter capabilities
@@ -60,8 +60,8 @@
 4. Initialized Git repository
 5. Created GitHub repository and pushed code (https://github.com/kyranxx/reality-portal)
 6. Deployed project to Vercel
-7. Created Supabase client configuration
-8. Designed database schema with tables, relationships, and security policies
+7. Created Firebase client configuration
+8. Designed Firestore database schema with collections and security rules
 9. Consolidated project structure (moved files from reality-app to root directory)
 10. Fixed encoding issues in source files
 11. Added Next.js configuration file (next.config.js)
@@ -69,7 +69,7 @@
 13. Added error handling pages (not-found.tsx, error.tsx, loading.tsx)
 14. Added middleware for proper routing
 15. Added public files (robots.txt, sitemap.xml)
-16. Created Supabase project and configured environment variables
+16. Created Firebase project and configured environment variables
 17. Implemented user authentication (email/password and Google OAuth)
 18. Created user dashboard with profile management
 19. Added admin dashboard with user statistics
@@ -80,6 +80,12 @@
     - Configured TypeScript to ignore build errors during development
     - Disabled ESLint during development for faster builds
     - Updated documentation with performance optimization details
+23. Migrated from Supabase to Firebase for better scalability and free tier
+24. Implemented Firebase Authentication with email/password and Google sign-in
+25. Created Firestore database service for property data
+26. Updated UI to use Firebase data instead of sample data
+27. Created combined login/signup button in header
+28. Added detailed README with Firebase setup instructions
 
 ## Issues to Resolve
 1. Ensure Vercel deployment is working correctly with the new configuration
