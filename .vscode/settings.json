@@ -5,22 +5,18 @@
   "terminal.integrated.tabs.enabled": true,
   "terminal.integrated.tabs.location": "right",
   "terminal.integrated.scrollback": 10000,
-  
   // Editor settings for better development experience
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "true"
   },
-  
   // TypeScript settings
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  
   // Next.js specific settings
   "files.associations": {
     "*.css": "tailwindcss"
   },
-  
   // Turbopack settings
   "npm.scriptExplorerAction": "run",
   "npm.scriptExplorerExclude": []

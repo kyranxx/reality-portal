@@ -1,10 +1,10 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  User, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
+import {
+  User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   GoogleAuthProvider,
@@ -30,11 +30,11 @@ type AuthContextType = {
 const defaultContextValue: AuthContextType = {
   user: null,
   isLoading: true,
-  signUp: async () => {},
-  signIn: async () => {},
-  signInWithGoogle: async () => {},
-  signOut: async () => {},
-  resetPassword: async () => {},
+  signUp: async () => { },
+  signIn: async () => { },
+  signInWithGoogle: async () => { },
+  signOut: async () => { },
+  resetPassword: async () => { },
   error: null,
 };
 
@@ -76,16 +76,16 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
   const signUp = async (email: string, password: string) => {
     if (!isClient) return;
-    
+
     if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError(null);
-      
+
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
       setError(error.message);
@@ -97,16 +97,16 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
   const signIn = async (email: string, password: string) => {
     if (!isClient) return;
-    
+
     if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError(null);
-      
+
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
       setError(error.message);
@@ -118,16 +118,16 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
   const signInWithGoogle = async () => {
     if (!isClient) return;
-    
+
     if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
     } catch (error: any) {
@@ -140,16 +140,16 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
   const signOut = async () => {
     if (!isClient) return;
-    
+
     if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError(null);
-      
+
       await firebaseSignOut(auth);
     } catch (error: any) {
       setError(error.message);
@@ -161,16 +161,16 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
   const resetPassword = async (email: string) => {
     if (!isClient) return;
-    
+
     if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError(null);
-      
+
       await sendPasswordResetEmail(auth, email);
     } catch (error: any) {
       setError(error.message);
@@ -196,8 +196,6 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  // Return the default context value if the context is not available (during SSR)
+  return context || defaultContextValue;
 }

@@ -28,8 +28,7 @@
                 "pattern": "- Local:.+(https?://.+)",
                 "uriFormat": "%s",
                 "action": "debugWithChrome"
-            },
-            "console": "integratedTerminal"
+            }
         }
     ]
 }
