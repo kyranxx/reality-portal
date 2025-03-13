@@ -8,7 +8,7 @@
   // Editor settings for better development experience
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "true"
+    "source.fixAll.eslint": true
   },
   // TypeScript settings
   "typescript.tsdk": "node_modules/typescript/lib",

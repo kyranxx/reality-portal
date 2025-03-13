@@ -6,6 +6,9 @@ import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
 import { getUserById, updateUser } from '@/utils/firestore';
 
+// Check if we're running on the client side
+const isClient = typeof window !== 'undefined';
+
 export default function ProfileClient() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
@@ -17,6 +20,12 @@ export default function ProfileClient() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
+    // Skip authentication check during server-side rendering
+    if (!isClient) {
+      setLoading(false);
+      return;
+    }
+
     if (!user && !authLoading) {
       router.push('/auth/login');
       return;
@@ -24,7 +33,7 @@ export default function ProfileClient() {
 
     const fetchProfile = async () => {
       if (!user) return;
-      
+
       try {
         const userData = await getUserById(user.uid);
         if (userData) {
@@ -48,21 +57,21 @@ export default function ProfileClient() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!user) return;
-    
+
     setError(null);
     setSuccess(false);
     setSaving(true);
-    
+
     try {
       await updateUser(user.uid, {
         name,
         phone,
       });
-      
+
       setSuccess(true);
-      
+
       // Reset success message after 3 seconds
       setTimeout(() => {
         setSuccess(false);
@@ -93,7 +102,7 @@ export default function ProfileClient() {
   return (
     <div className="container mx-auto px-4 py-8">
       <SectionTitle title="Profil používateľa" subtitle="Upravte svoje osobné údaje" />
-      
+
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           {error && (
@@ -101,13 +110,13 @@ export default function ProfileClient() {
               <p>{error}</p>
             </div>
           )}
-          
+
           {success && (
             <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
               <p>Profil bol úspešne aktualizovaný</p>
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -122,7 +131,7 @@ export default function ProfileClient() {
               />
               <p className="text-xs text-gray-500 mt-1">Email nemôžete zmeniť</p>
             </div>
-            
+
             <div className="mb-4">
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Meno a priezvisko
@@ -136,7 +145,7 @@ export default function ProfileClient() {
                 placeholder="Zadajte vaše meno a priezvisko"
               />
             </div>
-            
+
             <div className="mb-6">
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                 Telefónne číslo
@@ -150,7 +159,7 @@ export default function ProfileClient() {
                 placeholder="+421 XXX XXX XXX"
               />
             </div>
-            
+
             <div className="flex justify-between">
               <button
                 type="button"
@@ -159,7 +168,7 @@ export default function ProfileClient() {
               >
                 Späť
               </button>
-              
+
               <button
                 type="submit"
                 className="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-lg transition-colors"
