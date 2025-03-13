@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to prevent Firebase initialization during build
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';

@@ -1,0 +1,512 @@
+[20:03:52.078] Cloning github.com/kyranxx/reality-portal (Branch: master, Commit: 9b9177b)
+[20:03:52.958] Cloning completed: 879.000ms
+[20:03:55.418] Restored build cache from previous deployment (GgdSEh9WNZbU9xr7Dc9Z35vKEw5h)
+[20:03:55.503] Running build in Washington, D.C., USA (East) – iad1
+[20:03:55.935] Running "vercel build"
+[20:03:56.321] Vercel CLI 41.3.2
+[20:03:56.599] Running "install" command: `npm install`...
+[20:04:02.030] 
+[20:04:02.030] added 68 packages, and audited 543 packages in 5s
+[20:04:02.030] 
+[20:04:02.031] 153 packages are looking for funding
+[20:04:02.031]   run `npm fund` for details
+[20:04:02.031] 
+[20:04:02.032] found 0 vulnerabilities
+[20:04:02.080] Detected Next.js version: 14.2.24
+[20:04:02.081] Running "next build"
+[20:04:02.905]   ▲ Next.js 14.2.24
+[20:04:02.905] 
+[20:04:02.976]    Creating an optimized production build ...
+[20:04:18.301]  ✓ Compiled successfully
+[20:04:18.302]    Skipping validation of types
+[20:04:18.302]    Skipping linting
+[20:04:18.574]    Collecting page data ...
+[20:04:20.497]    Generating static pages (0/19) ...
+[20:04:20.864] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:20.864]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.864]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.864]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.865]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.865]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.865]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.866]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.866]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.866]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.867]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:20.867]   code: 'auth/invalid-api-key',
+[20:04:20.867]   customData: { appName: '[DEFAULT]' },
+[20:04:20.867]   digest: '1078504229'
+[20:04:20.867] }
+[20:04:20.867] 
+[20:04:20.867] Error occurred prerendering page "/auth/register". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:20.867] 
+[20:04:20.868] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:20.868]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.868]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.868]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.868]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.868]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.869]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.869]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.869]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.869]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.869]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:20.870] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:20.870]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.870]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.871]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.871]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.871]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.871]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.871]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.872]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.872]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.872]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:20.872]   code: 'auth/invalid-api-key',
+[20:04:20.872]   customData: { appName: '[DEFAULT]' },
+[20:04:20.872]   digest: '1078504229'
+[20:04:20.872] }
+[20:04:20.873] 
+[20:04:20.873] Error occurred prerendering page "/auth/login". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:20.873] 
+[20:04:20.873] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:20.873]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.873]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.880]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.880]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.880]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.880]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.880]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.880]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.880]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.880]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:20.892]    Generating static pages (4/19) 
+[20:04:20.951] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:20.951]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.951]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.952]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.952]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.952]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.952]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.962]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.962]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.962]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.962]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:20.962]   code: 'auth/invalid-api-key',
+[20:04:20.962]   customData: { appName: '[DEFAULT]' },
+[20:04:20.963]   digest: '1078504229'
+[20:04:20.963] }
+[20:04:20.963] 
+[20:04:20.963] Error occurred prerendering page "/dashboard/profile". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:20.963] 
+[20:04:20.963] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:20.963]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.963]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.964]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.964]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.964]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.964]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.964]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.964]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.964]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.964]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:20.989] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:20.990]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.990]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.990]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.990]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.990]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.990]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.990]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.990]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.990]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.990]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:20.990]   code: 'auth/invalid-api-key',
+[20:04:20.990]   customData: { appName: '[DEFAULT]' },
+[20:04:20.990]   digest: '1078504229'
+[20:04:20.990] }
+[20:04:20.990] 
+[20:04:20.991] Error occurred prerendering page "/dashboard". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:20.991] 
+[20:04:20.991] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:20.991]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:20.991]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:20.991]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:20.991]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:20.991]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:20.991]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:20.991]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:20.991]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:20.991]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:20.992]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.031] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.031]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.031]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.031]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.031]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.031]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.031]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.032]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.032]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.032]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.032]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.032]   code: 'auth/invalid-api-key',
+[20:04:21.032]   customData: { appName: '[DEFAULT]' },
+[20:04:21.032]   digest: '1078504229'
+[20:04:21.032] }
+[20:04:21.032] 
+[20:04:21.032] Error occurred prerendering page "/kontakt". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.032] 
+[20:04:21.032] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.033]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.033]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.033]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.033]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.033]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.033]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.033]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.033]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.033]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.033]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.033] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.033]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.033]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.033]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.034]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.034]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.034]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.034]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.034]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.034]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.034]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.034]   code: 'auth/invalid-api-key',
+[20:04:21.034]   customData: { appName: '[DEFAULT]' },
+[20:04:21.034]   digest: '1078504229'
+[20:04:21.034] }
+[20:04:21.034] 
+[20:04:21.035] Error occurred prerendering page "/auth/reset-password". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.035] 
+[20:04:21.035] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.035]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.035]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.035]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.035]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.035]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.035]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.036]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.036]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.036]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.036]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.036] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.036]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.036]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.036]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.036]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.037]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.037]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.037]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.037]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.037]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.037]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.037]   code: 'auth/invalid-api-key',
+[20:04:21.037]   customData: { appName: '[DEFAULT]' },
+[20:04:21.037]   digest: '1078504229'
+[20:04:21.038] }
+[20:04:21.048]    Generating static pages (9/19) 
+[20:04:21.054] 
+[20:04:21.055] Error occurred prerendering page "/nehnutelnosti/byty". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.055] 
+[20:04:21.055] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.055]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.056]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.056]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.056]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.056]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.056]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.057]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.057]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.057]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.057]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.071] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.071]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.071]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.072]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.072]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.072]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.072]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.072]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.073]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.073]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.073]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.074]   code: 'auth/invalid-api-key',
+[20:04:21.074]   customData: { appName: '[DEFAULT]' },
+[20:04:21.074]   digest: '1078504229'
+[20:04:21.074] }
+[20:04:21.096] 
+[20:04:21.097] Error occurred prerendering page "/nehnutelnosti/domy". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.097] 
+[20:04:21.097] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.097]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.097]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.098]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.098]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.098]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.098]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.098]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.098]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.098]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.098]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.103] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.103]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.104]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.104]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.104]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.104]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.104]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.104]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.105]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.105]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.105]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.105]   code: 'auth/invalid-api-key',
+[20:04:21.105]   customData: { appName: '[DEFAULT]' },
+[20:04:21.105]   digest: '1078504229'
+[20:04:21.106] }
+[20:04:21.106] 
+[20:04:21.106] Error occurred prerendering page "/nehnutelnosti". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.106] 
+[20:04:21.106] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.106]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.107]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.107]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.107]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.107]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.107]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.107]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.107]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.108]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.108]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.108] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.108]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.109]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.109]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.109]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.109]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.109]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.109]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.109]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.109]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.109]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.109]   code: 'auth/invalid-api-key',
+[20:04:21.109]   customData: { appName: '[DEFAULT]' },
+[20:04:21.109]   digest: '1078504229'
+[20:04:21.109] }
+[20:04:21.145] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.145]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.145]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.145]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.146]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.146]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.146]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.146]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.146]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.146]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.146]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.147]   code: 'auth/invalid-api-key',
+[20:04:21.147]   customData: { appName: '[DEFAULT]' },
+[20:04:21.147]   digest: '1078504229'
+[20:04:21.147] }
+[20:04:21.147] 
+[20:04:21.147] Error occurred prerendering page "/nehnutelnosti/pozemky". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.147] 
+[20:04:21.148] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.148]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.148]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.148]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.148]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.148]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.148]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.148]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.149]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.149]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.149]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.149] 
+[20:04:21.149] Error occurred prerendering page "/nehnutelnosti/komercne". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.149] 
+[20:04:21.150] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.150]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.150]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.150]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.150]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.150]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.150]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.151]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.151]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.151]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.151]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.151] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.151]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.151]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.152]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.152]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.152]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.152]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.152]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.152]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.152]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.152]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.153]   code: 'auth/invalid-api-key',
+[20:04:21.153]   customData: { appName: '[DEFAULT]' },
+[20:04:21.153]   digest: '1078504229'
+[20:04:21.153] }
+[20:04:21.153] 
+[20:04:21.153] Error occurred prerendering page "/o-nas". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.153] 
+[20:04:21.153] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.153]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.153]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.153]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.153]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.153]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.153]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.153]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.153]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.153]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.153]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.154]    Generating static pages (14/19) 
+[20:04:21.177] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.177]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.177]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.177]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.177]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.178]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.178]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.178]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.178]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.178]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.178]     at 2422 (/vercel/path0/.next/server/app/page.js:1:26217) {
+[20:04:21.178]   code: 'auth/invalid-api-key',
+[20:04:21.178]   customData: { appName: '[DEFAULT]' },
+[20:04:21.178]   digest: '1566038365'
+[20:04:21.178] }
+[20:04:21.178] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.179]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.179]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.179]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.179]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.179]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.179]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.179]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.179]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.179]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.179]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.179]   code: 'auth/invalid-api-key',
+[20:04:21.180]   customData: { appName: '[DEFAULT]' },
+[20:04:21.180]   digest: '1078504229'
+[20:04:21.180] }
+[20:04:21.184] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.184]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.185]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.185]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.185]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.185]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.185]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.185]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.185]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.185]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.185]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.185]   code: 'auth/invalid-api-key',
+[20:04:21.185]   customData: { appName: '[DEFAULT]' },
+[20:04:21.185]   digest: '1078504229'
+[20:04:21.185] }
+[20:04:21.190] 
+[20:04:21.190] Error occurred prerendering page "/pridat-nehnutelnost". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.190] 
+[20:04:21.191] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.191]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.191]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.191]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.191]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.191]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.191]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.191]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.191]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.191]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.191]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.191] 
+[20:04:21.191] Error occurred prerendering page "/". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.192] 
+[20:04:21.192] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.192]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.192]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.192]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.192]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.192]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.192]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.192]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.192]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.192]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.192]     at 2422 (/vercel/path0/.next/server/app/page.js:1:26217)
+[20:04:21.199] 
+[20:04:21.199] Error occurred prerendering page "/admin". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.199] 
+[20:04:21.199] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.199]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.199]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.199]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.200]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.200]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.200]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.200]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.200]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.200]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.200]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.216] P [FirebaseError]: Firebase: Error (auth/invalid-api-key).
+[20:04:21.216]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.216]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.216]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.216]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.216]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.216]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.216]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.216]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.216]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.216]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528) {
+[20:04:21.216]   code: 'auth/invalid-api-key',
+[20:04:21.216]   customData: { appName: '[DEFAULT]' },
+[20:04:21.216]   digest: '1078504229'
+[20:04:21.217] }
+[20:04:21.217] 
+[20:04:21.217] Error occurred prerendering page "/_not-found". Read more: https://nextjs.org/docs/messages/prerender-error
+[20:04:21.217] 
+[20:04:21.217] FirebaseError: Firebase: Error (auth/invalid-api-key).
+[20:04:21.217]     at v (/vercel/path0/.next/server/chunks/188.js:4:147065)
+[20:04:21.217]     at b (/vercel/path0/.next/server/chunks/188.js:4:147113)
+[20:04:21.217]     at i.instanceFactory (/vercel/path0/.next/server/chunks/188.js:4:203140)
+[20:04:21.217]     at a.getOrInitializeService (/vercel/path0/.next/server/chunks/188.js:4:131812)
+[20:04:21.217]     at a.initialize (/vercel/path0/.next/server/chunks/188.js:4:131187)
+[20:04:21.217]     at eB (/vercel/path0/.next/server/chunks/188.js:4:185513)
+[20:04:21.217]     at tD (/vercel/path0/.next/server/chunks/188.js:4:203809)
+[20:04:21.217]     at 179 (/vercel/path0/.next/server/chunks/733.js:1:11714)
+[20:04:21.217]     at t (/vercel/path0/.next/server/webpack-runtime.js:1:128)
+[20:04:21.217]     at 7471 (/vercel/path0/.next/server/chunks/733.js:1:9528)
+[20:04:21.217]  ✓ Generating static pages (19/19)
+[20:04:21.225] 
+[20:04:21.225] > Export encountered errors on following paths:
+[20:04:21.225] 	/_not-found/page: /_not-found
+[20:04:21.225] 	/admin/page: /admin
+[20:04:21.225] 	/auth/login/page: /auth/login
+[20:04:21.225] 	/auth/register/page: /auth/register
+[20:04:21.226] 	/auth/reset-password/page: /auth/reset-password
+[20:04:21.226] 	/dashboard/page: /dashboard
+[20:04:21.226] 	/dashboard/profile/page: /dashboard/profile
+[20:04:21.226] 	/kontakt/page: /kontakt
+[20:04:21.226] 	/nehnutelnosti/byty/page: /nehnutelnosti/byty
+[20:04:21.226] 	/nehnutelnosti/domy/page: /nehnutelnosti/domy
+[20:04:21.226] 	/nehnutelnosti/komercne/page: /nehnutelnosti/komercne
+[20:04:21.226] 	/nehnutelnosti/page: /nehnutelnosti
+[20:04:21.226] 	/nehnutelnosti/pozemky/page: /nehnutelnosti/pozemky
+[20:04:21.226] 	/o-nas/page: /o-nas
+[20:04:21.226] 	/page: /
+[20:04:21.227] 	/pridat-nehnutelnost/page: /pridat-nehnutelnost
+[20:04:21.250] Error: Command "next build" exited with 1
+[20:04:21.632] 

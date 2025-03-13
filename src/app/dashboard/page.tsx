@@ -1,45 +1,50 @@
 'use client';
 
+// Force dynamic rendering to prevent Firebase initialization during build
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/utils/AuthContext';
+import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
-import { supabase } from '@/utils/supabase';
+import { getUserById } from '@/utils/firestore';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<{ name: string; phone: string } | null>(null);
+  const [profile, setProfile] = useState<{ name?: string; phone?: string } | null>(null);
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !authLoading) {
       router.push('/auth/login');
       return;
     }
 
     const fetchProfile = async () => {
+      if (!user) return;
+      
       try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('name, phone')
-          .eq('id', user.id)
-          .single();
-
-        if (error) {
-          console.error('Error fetching profile:', error);
-        } else {
-          setProfile(data);
+        const userData = await getUserById(user.uid);
+        if (userData) {
+          setProfile({
+            name: userData.name,
+            phone: userData.phone
+          });
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching profile:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProfile();
-  }, [user, router]);
+    if (user) {
+      fetchProfile();
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [user, router, authLoading]);
 
   const handleSignOut = async () => {
     try {
@@ -50,8 +55,15 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Načítava sa...</div>;
+  if (loading || authLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
+          <div className="text-gray-400">Načítava sa...</div>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {

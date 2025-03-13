@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to prevent Firebase initialization during build
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
 import HeroSection from '@/components/HeroSection';
 import SearchBar from '@/components/SearchBar';

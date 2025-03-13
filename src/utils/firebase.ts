@@ -22,25 +22,40 @@ export const isFirebaseConfigured =
   process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN !== undefined &&
   process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== undefined;
 
-// Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+// Check if we're running on the client side
+const isClient = typeof window !== 'undefined';
 
-// Connect to emulators in development environment
-if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
-  connectAuthEmulator(auth, 'http://localhost:9099');
-  connectFirestoreEmulator(db, 'localhost', 8080);
-  connectStorageEmulator(storage, 'localhost', 9199);
-}
+// Initialize Firebase only on the client side
+let app: ReturnType<typeof initializeApp> | undefined;
+let auth: ReturnType<typeof getAuth> | undefined;
+let db: ReturnType<typeof getFirestore> | undefined;
+let storage: ReturnType<typeof getStorage> | undefined;
 
-// Log a warning if environment variables are not set
-if (!isFirebaseConfigured) {
-  console.warn(
-    'Firebase environment variables are not set. Authentication and database features will not work properly. ' +
-    'Please ensure NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, and NEXT_PUBLIC_FIREBASE_PROJECT_ID are set in your environment.'
-  );
+if (isClient && isFirebaseConfigured) {
+  try {
+    // Initialize Firebase
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
+
+    // Connect to emulators in development environment
+    if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
+      connectAuthEmulator(auth, 'http://localhost:9099');
+      connectFirestoreEmulator(db, 'localhost', 8080);
+      connectStorageEmulator(storage, 'localhost', 9199);
+    }
+  } catch (error) {
+    console.error('Firebase initialization error:', error);
+  }
+} else {
+  // Log a warning if environment variables are not set
+  if (!isFirebaseConfigured && isClient) {
+    console.warn(
+      'Firebase environment variables are not set. Authentication and database features will not work properly. ' +
+      'Please ensure NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, and NEXT_PUBLIC_FIREBASE_PROJECT_ID are set in your environment.'
+    );
+  }
 }
 
 // Types for our database collections

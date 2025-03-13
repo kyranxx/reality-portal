@@ -1,83 +1,92 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+// Force dynamic rendering to prevent Firebase initialization during build
+export const dynamic = 'force-dynamic';
+
+import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/utils/AuthContext';
+import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
-import { supabase } from '@/utils/supabase';
+import { getUserById, updateUser } from '@/utils/firestore';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !authLoading) {
       router.push('/auth/login');
       return;
     }
 
     const fetchProfile = async () => {
+      if (!user) return;
+      
       try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('name, phone')
-          .eq('id', user.id)
-          .single();
-
-        if (error) {
-          console.error('Error fetching profile:', error);
-        } else if (data) {
-          setName(data.name || '');
-          setPhone(data.phone || '');
+        const userData = await getUserById(user.uid);
+        if (userData) {
+          setName(userData.name || '');
+          setPhone(userData.phone || '');
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching profile:', error);
+        setError('Nastala chyba pri načítaní profilu');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProfile();
-  }, [user, router]);
+    if (user) {
+      fetchProfile();
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [user, router, authLoading]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     if (!user) return;
     
+    setError(null);
+    setSuccess(false);
     setSaving(true);
-    setMessage(null);
     
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          name,
-          phone,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id);
-
-      if (error) {
-        throw error;
-      }
+      await updateUser(user.uid, {
+        name,
+        phone,
+      });
       
-      setMessage({ type: 'success', text: 'Profil bol úspešne aktualizovaný' });
-    } catch (error: any) {
+      setSuccess(true);
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+    } catch (error) {
       console.error('Error updating profile:', error);
-      setMessage({ type: 'error', text: 'Nastala chyba pri aktualizácii profilu' });
+      setError('Nastala chyba pri ukladaní profilu');
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Načítava sa...</div>;
+  if (loading || authLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
+          <div className="text-gray-400">Načítava sa...</div>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {
@@ -86,76 +95,84 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <SectionTitle title="Úprava profilu" subtitle="Aktualizujte svoje osobné údaje" />
+      <SectionTitle title="Profil používateľa" subtitle="Upravte svoje osobné údaje" />
       
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        {message && (
-          <div className={`mb-4 p-3 rounded ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-            {message.text}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={user.email}
-              disabled
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
-            />
-            <p className="text-sm text-gray-500 mt-1">Email nemôže byť zmenený</p>
-          </div>
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <p>{error}</p>
+            </div>
+          )}
           
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-              Meno a priezvisko
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Zadajte vaše meno a priezvisko"
-            />
-          </div>
+          {success && (
+            <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+              <p>Profil bol úspešne aktualizovaný</p>
+            </div>
+          )}
           
-          <div className="mb-6">
-            <label htmlFor="phone" className="block text-gray-700 font-medium mb-2">
-              Telefónne číslo
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Zadajte vaše telefónne číslo"
-            />
-          </div>
-          
-          <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={() => router.push('/dashboard')}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Späť
-            </button>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={user.email || ''}
+                disabled
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+              />
+              <p className="text-xs text-gray-500 mt-1">Email nemôžete zmeniť</p>
+            </div>
             
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-            >
-              {saving ? 'Ukladá sa...' : 'Uložiť zmeny'}
-            </button>
-          </div>
-        </form>
+            <div className="mb-4">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Meno a priezvisko
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="Zadajte vaše meno a priezvisko"
+              />
+            </div>
+            
+            <div className="mb-6">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                Telefónne číslo
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="+421 XXX XXX XXX"
+              />
+            </div>
+            
+            <div className="flex justify-between">
+              <button
+                type="button"
+                className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                onClick={() => router.push('/dashboard')}
+              >
+                Späť
+              </button>
+              
+              <button
+                type="submit"
+                className="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-lg transition-colors"
+                disabled={saving}
+              >
+                {saving ? 'Ukladá sa...' : 'Uložiť zmeny'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

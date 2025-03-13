@@ -9,7 +9,8 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  Auth
 } from 'firebase/auth';
 import { auth, isFirebaseConfigured } from './firebase';
 
@@ -26,15 +27,18 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Check if we're running on the client side
+const isClient = typeof window !== 'undefined';
+
 export function FirebaseAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Skip Firebase initialization if not configured
-    if (!isFirebaseConfigured) {
-      console.warn('Firebase is not configured. Authentication features will be disabled.');
+    // Skip Firebase initialization if not configured or not on client
+    if (!isFirebaseConfigured || !isClient || !auth) {
+      console.warn('Firebase is not configured or not on client. Authentication features will be disabled.');
       setIsLoading(false);
       return;
     }
@@ -53,7 +57,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    if (!isFirebaseConfigured) {
+    if (!isFirebaseConfigured || !isClient || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -72,7 +76,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const signIn = async (email: string, password: string) => {
-    if (!isFirebaseConfigured) {
+    if (!isFirebaseConfigured || !isClient || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -91,7 +95,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const signInWithGoogle = async () => {
-    if (!isFirebaseConfigured) {
+    if (!isFirebaseConfigured || !isClient || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -111,7 +115,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const signOut = async () => {
-    if (!isFirebaseConfigured) {
+    if (!isFirebaseConfigured || !isClient || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -130,7 +134,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const resetPassword = async (email: string) => {
-    if (!isFirebaseConfigured) {
+    if (!isFirebaseConfigured || !isClient || !auth) {
       setError('Authentication service is not configured');
       return;
     }
