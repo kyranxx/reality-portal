@@ -25,7 +25,20 @@ type AuthContextType = {
   error: string | null;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Create a default context value to prevent the "useAuth must be used within a FirebaseAuthProvider" error
+// during server-side rendering
+const defaultContextValue: AuthContextType = {
+  user: null,
+  isLoading: true,
+  signUp: async () => {},
+  signIn: async () => {},
+  signInWithGoogle: async () => {},
+  signOut: async () => {},
+  resetPassword: async () => {},
+  error: null,
+};
+
+const AuthContext = createContext<AuthContextType>(defaultContextValue);
 
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';
@@ -37,8 +50,13 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     // Skip Firebase initialization if not configured or not on client
-    if (!isFirebaseConfigured || !isClient || !auth) {
-      console.warn('Firebase is not configured or not on client. Authentication features will be disabled.');
+    if (!isClient) {
+      setIsLoading(false);
+      return;
+    }
+
+    if (!isFirebaseConfigured || !auth) {
+      console.warn('Firebase is not configured. Authentication features will be disabled.');
       setIsLoading(false);
       return;
     }
@@ -57,7 +75,9 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    if (!isFirebaseConfigured || !isClient || !auth) {
+    if (!isClient) return;
+    
+    if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -76,7 +96,9 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const signIn = async (email: string, password: string) => {
-    if (!isFirebaseConfigured || !isClient || !auth) {
+    if (!isClient) return;
+    
+    if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -95,7 +117,9 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const signInWithGoogle = async () => {
-    if (!isFirebaseConfigured || !isClient || !auth) {
+    if (!isClient) return;
+    
+    if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -115,7 +139,9 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const signOut = async () => {
-    if (!isFirebaseConfigured || !isClient || !auth) {
+    if (!isClient) return;
+    
+    if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -134,7 +160,9 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   };
 
   const resetPassword = async (email: string) => {
-    if (!isFirebaseConfigured || !isClient || !auth) {
+    if (!isClient) return;
+    
+    if (!isFirebaseConfigured || !auth) {
       setError('Authentication service is not configured');
       return;
     }
@@ -167,9 +195,5 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within a FirebaseAuthProvider');
-  }
-  return context;
+  return useContext(AuthContext);
 }
