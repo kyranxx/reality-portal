@@ -5,8 +5,16 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
   ],
+  "git": {
+    "deploymentEnabled": {
+      "master": true
+    }
+  },
   "env": {
     "NEXT_PUBLIC_FIREBASE_API_KEY": "@next_public_firebase_api_key",
     "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "@next_public_firebase_auth_domain",
