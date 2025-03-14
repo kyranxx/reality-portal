@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
+import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 
 // Admin emails that are allowed to access this page
 const ADMIN_EMAILS = ['admin@example.com'];
@@ -11,7 +12,7 @@ const ADMIN_EMAILS = ['admin@example.com'];
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';
 
-export default function AdminClient() {
+function AdminClientContent() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -152,5 +153,13 @@ export default function AdminClient() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminClient() {
+  return (
+    <AuthErrorBoundary>
+      <AdminClientContent />
+    </AuthErrorBoundary>
   );
 }

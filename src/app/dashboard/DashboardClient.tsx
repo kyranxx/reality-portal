@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
 import { getUserById } from '@/utils/firestore';
+import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';
 
-export default function DashboardClient() {
+function DashboardClientContent() {
   const router = useRouter();
   const { user, signOut, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -141,5 +142,13 @@ export default function DashboardClient() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function DashboardClient() {
+  return (
+    <AuthErrorBoundary>
+      <DashboardClientContent />
+    </AuthErrorBoundary>
   );
 }

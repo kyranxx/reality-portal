@@ -4,12 +4,6 @@
   "outputDirectory": ".next",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ],
   "git": {
     "deploymentEnabled": {
       "master": true
@@ -22,6 +16,11 @@
     "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "@next_public_firebase_storage_bucket",
     "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "@next_public_firebase_messaging_sender_id",
     "NEXT_PUBLIC_FIREBASE_APP_ID": "@next_public_firebase_app_id",
-    "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "@next_public_firebase_measurement_id"
+    "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "@next_public_firebase_measurement_id",
+    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key"
+  },
+  "buildEnvironment": {
+    "NODE_OPTIONS": "--max-old-space-size=4096"
   }
 }

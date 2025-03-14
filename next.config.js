@@ -52,6 +52,10 @@ const nextConfig = {
   experimental: {
     // Server Actions are available by default in Next.js 14+
   },
+  // Configure page generation behavior
+  // This prevents Next.js from trying to pre-render pages that require authentication
+  // during the build process
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
