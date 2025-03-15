@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST='{"app\\\\page.tsx -> @/data/sampleProperties":{"id":362,"files":[]}}';

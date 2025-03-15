@@ -1,0 +1,19 @@
+{
+  "/auth/callback/route": "app/auth/callback/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/kontakt/page": "app/kontakt/page.js",
+  "/nehnutelnosti/byty/page": "app/nehnutelnosti/byty/page.js",
+  "/nehnutelnosti/domy/page": "app/nehnutelnosti/domy/page.js",
+  "/nehnutelnosti/komercne/page": "app/nehnutelnosti/komercne/page.js",
+  "/nehnutelnosti/page": "app/nehnutelnosti/page.js",
+  "/nehnutelnosti/pozemky/page": "app/nehnutelnosti/pozemky/page.js",
+  "/o-nas/page": "app/o-nas/page.js",
+  "/pridat-nehnutelnost/page": "app/pridat-nehnutelnost/page.js",
+  "/auth/register/page": "app/auth/register/page.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/auth/reset-password/page": "app/auth/reset-password/page.js",
+  "/page": "app/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/profile/page": "app/dashboard/profile/page.js"
+}

@@ -1,0 +1,100 @@
+{
+  "version": 3,
+  "middleware": {},
+  "functions": {
+    "/admin/page": {
+      "files": [
+        "server/server-reference-manifest.js",
+        "server/app/admin/page_client-reference-manifest.js",
+        "server/middleware-build-manifest.js",
+        "server/middleware-react-loadable-manifest.js",
+        "server/next-font-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/516.js",
+        "server/edge-chunks/834.js",
+        "server/app/admin/page.js"
+      ],
+      "name": "app/admin/page",
+      "page": "/admin/page",
+      "matchers": [
+        {
+          "regexp": "^/admin$",
+          "originalSource": "/admin"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "build-1742043205072",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "ZBOpdzfHAi9rNGuQIzlrBGc1BOqUZ41DGqmRubTlj1s=",
+        "__NEXT_PREVIEW_MODE_ID": "8f226e5db63eb2679736c50ec793be4b",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "3bfacee3bb6d135d8548b2e0a5b0b5b02a9128506146d2e15ca50ddfd2a88a4b",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "aa40c29e0dca1108ffd5dd9e5bd6832b7a096a87219d475b1b18c86bf349da75"
+      }
+    },
+    "/dashboard/page": {
+      "files": [
+        "server/server-reference-manifest.js",
+        "server/app/dashboard/page_client-reference-manifest.js",
+        "server/middleware-build-manifest.js",
+        "server/middleware-react-loadable-manifest.js",
+        "server/next-font-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/516.js",
+        "server/edge-chunks/834.js",
+        "server/app/dashboard/page.js"
+      ],
+      "name": "app/dashboard/page",
+      "page": "/dashboard/page",
+      "matchers": [
+        {
+          "regexp": "^/dashboard$",
+          "originalSource": "/dashboard"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "build-1742043205072",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "ZBOpdzfHAi9rNGuQIzlrBGc1BOqUZ41DGqmRubTlj1s=",
+        "__NEXT_PREVIEW_MODE_ID": "8f226e5db63eb2679736c50ec793be4b",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "3bfacee3bb6d135d8548b2e0a5b0b5b02a9128506146d2e15ca50ddfd2a88a4b",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "aa40c29e0dca1108ffd5dd9e5bd6832b7a096a87219d475b1b18c86bf349da75"
+      }
+    },
+    "/dashboard/profile/page": {
+      "files": [
+        "server/server-reference-manifest.js",
+        "server/app/dashboard/profile/page_client-reference-manifest.js",
+        "server/middleware-build-manifest.js",
+        "server/middleware-react-loadable-manifest.js",
+        "server/next-font-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/516.js",
+        "server/edge-chunks/834.js",
+        "server/app/dashboard/profile/page.js"
+      ],
+      "name": "app/dashboard/profile/page",
+      "page": "/dashboard/profile/page",
+      "matchers": [
+        {
+          "regexp": "^/dashboard/profile$",
+          "originalSource": "/dashboard/profile"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "build-1742043205072",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "ZBOpdzfHAi9rNGuQIzlrBGc1BOqUZ41DGqmRubTlj1s=",
+        "__NEXT_PREVIEW_MODE_ID": "8f226e5db63eb2679736c50ec793be4b",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "3bfacee3bb6d135d8548b2e0a5b0b5b02a9128506146d2e15ca50ddfd2a88a4b",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "aa40c29e0dca1108ffd5dd9e5bd6832b7a096a87219d475b1b18c86bf349da75"
+      }
+    }
+  },
+  "sortedMiddleware": []
+}

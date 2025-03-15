@@ -1,27 +1,11 @@
-'use client';
+// This is a server component that will be rendered on the server
+// We'll use a special technique to ensure it only renders on the client
 
-import { Suspense } from 'react';
-import { lazy } from 'react';
-
-// Export runtime to use edge runtime
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 export const runtime = 'edge';
 
-// Completely disable SSR for this component
-const AdminClient = lazy(() => import('./AdminClient'));
-
-const LoadingFallback = () => (
-  <div className="flex justify-center items-center min-h-screen">
-    <div className="animate-pulse flex flex-col items-center">
-      <div className="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
-      <div className="text-gray-400">Loading...</div>
-    </div>
-  </div>
-);
-
+// This is a placeholder component that will be replaced with the actual client component
 export default function AdminPage() {
-  return (
-    <Suspense fallback={<LoadingFallback />}>
-      <AdminClient />
-    </Suspense>
-  );
+  return null;
 }

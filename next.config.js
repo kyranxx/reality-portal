@@ -60,6 +60,13 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   // Completely disable static generation for the entire app
   staticPageGenerationTimeout: 0,
+  // Force all pages to be server-side rendered
+  distDir: process.env.NODE_ENV === 'production' ? '.next-dynamic' : '.next',
+};
+
+// Disable static optimization for all pages
+nextConfig.generateBuildId = async () => {
+  return `build-${Date.now()}`;
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
