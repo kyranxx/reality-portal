@@ -51,11 +51,15 @@ const nextConfig = {
   // Experimental features
   experimental: {
     // Server Actions are available by default in Next.js 14+
+    // Completely disable static generation for the entire app
+    serverComponentsExternalPackages: ['firebase', '@supabase/supabase-js'],
   },
   // Configure page generation behavior
   // This prevents Next.js from trying to pre-render pages that require authentication
   // during the build process
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  // Completely disable static generation for the entire app
+  staticPageGenerationTimeout: 0,
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

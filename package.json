@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
-    "build": "next build",
+    "prebuild": "node prebuild.js",
+    "build": "npm run prebuild && next build",
     "start": "next start",
     "lint": "next lint",
     "clean": "rimraf .next out",

@@ -1,7 +1,27 @@
 'use client';
 
-import AdminClient from './AdminClient';
+import { Suspense } from 'react';
+import { lazy } from 'react';
+
+// Export runtime to use edge runtime
+export const runtime = 'edge';
+
+// Completely disable SSR for this component
+const AdminClient = lazy(() => import('./AdminClient'));
+
+const LoadingFallback = () => (
+  <div className="flex justify-center items-center min-h-screen">
+    <div className="animate-pulse flex flex-col items-center">
+      <div className="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
+      <div className="text-gray-400">Loading...</div>
+    </div>
+  </div>
+);
 
 export default function AdminPage() {
-  return <AdminClient />;
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <AdminClient />
+    </Suspense>
+  );
 }

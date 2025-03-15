@@ -18,9 +18,24 @@
     "NEXT_PUBLIC_FIREBASE_APP_ID": "@next_public_firebase_app_id",
     "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "@next_public_firebase_measurement_id",
     "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key"
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
+    "NEXT_PUBLIC_VERCEL_ENV": "production"
   },
   "buildEnvironment": {
     "NODE_OPTIONS": "--max-old-space-size=4096"
+  },
+  "functions": {
+    "src/app/admin/page.tsx": {
+      "memory": 1024,
+      "maxDuration": 10
+    },
+    "src/app/dashboard/page.tsx": {
+      "memory": 1024,
+      "maxDuration": 10
+    },
+    "src/app/dashboard/profile/page.tsx": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
   }
 }
