@@ -41,6 +41,14 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    // Try to load @tailwindcss/forms, but continue if it's not available
+    (function() {
+      try {
+        return require('@tailwindcss/forms');
+      } catch (e) {
+        console.warn('Warning: @tailwindcss/forms not found, form styling disabled');
+        return {};
+      }
+    })(),
   ],
 };
