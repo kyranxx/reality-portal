@@ -3,9 +3,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-// Import the export configuration
-const { skipPages } = require('./next-export-config');
-
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -66,14 +63,8 @@ const nextConfig = {
   // Force all pages to be server-side rendered
   distDir: process.env.NODE_ENV === 'production' ? '.next-dynamic' : '.next',
   
-  // Skip pre-rendering for pages that use authentication
-  exportPathMap: async function (defaultPathMap) {
-    // Remove the pages that should be skipped from the default path map
-    for (const path of skipPages) {
-      delete defaultPathMap[path];
-    }
-    return defaultPathMap;
-  },
+  // App Router doesn't support exportPathMap
+  // Protected pages will be handled by the NoSSR component
 };
 
 // Disable static optimization for all pages
