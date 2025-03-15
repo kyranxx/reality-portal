@@ -43,6 +43,9 @@ const AuthContext = createContext<AuthContextType>(defaultContextValue);
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';
 
+// Check if we're in build time (set by prebuild.js)
+const isBuildTime = process.env.NEXT_PUBLIC_IS_BUILD_TIME === 'true';
+
 export function FirebaseAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -195,7 +198,20 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 }
 
 export function useAuth() {
+  // Check if we're running on the client side
+  const isClientSide = typeof window !== 'undefined';
+  
+  // During SSR or build time, return the default context to prevent errors
+  if (!isClientSide || isBuildTime) {
+    return defaultContextValue;
+  }
+  
   const context = useContext(AuthContext);
-  // Return the default context value if the context is not available (during SSR)
-  return context || defaultContextValue;
+  
+  if (!context) {
+    console.warn('useAuth must be used within an AuthProvider');
+    return defaultContextValue;
+  }
+  
+  return context;
 }

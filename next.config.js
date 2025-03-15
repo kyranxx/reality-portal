@@ -3,6 +3,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+// Import the export configuration
+const { skipPages } = require('./next-export-config');
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -62,11 +65,33 @@ const nextConfig = {
   staticPageGenerationTimeout: 0,
   // Force all pages to be server-side rendered
   distDir: process.env.NODE_ENV === 'production' ? '.next-dynamic' : '.next',
+  
+  // Skip pre-rendering for pages that use authentication
+  exportPathMap: async function (defaultPathMap) {
+    // Remove the pages that should be skipped from the default path map
+    for (const path of skipPages) {
+      delete defaultPathMap[path];
+    }
+    return defaultPathMap;
+  },
 };
 
 // Disable static optimization for all pages
 nextConfig.generateBuildId = async () => {
   return `build-${Date.now()}`;
+};
+
+// Add a custom webpack configuration to handle client-only modules
+nextConfig.webpack = (config, { isServer }) => {
+  // If on the server side, add a null loader for client-only modules
+  if (isServer) {
+    config.module.rules.push({
+      test: /firebase\/auth/,
+      use: 'null-loader',
+    });
+  }
+  
+  return config;
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

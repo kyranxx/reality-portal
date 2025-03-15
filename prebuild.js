@@ -1,6 +1,10 @@
 // This script runs before the build to ensure proper environment setup
 console.log('Running prebuild script...');
 
+// Set a special flag to indicate we're in build mode
+// This will be used to skip authentication checks during build
+process.env.NEXT_PUBLIC_IS_BUILD_TIME = 'true';
+
 // Set placeholder values for Firebase config if not provided
 // This ensures the build process can complete even without real values
 if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
@@ -39,6 +43,9 @@ try {
   // Add Supabase config
   envContent += `NEXT_PUBLIC_SUPABASE_URL=${process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-url.supabase.co'}\n`;
   envContent += `NEXT_PUBLIC_SUPABASE_ANON_KEY=${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'}\n`;
+  
+  // Add build-time flag
+  envContent += `NEXT_PUBLIC_IS_BUILD_TIME=true\n`;
   
   fs.writeFileSync('.env.local', envContent);
   console.log('.env.local file created successfully.');

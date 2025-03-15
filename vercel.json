@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build:vercel",
   "outputDirectory": ".next-dynamic",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
@@ -20,7 +20,8 @@
     "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
     "NEXT_PUBLIC_VERCEL_ENV": "production",
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_IS_BUILD_TIME": "true"
   },
   "buildEnvironment": {
     "NODE_OPTIONS": "--max-old-space-size=4096"
