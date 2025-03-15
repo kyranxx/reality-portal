@@ -21,9 +21,39 @@ execSync('node prebuild.js', { stdio: 'inherit' });
 console.log('Ensuring all dependencies are installed...');
 execSync('npm install --production=false', { stdio: 'inherit' });
 
-// Ensure correct Firebase version and auth package are installed
-console.log('Ensuring correct Firebase version and auth package...');
-execSync('npm install firebase@10.7.0 @firebase/auth --save', { stdio: 'inherit' });
+// Ensure correct Firebase version is installed
+console.log('Ensuring correct Firebase version...');
+execSync('npm install firebase@10.7.0 --save', { stdio: 'inherit' });
+
+// Create a symlink from @firebase/auth to firebase/auth for compatibility
+console.log('Setting up Firebase auth compatibility...');
+try {
+  // Create a directory for the symlink if it doesn't exist
+  if (!fs.existsSync('./node_modules/@firebase')) {
+    fs.mkdirSync('./node_modules/@firebase', { recursive: true });
+  }
+  
+  // Create a symlink or copy the firebase/auth directory
+  if (fs.existsSync('./node_modules/firebase/auth')) {
+    if (!fs.existsSync('./node_modules/@firebase/auth')) {
+      // Try to create a symlink first
+      try {
+        fs.symlinkSync('../firebase/auth', './node_modules/@firebase/auth', 'dir');
+        console.log('Created symlink for @firebase/auth');
+      } catch (symlinkError) {
+        // If symlink fails, copy the directory
+        console.log('Symlink creation failed, copying directory instead');
+        fs.cpSync('./node_modules/firebase/auth', './node_modules/@firebase/auth', { recursive: true });
+        console.log('Copied firebase/auth to @firebase/auth');
+      }
+    }
+  } else {
+    console.warn('firebase/auth directory not found, skipping compatibility setup');
+  }
+} catch (error) {
+  console.warn('Error setting up Firebase auth compatibility:', error.message);
+  // Continue with the build even if this fails
+}
 
 // Run the Next.js build
 console.log('Running Next.js build...');
