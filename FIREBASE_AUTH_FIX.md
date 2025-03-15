@@ -23,7 +23,7 @@ These errors occurred in:
 
 The project was using Firebase v11.4.0, but in this version, the authentication functions are no longer exported directly from 'firebase/auth'. Instead, they are moved to '@firebase/auth'.
 
-## Solution
+## Initial Solution
 
 Downgraded Firebase to version 10.7.0, which maintains the original import structure:
 
@@ -47,9 +47,11 @@ import {
 } from 'firebase/auth';
 ```
 
-## Alternative Solution
+## Enhanced Solution for Vercel Deployment
 
-If you need to use Firebase v11.x in the future, you'll need to update the imports to use '@firebase/auth' instead:
+The initial solution worked locally but not in the Vercel deployment environment. To fix this, we implemented two additional changes:
+
+1. Updated the imports to use '@firebase/auth' for the authentication functions:
 
 ```typescript
 import { User, onAuthStateChanged, Auth } from 'firebase/auth';
@@ -69,6 +71,16 @@ And in firebase.ts:
 import { getAuth, connectAuthEmulator } from '@firebase/auth';
 ```
 
+2. Modified the build-vercel.js script to explicitly install Firebase v10.7.0 during the Vercel build process:
+
+```javascript
+// Ensure correct Firebase version is installed
+console.log('Ensuring correct Firebase version...');
+execSync('npm install firebase@10.7.0 --save', { stdio: 'inherit' });
+```
+
+This ensures that the correct version of Firebase is used during the Vercel build, regardless of what's specified in package.json.
+
 ## Verification
 
-After downgrading Firebase to v10.7.0, the build completed successfully without any import errors.
+After implementing these changes, the build should complete successfully without any import errors. The combination of using the correct import paths and ensuring the right Firebase version is installed during the build process provides a robust solution to the authentication import issues.

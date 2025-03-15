@@ -17,6 +17,10 @@ process.env.NEXT_PUBLIC_IS_BUILD_TIME = 'true';
 console.log('Running prebuild script...');
 execSync('node prebuild.js', { stdio: 'inherit' });
 
+// Ensure correct Firebase version is installed
+console.log('Ensuring correct Firebase version...');
+execSync('npm install firebase@10.7.0 --save', { stdio: 'inherit' });
+
 // Run the Next.js build
 console.log('Running Next.js build...');
 try {
