@@ -3,17 +3,15 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import {
   User,
-  onAuthStateChanged,
-  Auth
-} from 'firebase/auth';
-import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
+  onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  sendPasswordResetEmail
-} from '@firebase/auth';
+  sendPasswordResetEmail,
+  Auth
+} from 'firebase/auth';
 import { auth, isFirebaseConfigured } from './firebase';
 
 type AuthContextType = {
