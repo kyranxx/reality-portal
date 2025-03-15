@@ -21,9 +21,9 @@ execSync('node prebuild.js', { stdio: 'inherit' });
 console.log('Ensuring all dependencies are installed...');
 execSync('npm install --production=false', { stdio: 'inherit' });
 
-// Ensure correct Firebase version is installed
-console.log('Ensuring correct Firebase version...');
-execSync('npm install firebase@10.7.0 --save', { stdio: 'inherit' });
+// Ensure correct Firebase version and auth package are installed
+console.log('Ensuring correct Firebase version and auth package...');
+execSync('npm install firebase@10.7.0 @firebase/auth --save', { stdio: 'inherit' });
 
 // Run the Next.js build
 console.log('Running Next.js build...');
