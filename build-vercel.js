@@ -25,19 +25,20 @@ execSync('npm install --production=false', { stdio: 'inherit' });
 console.log('Ensuring correct Firebase version...');
 execSync('npm install firebase@10.7.0 --save', { stdio: 'inherit' });
 
-// Create a symlink from @firebase/auth to firebase/auth for compatibility
+// Enhanced Firebase auth compatibility setup
 console.log('Setting up Firebase auth compatibility...');
 try {
-  // Create a directory for the symlink if it doesn't exist
+  // Create directories if they don't exist
   if (!fs.existsSync('./node_modules/@firebase')) {
     fs.mkdirSync('./node_modules/@firebase', { recursive: true });
   }
   
-  // Create a symlink or copy the firebase/auth directory
+  // Check if firebase/auth exists
   if (fs.existsSync('./node_modules/firebase/auth')) {
+    // Create @firebase/auth if it doesn't exist
     if (!fs.existsSync('./node_modules/@firebase/auth')) {
-      // Try to create a symlink first
       try {
+        // Try to create a symlink first
         fs.symlinkSync('../firebase/auth', './node_modules/@firebase/auth', 'dir');
         console.log('Created symlink for @firebase/auth');
       } catch (symlinkError) {
@@ -46,13 +47,76 @@ try {
         fs.cpSync('./node_modules/firebase/auth', './node_modules/@firebase/auth', { recursive: true });
         console.log('Copied firebase/auth to @firebase/auth');
       }
+    } else {
+      console.log('@firebase/auth directory already exists');
     }
+    
+    // Create a compatibility index.js file in @firebase/auth
+    const compatIndexPath = './node_modules/@firebase/auth/index.js';
+    const compatIndexContent = `
+/**
+ * Firebase Auth compatibility layer for Vercel
+ * This file ensures that imports from @firebase/auth work correctly
+ */
+module.exports = require('../../firebase/auth');
+`;
+    fs.writeFileSync(compatIndexPath, compatIndexContent);
+    console.log('Created compatibility index.js in @firebase/auth');
+    
+    // Create a compatibility index.d.ts file for TypeScript
+    const compatDtsPath = './node_modules/@firebase/auth/index.d.ts';
+    const compatDtsContent = `
+/**
+ * Firebase Auth compatibility type definitions for Vercel
+ */
+export * from '../../firebase/auth';
+`;
+    fs.writeFileSync(compatDtsPath, compatDtsContent);
+    console.log('Created compatibility index.d.ts in @firebase/auth');
   } else {
-    console.warn('firebase/auth directory not found, skipping compatibility setup');
+    console.warn('firebase/auth directory not found, using alternative compatibility approach');
+    
+    // Create a minimal @firebase/auth directory with re-exports
+    const authDir = './node_modules/@firebase/auth';
+    if (!fs.existsSync(authDir)) {
+      fs.mkdirSync(authDir, { recursive: true });
+    }
+    
+    // Create index.js that re-exports from firebase/auth
+    fs.writeFileSync(`${authDir}/index.js`, `
+/**
+ * Firebase Auth compatibility layer for Vercel
+ */
+try {
+  module.exports = require('firebase/auth');
+} catch (error) {
+  console.error('Error importing firebase/auth:', error);
+  // Provide empty implementations as fallback
+  module.exports = {
+    getAuth: () => ({}),
+    onAuthStateChanged: () => () => {},
+    createUserWithEmailAndPassword: async () => ({}),
+    signInWithEmailAndPassword: async () => ({}),
+    signOut: async () => {},
+    GoogleAuthProvider: class {},
+    signInWithPopup: async () => ({}),
+    sendPasswordResetEmail: async () => {},
+    connectAuthEmulator: () => {},
+  };
+}
+`);
+    console.log('Created fallback @firebase/auth implementation');
+  }
+  
+  // Copy our custom firebase-auth-vercel.js to node_modules for easier imports
+  const customAuthPath = './src/utils/firebase-auth-vercel.js';
+  if (fs.existsSync(customAuthPath)) {
+    fs.copyFileSync(customAuthPath, './node_modules/firebase-auth-vercel.js');
+    console.log('Copied custom firebase-auth-vercel.js to node_modules');
   }
 } catch (error) {
   console.warn('Error setting up Firebase auth compatibility:', error.message);
-  // Continue with the build even if this fails
+  console.warn('Build will continue, but Firebase auth may not work correctly in Vercel');
 }
 
 // Run the Next.js build

@@ -10,7 +10,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail
-} from 'firebase/auth';
+} from '../utils/firebase-auth';
 
 // Define types for Firebase Auth
 type User = any;
