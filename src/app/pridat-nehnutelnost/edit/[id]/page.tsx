@@ -1,14 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../utils/FirebaseAuthContext';
-import { addProperty } from '../../utils/firestore';
-import NoSSR from '../../components/NoSSR';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { useAuth } from '../../../../utils/FirebaseAuthContext';
+import { getPropertyById, updateProperty } from '../../../../utils/firestore';
+import NoSSR from '../../../../components/NoSSR';
 
-export default function PridatNehnutelnostPage() {
+export default function EditPropertyPage() {
   const router = useRouter();
+  const params = useParams();
   const { user } = useAuth();
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -27,6 +31,62 @@ export default function PridatNehnutelnostPage() {
     contactEmail: '',
     contactVisibility: 'all',
   });
+
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        if (!params.id) return;
+        
+        const propertyId = Array.isArray(params.id) ? params.id[0] : params.id;
+        const propertyData = await getPropertyById(propertyId);
+        
+        if (!propertyData) {
+          setError('Nehnuteľnosť nebola nájdená');
+          setLoading(false);
+          return;
+        }
+        
+        // Check if the user is the owner of the property
+        if (user && propertyData.userId !== user.uid) {
+          setError('Nemáte oprávnenie upravovať túto nehnuteľnosť');
+          setLoading(false);
+          return;
+        }
+        
+        setProperty(propertyData);
+        
+        // Populate form data
+        setFormData({
+          propertyType: propertyData.propertyType || 'apartment',
+          title: propertyData.title || '',
+          description: propertyData.description || '',
+          price: propertyData.price?.toString() || '',
+          area: propertyData.area?.toString() || '',
+          rooms: propertyData.rooms?.toString() || '',
+          bathrooms: propertyData.bathrooms?.toString() || '',
+          location: propertyData.location || '',
+          features: propertyData.features || [],
+          images: propertyData.images || [],
+          contactName: propertyData.contactName || '',
+          contactPhone: propertyData.contactPhone || '',
+          contactEmail: propertyData.contactEmail || '',
+          contactVisibility: propertyData.contactVisibility || 'all',
+        });
+      } catch (err) {
+        console.error('Error fetching property:', err);
+        setError('Nastala chyba pri načítaní nehnuteľnosti');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchProperty();
+    } else {
+      setLoading(false);
+      setError('Pre úpravu inzerátu sa musíte prihlásiť');
+    }
+  }, [params.id, user]);
 
   const updateFormData = (field: string, value: any) => {
     setFormData({
@@ -55,8 +115,8 @@ export default function PridatNehnutelnostPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) {
-      alert('Pre pridanie inzerátu sa musíte prihlásiť');
+    if (!user || !property) {
+      alert('Pre úpravu inzerátu sa musíte prihlásiť');
       router.push('/auth/login');
       return;
     }
@@ -80,18 +140,20 @@ export default function PridatNehnutelnostPage() {
         contactPhone: formData.contactPhone || '',
         contactEmail: formData.contactEmail || user.email || '',
         contactVisibility: formData.contactVisibility,
-        userId: user.uid,
-        isFeatured: false,
-        isNew: true,
+        // Keep the original userId and other fields
+        userId: property.userId,
+        isFeatured: property.isFeatured || false,
+        isNew: property.isNew || false,
       };
       
-      const propertyId = await addProperty(propertyData);
+      const propertyId = Array.isArray(params.id) ? params.id[0] : params.id;
+      await updateProperty(propertyId, propertyData);
       
-      alert('Inzerát bol úspešne pridaný!');
+      alert('Inzerát bol úspešne aktualizovaný!');
       router.push(`/nehnutelnosti/${propertyId}`);
     } catch (error) {
-      console.error('Error adding property:', error);
-      alert('Nastala chyba pri pridávaní inzerátu. Skúste to znova.');
+      console.error('Error updating property:', error);
+      alert('Nastala chyba pri aktualizácii inzerátu. Skúste to znova.');
     } finally {
       setIsSubmitting(false);
     }
@@ -116,12 +178,40 @@ export default function PridatNehnutelnostPage() {
     updateFormData('images', newImages);
   };
 
+  if (loading) {
+    return (
+      <div className="container py-16 text-center">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto mb-8"></div>
+          <div className="h-64 bg-gray-200 rounded mb-8"></div>
+          <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container py-16 text-center">
+        <h1 className="text-3xl font-bold mb-4">Chyba</h1>
+        <p className="text-red-500 mb-6">{error}</p>
+        <button 
+          onClick={() => router.push('/nehnutelnosti')}
+          className="btn btn-primary"
+        >
+          Späť na zoznam nehnuteľností
+        </button>
+      </div>
+    );
+  }
+
   return (
     <NoSSR>
       {!user ? (
         <div className="container py-16 text-center">
-          <h1 className="text-3xl font-bold mb-4">Pridať inzerát</h1>
-          <p className="mb-6">Pre pridanie inzerátu sa musíte prihlásiť</p>
+          <h1 className="text-3xl font-bold mb-4">Upraviť inzerát</h1>
+          <p className="mb-6">Pre úpravu inzerátu sa musíte prihlásiť</p>
           <button 
             onClick={() => router.push('/auth/login')}
             className="btn btn-primary"
@@ -131,7 +221,7 @@ export default function PridatNehnutelnostPage() {
         </div>
       ) : (
         <div className="container py-16">
-          <h1 className="text-3xl font-bold mb-8">Pridať inzerát</h1>
+          <h1 className="text-3xl font-bold mb-8">Upraviť inzerát</h1>
           
           <div className="mb-8">
             <div className="flex items-center">
@@ -257,10 +347,10 @@ export default function PridatNehnutelnostPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-1">Plocha (m²)</label>
+                    <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">Plocha (m²)</label>
                     <input
                       type="number"
-                      id="size"
+                      id="area"
                       value={formData.area}
                       onChange={(e) => updateFormData('area', e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -459,7 +549,7 @@ export default function PridatNehnutelnostPage() {
                     className="btn btn-primary"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Pridávam...' : 'Pridať inzerát'}
+                    {isSubmitting ? 'Ukladám...' : 'Uložiť zmeny'}
                   </button>
                 </div>
               </div>

@@ -6,7 +6,7 @@ interface PropertyCardProps {
   title: string;
   location: string;
   price: number;
-  size: number;
+  size: number; // This is for backward compatibility
   bedrooms?: number;
   bathrooms?: number;
   landSize?: number;
