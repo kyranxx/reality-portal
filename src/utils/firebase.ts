@@ -16,11 +16,14 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Check if Firebase environment variables are properly set
+// Check if Firebase environment variables are properly set with real values (not placeholders)
 export const isFirebaseConfigured = 
   process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== undefined && 
   process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN !== undefined &&
-  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== undefined;
+  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== undefined &&
+  process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'placeholder-api-key' &&
+  process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN !== 'placeholder-auth-domain' &&
+  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== 'placeholder-project-id';
 
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';

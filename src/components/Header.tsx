@@ -145,28 +145,12 @@ export default function Header() {
               {authMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-10 animate-fadeIn">
                   <Link 
-                    href="/auth/login" 
+                    href="/auth/unified" 
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                     onClick={() => setAuthMenuOpen(false)}
                   >
-                    Prihlásiť sa
+                    Prihlásiť sa / Registrovať sa
                   </Link>
-                  <Link 
-                    href="/auth/register" 
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                    onClick={() => setAuthMenuOpen(false)}
-                  >
-                    Registrovať sa
-                  </Link>
-                  <button 
-                    onClick={() => {
-                      signInWithGoogle();
-                      setAuthMenuOpen(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                  >
-                    Prihlásiť cez Google
-                  </button>
                 </div>
               )}
             </div>
@@ -277,28 +261,12 @@ export default function Header() {
               ) : (
                 <>
                   <Link 
-                    href="/auth/login" 
+                    href="/auth/unified" 
                     className="btn btn-primary w-full justify-center" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Prihlásiť sa
+                    Prihlásiť sa / Registrovať sa
                   </Link>
-                  <Link 
-                    href="/auth/register" 
-                    className="btn btn-outline w-full justify-center" 
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Registrovať sa
-                  </Link>
-                  <button 
-                    onClick={() => {
-                      signInWithGoogle();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="btn btn-outline w-full justify-center"
-                  >
-                    Prihlásiť cez Google
-                  </button>
                 </>
               )}
             </div>

@@ -7,7 +7,7 @@ import SectionTitle from '@/components/SectionTitle';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 
 // Admin emails that are allowed to access this page
-const ADMIN_EMAILS = ['admin@example.com'];
+const ADMIN_EMAILS = ['admin@example.com', 'admin@realityportal.com'];
 
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';

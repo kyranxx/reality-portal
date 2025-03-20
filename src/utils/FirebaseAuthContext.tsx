@@ -135,10 +135,28 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
       setError(null);
 
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      // Add scopes for better user experience
+      provider.addScope('profile');
+      provider.addScope('email');
+      
+      // Set custom parameters for the auth provider
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
+      await signInWithPopup(auth, provider).catch((error: any) => {
+        // Handle specific popup errors
+        if (error.code === 'auth/popup-blocked') {
+          setError('Popup was blocked by your browser. Please allow popups for this site.');
+        } else if (error.code === 'auth/popup-closed-by-user') {
+          setError('Authentication was cancelled. Please try again.');
+        } else {
+          throw error; // Re-throw other errors to be caught by the outer catch
+        }
+      });
     } catch (error: any) {
-      setError(error.message);
-      console.error('Error signing in with Google:', error.message);
+      console.error('Error signing in with Google:', error);
+      setError(error.message || 'Failed to sign in with Google. Please try again.');
     } finally {
       setIsLoading(false);
     }
