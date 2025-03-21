@@ -19,7 +19,7 @@ execSync('node prebuild.js', { stdio: 'inherit' });
 
 // Ensure all dependencies are installed, including devDependencies
 console.log('Ensuring all dependencies are installed...');
-execSync('npm install --production=false', { stdio: 'inherit' });
+execSync('npm install --include=dev', { stdio: 'inherit' });
 
 // Ensure correct Firebase version is installed
 console.log('Ensuring correct Firebase version...');

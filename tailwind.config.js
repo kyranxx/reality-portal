@@ -8,7 +8,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "var(--color-primary, #4F46E5)",
+        primary: {
+          DEFAULT: "var(--color-primary, #4F46E5)",
+          // Add opacity variants
+          '10': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.1)',
+          '20': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.2)',
+          '30': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.3)',
+          '40': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.4)',
+          '50': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.5)',
+          '60': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.6)',
+          '70': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.7)',
+          '80': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.8)',
+          '90': 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.9)',
+        },
         secondary: "var(--color-secondary, #6366F1)",
         accent: "var(--color-accent, #F59E0B)",
         background: "var(--color-background, #FFFFFF)",
