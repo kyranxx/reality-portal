@@ -1,0 +1,84 @@
+{
+  "site": {
+    "title": "Reality Portal - Realitní portál",
+    "description": "Realitní portál pro prodej a pronájem nemovitostí"
+  },
+  "nav": {
+    "home": "Domů",
+    "properties": "Nemovitosti",
+    "about": "O nás",
+    "contact": "Kontakt",
+    "addProperty": "Přidat nemovitost",
+    "myAccount": "Můj účet",
+    "dashboard": "Nástěnka",
+    "profile": "Profil",
+    "admin": "Admin",
+    "signOut": "Odhlásit se",
+    "signIn": "Přihlásit se / Registrovat"
+  },
+  "properties": {
+    "apartments": "Byty",
+    "houses": "Domy",
+    "land": "Pozemky",
+    "commercial": "Komerční"
+  },
+  "property": {
+    "price": "Cena",
+    "area": "Plocha",
+    "rooms": "Pokoje",
+    "location": "Lokalita",
+    "type": "Typ",
+    "sale": "Na prodej",
+    "rent": "K pronájmu"
+  },
+  "admin": {
+    "panel": "Administrace",
+    "portalManagement": "Správa portálu",
+    "statistics": "Statistiky",
+    "users": "Uživatelé",
+    "propertiesSection": "Nemovitosti",
+    "siteSettings": "Nastavení webu",
+    "language": "Jazyk",
+    "theme": "Motiv",
+    "email": "Email",
+    "name": "Jméno",
+    "registered": "Registrován",
+    "actions": "Akce",
+    "noUsers": "Žádní uživatelé",
+    "noProperties": "Žádné nemovitosti",
+    "propertyName": "Název",
+    "propertyType": "Typ",
+    "propertyPrice": "Cena",
+    "propertyUser": "Uživatel"
+  },
+  "themes": {
+    "earthy": "Přírodní",
+    "professional": "Profesionální modrý",
+    "playful": "Hravý barevný",
+    "selectTheme": "Vybrat motiv",
+    "applyTheme": "Použít motiv"
+  },
+  "languages": {
+    "en": "Angličtina",
+    "cs": "Čeština",
+    "hu": "Maďarština",
+    "selectLanguage": "Vybrat jazyk"
+  },
+  "footer": {
+    "description": "Váš spolehlivý partner při hledání nemovitostí na Slovensku. Jednoduché vyhledávání, ověření prodejci a kompletní servis.",
+    "navigation": "Navigace",
+    "categories": "Kategorie",
+    "contact": "Kontakt",
+    "apartments": "Byty",
+    "houses": "Domy",
+    "land": "Pozemky",
+    "commercial": "Komerční prostory",
+    "address": "Hlavní 123, 831 01 Bratislava",
+    "phone": "+421 900 123 456",
+    "email": "info@realityportal.sk",
+    "rights": "Všechna práva vyhrazena.",
+    "terms": "Podmínky použití",
+    "privacy": "Ochrana osobních údajů",
+    "cookies": "Cookies"
+  }
+}

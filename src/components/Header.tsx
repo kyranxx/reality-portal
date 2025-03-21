@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/utils/FirebaseAuthContext';
+import { useApp } from '@/contexts/AppContext';
 import { useState, useEffect } from 'react';
 
 export default function Header() {
   const { user, signOut, signInWithGoogle } = useAuth();
+  const { language, setLanguage, t } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [authMenuOpen, setAuthMenuOpen] = useState(false);
@@ -59,22 +61,22 @@ export default function Header() {
           <ul className="flex space-x-8">
             <li>
               <Link href="/" className="text-gray-700 hover:text-primary font-medium py-2 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-primary after:transition-all after:duration-300">
-                Domov
+                {t('nav.home')}
               </Link>
             </li>
             <li>
               <Link href="/nehnutelnosti" className="text-gray-700 hover:text-primary font-medium py-2 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-primary after:transition-all after:duration-300">
-                Nehnuteľnosti
+                {t('nav.properties')}
               </Link>
             </li>
             <li>
               <Link href="/o-nas" className="text-gray-700 hover:text-primary font-medium py-2 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-primary after:transition-all after:duration-300">
-                O nás
+                {t('nav.about')}
               </Link>
             </li>
             <li>
               <Link href="/kontakt" className="text-gray-700 hover:text-primary font-medium py-2 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-primary after:transition-all after:duration-300">
-                Kontakt
+                {t('nav.contact')}
               </Link>
             </li>
           </ul>
@@ -83,7 +85,7 @@ export default function Header() {
         {/* Desktop Buttons */}
         <div className="hidden md:flex space-x-4">
           <Link href="/pridat-nehnutelnost" className="btn btn-outline">
-            Pridať inzerát
+            {t('nav.addProperty')}
           </Link>
           
           {user ? (
@@ -92,7 +94,7 @@ export default function Header() {
                 className="btn btn-primary flex items-center"
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
               >
-                <span className="mr-2">Môj účet</span>
+                <span className="mr-2">{t('nav.myAccount')}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 transition-transform duration-300 ${userMenuOpen ? 'rotate-180' : ''}`}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
@@ -105,27 +107,27 @@ export default function Header() {
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                     onClick={() => setUserMenuOpen(false)}
                   >
-                    Dashboard
+                    {t('nav.dashboard')}
                   </Link>
                   <Link 
                     href="/dashboard/profile" 
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                     onClick={() => setUserMenuOpen(false)}
                   >
-                    Profil
+                    {t('nav.profile')}
                   </Link>
                   <Link 
                     href="/admin" 
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                     onClick={() => setUserMenuOpen(false)}
                   >
-                    Admin
+                    {t('nav.admin')}
                   </Link>
                   <button 
                     onClick={handleSignOut}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                   >
-                    Odhlásiť sa
+                    {t('nav.signOut')}
                   </button>
                 </div>
               )}
@@ -136,7 +138,7 @@ export default function Header() {
                 className="btn btn-primary flex items-center"
                 onClick={() => setAuthMenuOpen(!authMenuOpen)}
               >
-                <span className="mr-2">Účet</span>
+                <span className="mr-2">{t('nav.myAccount')}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 transition-transform duration-300 ${authMenuOpen ? 'rotate-180' : ''}`}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
@@ -149,7 +151,7 @@ export default function Header() {
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                     onClick={() => setAuthMenuOpen(false)}
                   >
-                    Prihlásiť sa / Registrovať sa
+                    {t('nav.signIn')}
                   </Link>
                 </div>
               )}
@@ -187,7 +189,7 @@ export default function Header() {
                     className="block text-gray-700 hover:text-primary font-medium py-2 transition-colors" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Domov
+                    {t('nav.home')}
                   </Link>
                 </li>
                 <li>
@@ -196,7 +198,7 @@ export default function Header() {
                     className="block text-gray-700 hover:text-primary font-medium py-2 transition-colors" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Nehnuteľnosti
+                    {t('nav.properties')}
                   </Link>
                 </li>
                 <li>
@@ -205,7 +207,7 @@ export default function Header() {
                     className="block text-gray-700 hover:text-primary font-medium py-2 transition-colors" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    O nás
+                    {t('nav.about')}
                   </Link>
                 </li>
                 <li>
@@ -214,7 +216,7 @@ export default function Header() {
                     className="block text-gray-700 hover:text-primary font-medium py-2 transition-colors" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Kontakt
+                    {t('nav.contact')}
                   </Link>
                 </li>
               </ul>
@@ -225,7 +227,7 @@ export default function Header() {
                 className="btn btn-outline w-full justify-center" 
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Pridať inzerát
+                {t('nav.addProperty')}
               </Link>
               
               {user ? (
@@ -235,27 +237,27 @@ export default function Header() {
                     className="btn btn-primary w-full justify-center" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Dashboard
+                    {t('nav.dashboard')}
                   </Link>
                   <Link 
                     href="/dashboard/profile" 
                     className="btn btn-outline w-full justify-center" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Profil
+                    {t('nav.profile')}
                   </Link>
                   <Link 
                     href="/admin" 
                     className="btn btn-outline w-full justify-center" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Admin
+                    {t('nav.admin')}
                   </Link>
                   <button 
                     onClick={handleSignOut}
                     className="btn btn-outline w-full justify-center text-red-600 border-red-200 hover:bg-red-50 transition-colors"
                   >
-                    Odhlásiť sa
+                    {t('nav.signOut')}
                   </button>
                 </>
               ) : (
@@ -265,7 +267,7 @@ export default function Header() {
                     className="btn btn-primary w-full justify-center" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Prihlásiť sa / Registrovať sa
+                    {t('nav.signIn')}
                   </Link>
                 </>
               )}

@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const { i18n } = require('./next-i18next.config');
+
 let withBundleAnalyzer = (config) => config;
 try {
   withBundleAnalyzer = require('@next/bundle-analyzer')({
@@ -11,6 +13,8 @@ try {
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  // i18n configuration
+  i18n,
   // Ensure proper handling of routes
   trailingSlash: false,
   // Configure allowed image sources
@@ -86,6 +90,12 @@ nextConfig.webpack = (config, { isServer }) => {
       use: 'null-loader',
     });
   }
+  
+  // Add support for importing JSON files
+  config.module.rules.push({
+    test: /\.json$/,
+    type: 'json',
+  });
   
   return config;
 };

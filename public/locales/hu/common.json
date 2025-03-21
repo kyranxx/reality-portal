@@ -1,0 +1,84 @@
+{
+  "site": {
+    "title": "Reality Portal - Ingatlan Portál",
+    "description": "Ingatlan portál ingatlanok eladásához és bérléséhez"
+  },
+  "nav": {
+    "home": "Főoldal",
+    "properties": "Ingatlanok",
+    "about": "Rólunk",
+    "contact": "Kapcsolat",
+    "addProperty": "Ingatlan hozzáadása",
+    "myAccount": "Fiókom",
+    "dashboard": "Irányítópult",
+    "profile": "Profil",
+    "admin": "Admin",
+    "signOut": "Kijelentkezés",
+    "signIn": "Bejelentkezés / Regisztráció"
+  },
+  "properties": {
+    "apartments": "Lakások",
+    "houses": "Házak",
+    "land": "Telkek",
+    "commercial": "Kereskedelmi"
+  },
+  "property": {
+    "price": "Ár",
+    "area": "Terület",
+    "rooms": "Szobák",
+    "location": "Helyszín",
+    "type": "Típus",
+    "sale": "Eladó",
+    "rent": "Kiadó"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "portalManagement": "Portál kezelése",
+    "statistics": "Statisztikák",
+    "users": "Felhasználók",
+    "propertiesSection": "Ingatlanok",
+    "siteSettings": "Oldal beállítások",
+    "language": "Nyelv",
+    "theme": "Téma",
+    "email": "Email",
+    "name": "Név",
+    "registered": "Regisztrált",
+    "actions": "Műveletek",
+    "noUsers": "Nincsenek felhasználók",
+    "noProperties": "Nincsenek ingatlanok",
+    "propertyName": "Név",
+    "propertyType": "Típus",
+    "propertyPrice": "Ár",
+    "propertyUser": "Felhasználó"
+  },
+  "themes": {
+    "earthy": "Földes nyugodt",
+    "professional": "Professzionális kék",
+    "playful": "Játékos színes",
+    "selectTheme": "Téma kiválasztása",
+    "applyTheme": "Téma alkalmazása"
+  },
+  "languages": {
+    "en": "Angol",
+    "cs": "Cseh",
+    "hu": "Magyar",
+    "selectLanguage": "Nyelv kiválasztása"
+  },
+  "footer": {
+    "description": "Megbízható partnere az ingatlankeresésben Szlovákiában. Egyszerű keresés, ellenőrzött eladók és teljes körű szolgáltatás.",
+    "navigation": "Navigáció",
+    "categories": "Kategóriák",
+    "contact": "Kapcsolat",
+    "apartments": "Lakások",
+    "houses": "Házak",
+    "land": "Telkek",
+    "commercial": "Kereskedelmi ingatlanok",
+    "address": "Fő utca 123, 831 01 Pozsony",
+    "phone": "+421 900 123 456",
+    "email": "info@realityportal.sk",
+    "rights": "Minden jog fenntartva.",
+    "terms": "Felhasználási feltételek",
+    "privacy": "Adatvédelmi irányelvek",
+    "cookies": "Sütik"
+  }
+}

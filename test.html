@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Variables Test</title>
+    <style>
+        :root {
+            --color-primary: #4f46e5;
+            --color-secondary: #6366f1;
+            --color-accent: #f59e0b;
+            --color-background: #ffffff;
+            --color-foreground: #1f2937;
+            --color-card: #ffffff;
+            --color-border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-foreground);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: var(--color-primary);
+        }
+
+        .card {
+            background-color: var(--color-card);
+            border: 1px solid var(--color-border);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .theme-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .theme-option {
+            cursor: pointer;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .theme-option.active {
+            border: 2px solid var(--color-primary);
+        }
+
+        .color-preview {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .language-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .language-option {
+            cursor: pointer;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+
+        .language-option.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secondary);
+        }
+
+        .btn-accent {
+            background-color: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS Variables and Theme Test</h1>
+    
+    <div class="card">
+        <h2>Theme Selection</h2>
+        <div class="theme-container">
+            <div class="theme-option active" id="professional">
+                <div class="color-preview">
+                    <div class="color-dot" style="background-color: #1E40AF;"></div>
+                    <div class="color-dot" style="background-color: #3B82F6;"></div>
+                    <div class="color-dot" style="background-color: #60A5FA;"></div>
+                </div>
+                <span>Professional</span>
+            </div>
+            <div class="theme-option" id="earthy">
+                <div class="color-preview">
+                    <div class="color-dot" style="background-color: #8B7355;"></div>
+                    <div class="color-dot" style="background-color: #A67F5D;"></div>
+                    <div class="color-dot" style="background-color: #D2B48C;"></div>
+                </div>
+                <span>Earthy</span>
+            </div>
+            <div class="theme-option" id="playful">
+                <div class="color-preview">
+                    <div class="color-dot" style="background-color: #8B5CF6;"></div>
+                    <div class="color-dot" style="background-color: #EC4899;"></div>
+                    <div class="color-dot" style="background-color: #F59E0B;"></div>
+                </div>
+                <span>Playful</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Language Selection</h2>
+        <div class="language-container">
+            <div class="language-option active" id="en">English</div>
+            <div class="language-option" id="cs">Czech</div>
+            <div class="language-option" id="hu">Hungarian</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Button Styles</h2>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn">Primary Button</button>
+            <button class="btn btn-secondary">Secondary Button</button>
+            <button class="btn btn-accent">Accent Button</button>
+        </div>
+    </div>
+
+    <script>
+        // Theme switching functionality
+        const themes = {
+            professional: {
+                primary: '#1E40AF',
+                secondary: '#3B82F6',
+                accent: '#60A5FA',
+                background: '#F9FAFB',
+                foreground: '#1F2937',
+                card: '#FFFFFF',
+                border: '#E5E7EB',
+            },
+            earthy: {
+                primary: '#8B7355',
+                secondary: '#A67F5D',
+                accent: '#D2B48C',
+                background: '#F5F5DC',
+                foreground: '#3A3226',
+                card: '#FFFFFF',
+                border: '#E8E4D8',
+            },
+            playful: {
+                primary: '#8B5CF6',
+                secondary: '#EC4899',
+                accent: '#F59E0B',
+                background: '#FFFFFF',
+                foreground: '#4B5563',
+                card: '#FFFFFF',
+                border: '#F3F4F6',
+            }
+        };
+
+        const themeOptions = document.querySelectorAll('.theme-option');
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove active class from all options
+                themeOptions.forEach(opt => opt.classList.remove('active'));
+                
+                // Add active class to clicked option
+                option.classList.add('active');
+                
+                // Apply theme
+                const themeId = option.id;
+                const theme = themes[themeId];
+                
+                document.documentElement.style.setProperty('--color-primary', theme.primary);
+                document.documentElement.style.setProperty('--color-secondary', theme.secondary);
+                document.documentElement.style.setProperty('--color-accent', theme.accent);
+                document.documentElement.style.setProperty('--color-background', theme.background);
+                document.documentElement.style.setProperty('--color-foreground', theme.foreground);
+                document.documentElement.style.setProperty('--color-card', theme.card);
+                document.documentElement.style.setProperty('--color-border', theme.border);
+            });
+        });
+
+        // Language switching functionality
+        const languageOptions = document.querySelectorAll('.language-option');
+        languageOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove active class from all options
+                languageOptions.forEach(opt => opt.classList.remove('active'));
+                
+                // Add active class to clicked option
+                option.classList.add('active');
+                
+                // In a real app, we would change the language here
+                console.log('Language changed to:', option.id);
+            });
+        });
+    </script>
+</body>
+</html>

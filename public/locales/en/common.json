@@ -1,0 +1,84 @@
+{
+  "site": {
+    "title": "Reality Portal - Real Estate Portal",
+    "description": "Real estate portal for sale and rental of properties"
+  },
+  "nav": {
+    "home": "Home",
+    "properties": "Properties",
+    "about": "About Us",
+    "contact": "Contact",
+    "addProperty": "Add Property",
+    "myAccount": "My Account",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "admin": "Admin",
+    "signOut": "Sign Out",
+    "signIn": "Sign In / Register"
+  },
+  "properties": {
+    "apartments": "Apartments",
+    "houses": "Houses",
+    "land": "Land",
+    "commercial": "Commercial"
+  },
+  "property": {
+    "price": "Price",
+    "area": "Area",
+    "rooms": "Rooms",
+    "location": "Location",
+    "type": "Type",
+    "sale": "For Sale",
+    "rent": "For Rent"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "portalManagement": "Portal Management",
+    "statistics": "Statistics",
+    "users": "Users",
+    "propertiesSection": "Properties",
+    "siteSettings": "Site Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "email": "Email",
+    "name": "Name",
+    "registered": "Registered",
+    "actions": "Actions",
+    "noUsers": "No users",
+    "noProperties": "No properties",
+    "propertyName": "Name",
+    "propertyType": "Type",
+    "propertyPrice": "Price",
+    "propertyUser": "User"
+  },
+  "themes": {
+    "earthy": "Earthy Calm",
+    "professional": "Professional Blue",
+    "playful": "Playful Colorful",
+    "selectTheme": "Select Theme",
+    "applyTheme": "Apply Theme"
+  },
+  "languages": {
+    "en": "English",
+    "cs": "Czech",
+    "hu": "Hungarian",
+    "selectLanguage": "Select Language"
+  },
+  "footer": {
+    "description": "Your reliable partner in finding real estate in Slovakia. Simple search, verified sellers, and complete service.",
+    "navigation": "Navigation",
+    "categories": "Categories",
+    "contact": "Contact",
+    "apartments": "Apartments",
+    "houses": "Houses",
+    "land": "Land",
+    "commercial": "Commercial spaces",
+    "address": "Main Street 123, 831 01 Bratislava",
+    "phone": "+421 900 123 456",
+    "email": "info@realityportal.sk",
+    "rights": "All rights reserved.",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookies"
+  }
+}

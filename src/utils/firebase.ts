@@ -78,6 +78,12 @@ export interface Property {
   isNew?: boolean;
   bathrooms?: number;
   landSize?: number;
+  // Adding missing properties
+  features?: string[];
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  contactVisibility?: string;
 }
 
 export interface User {

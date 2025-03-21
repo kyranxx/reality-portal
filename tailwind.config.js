@@ -8,9 +8,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#4F46E5",
-        secondary: "#6366F1",
-        accent: "#F59E0B",
+        primary: "var(--color-primary, #4F46E5)",
+        secondary: "var(--color-secondary, #6366F1)",
+        accent: "var(--color-accent, #F59E0B)",
+        background: "var(--color-background, #FFFFFF)",
+        foreground: "var(--color-foreground, #1F2937)",
+        card: "var(--color-card, #FFFFFF)",
+        border: "var(--color-border, #E5E7EB)",
         "gray-50": "#F9FAFB",
         "gray-100": "#F3F4F6",
         "gray-200": "#E5E7EB",

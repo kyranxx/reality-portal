@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FirebaseAuthProvider } from '@/utils/FirebaseAuthContext';
+import { AppProvider } from '@/contexts/AppContext';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({ 
@@ -29,12 +30,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="sk" className={inter.variable}>
+    <html lang="en" className={inter.variable}>
       <body className="flex flex-col min-h-screen">
         <FirebaseAuthProvider>
-          <Header />
-          <main className="flex-grow">{children}</main>
-          <Footer />
+          <AppProvider>
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </AppProvider>
         </FirebaseAuthProvider>
       </body>
     </html>

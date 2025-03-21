@@ -1,7 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { useApp } from '@/contexts/AppContext';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { t } = useApp();
   
   return (
     <footer className="bg-white border-t border-gray-100 py-16 mt-20">
@@ -18,7 +22,7 @@ export default function Footer() {
               <h2 className="text-xl font-bold text-gray-800">Reality Portal</h2>
             </div>
             <p className="text-gray-500 text-sm mb-6 leading-relaxed">
-              Váš spoľahlivý partner pri hľadaní nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení predajcovia a kompletný servis.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white transition-colors duration-300">
@@ -40,59 +44,59 @@ export default function Footer() {
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-800 mb-5 text-lg">Navigácia</h3>
+            <h3 className="font-semibold text-gray-800 mb-5 text-lg">{t('footer.navigation')}</h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  Domov
+                  {t('nav.home')}
                 </Link>
               </li>
               <li>
                 <Link href="/nehnutelnosti" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  Nehnuteľnosti
+                  {t('nav.properties')}
                 </Link>
               </li>
               <li>
                 <Link href="/o-nas" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  O nás
+                  {t('nav.about')}
                 </Link>
               </li>
               <li>
                 <Link href="/kontakt" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  Kontakt
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-800 mb-5 text-lg">Kategórie</h3>
+            <h3 className="font-semibold text-gray-800 mb-5 text-lg">{t('footer.categories')}</h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/nehnutelnosti/byty" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  Byty
+                  {t('properties.apartments')}
                 </Link>
               </li>
               <li>
                 <Link href="/nehnutelnosti/domy" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  Domy
+                  {t('properties.houses')}
                 </Link>
               </li>
               <li>
                 <Link href="/nehnutelnosti/pozemky" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  Pozemky
+                  {t('properties.land')}
                 </Link>
               </li>
               <li>
                 <Link href="/nehnutelnosti/komercne" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  Komerčné priestory
+                  {t('footer.commercial')}
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-800 mb-5 text-lg">Kontakt</h3>
+            <h3 className="font-semibold text-gray-800 mb-5 text-lg">{t('footer.contact')}</h3>
             <ul className="space-y-4">
               <li className="text-gray-500 flex items-start">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-3 shrink-0">
@@ -101,7 +105,7 @@ export default function Footer() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                   </svg>
                 </div>
-                <span>Hlavná 123, 831 01 Bratislava</span>
+                <span>{t('footer.address')}</span>
               </li>
               <li className="text-gray-500 flex items-center">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-3 shrink-0">
@@ -109,7 +113,7 @@ export default function Footer() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                   </svg>
                 </div>
-                <span>+421 900 123 456</span>
+                <span>{t('footer.phone')}</span>
               </li>
               <li className="text-gray-500 flex items-center">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-3 shrink-0">
@@ -117,7 +121,7 @@ export default function Footer() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                   </svg>
                 </div>
-                <span>info@realityportal.sk</span>
+                <span>{t('footer.email')}</span>
               </li>
             </ul>
           </div>
@@ -125,17 +129,17 @@ export default function Footer() {
         
         <div className="border-t border-gray-100 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © {currentYear} Reality Portal. Všetky práva vyhradené.
+            © {currentYear} Reality Portal. {t('footer.rights')}
           </p>
           <div className="flex flex-wrap gap-6 mt-4 md:mt-0">
             <Link href="/podmienky-pouzitia" className="text-gray-400 hover:text-primary transition-colors duration-300 text-sm">
-              Podmienky použitia
+              {t('footer.terms')}
             </Link>
             <Link href="/ochrana-osobnych-udajov" className="text-gray-400 hover:text-primary transition-colors duration-300 text-sm">
-              Ochrana osobných údajov
+              {t('footer.privacy')}
             </Link>
             <Link href="/cookies" className="text-gray-400 hover:text-primary transition-colors duration-300 text-sm">
-              Cookies
+              {t('footer.cookies')}
             </Link>
           </div>
         </div>
