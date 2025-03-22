@@ -210,6 +210,16 @@ function LanguageSelector() {
         >
           {t('languages.hu')}
         </button>
+        <button
+          onClick={() => setLanguage('sk')}
+          className={`px-4 py-2 rounded-lg border transition-colors ${
+            language === 'sk' 
+              ? 'bg-primary text-white border-primary' 
+              : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+          }`}
+        >
+          {t('settings.languageOptions.sk')}
+        </button>
       </div>
       <p className="text-sm text-gray-500">
         Aktuálny jazyk: <span className="font-medium">{t(`languages.${language}`)}</span>

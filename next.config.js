@@ -60,17 +60,17 @@ const nextConfig = {
   // Experimental features
   experimental: {
     // Server Actions are available by default in Next.js 14+
-    // Completely disable static generation for the entire app
     serverComponentsExternalPackages: ['firebase', '@supabase/supabase-js'],
+    // Configure runtime properly
+    runtime: 'nodejs', // Default runtime
   },
   // Configure page generation behavior
   // This prevents Next.js from trying to pre-render pages that require authentication
   // during the build process
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  // Completely disable static generation for the entire app
-  staticPageGenerationTimeout: 0,
-  // Force all pages to be server-side rendered
-  distDir: process.env.NODE_ENV === 'production' ? '.next-dynamic' : '.next',
+  // Configure static generation behavior
+  staticPageGenerationTimeout: 180,
+  distDir: '.next',
   
   // App Router doesn't support exportPathMap
   // Protected pages will be handled by the NoSSR component

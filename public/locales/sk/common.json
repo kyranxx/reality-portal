@@ -1,0 +1,268 @@
+{
+  "siteTitle": "Reality Portal",
+  "siteDescription": "Váš spoľahlivý partner pri hľadaní nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení predajcovia a kompletný servis.",
+  "nav": {
+    "home": "Domov",
+    "properties": "Nehnuteľnosti",
+    "about": "O nás",
+    "contact": "Kontakt",
+    "addProperty": "Pridať nehnuteľnosť",
+    "myAccount": "Môj účet",
+    "dashboard": "Prehľad",
+    "profile": "Profil",
+    "admin": "Admin",
+    "signOut": "Odhlásiť sa",
+    "signIn": "Prihlásiť sa"
+  },
+  "auth": {
+    "login": "Prihlásenie",
+    "register": "Registrácia",
+    "email": "Email",
+    "password": "Heslo",
+    "confirmPassword": "Potvrdiť heslo",
+    "forgotPassword": "Zabudli ste heslo?",
+    "signIn": "Prihlásiť sa",
+    "signUp": "Registrovať sa",
+    "signInWithGoogle": "Prihlásiť sa cez Google",
+    "signUpWithGoogle": "Registrovať sa cez Google",
+    "orSignInWith": "alebo sa prihláste cez",
+    "orSignUpWith": "alebo sa registrujte cez",
+    "dontHaveAccount": "Nemáte účet?",
+    "alreadyHaveAccount": "Už máte účet?",
+    "createAccount": "Vytvoriť účet",
+    "resetPassword": "Obnoviť heslo",
+    "resetPasswordSuccess": "Pokyny na obnovenie hesla boli odoslané na váš email"
+  },
+  "home": {
+    "hero": {
+      "title": "Nájdite svoje vysnívanú nehnuteľnosť",
+      "subtitle": "Prehľadávajte tisíce nehnuteľností na jednom mieste",
+      "searchPlaceholder": "Zadajte lokalitu, názov ulice alebo PSČ",
+      "searchButton": "Hľadať"
+    },
+    "categories": {
+      "title": "Hľadajte podľa kategórie",
+      "subtitle": "Vyberte si z rôznych typov nehnuteľností",
+      "apartments": "Byty",
+      "houses": "Domy",
+      "land": "Pozemky",
+      "commercial": "Komerčné"
+    },
+    "featuredProperties": {
+      "title": "Odporúčané nehnuteľnosti",
+      "subtitle": "Pozrite si naše najlepšie ponuky",
+      "viewAll": "Zobraziť všetky"
+    },
+    "howItWorks": {
+      "title": "Ako to funguje",
+      "subtitle": "Jednoduchý proces pre nájdenie vašej nehnuteľnosti",
+      "step1": {
+        "title": "Vyhľadávajte",
+        "description": "Prehľadávajte našu databázu nehnuteľností podľa vašich preferencií"
+      },
+      "step2": {
+        "title": "Kontaktujte",
+        "description": "Spojte sa priamo s predajcom alebo realitným agentom"
+      },
+      "step3": {
+        "title": "Navštívte",
+        "description": "Dohodnite si prehliadku nehnuteľnosti a pozrite si ju naživo"
+      },
+      "step4": {
+        "title": "Rozhodnite sa",
+        "description": "Urobte informované rozhodnutie a získajte svoj nový domov"
+      }
+    }
+  },
+  "properties": {
+    "title": "Nehnuteľnosti",
+    "subtitle": "Prehľadávajte našu kompletnú ponuku nehnuteľností",
+    "search": "Vyhľadávanie",
+    "filters": "Filtre",
+    "sort": "Zoradiť",
+    "results": "Výsledky",
+    "noResults": "Neboli nájdené žiadne nehnuteľnosti. Skúste zmeniť vaše filtre.",
+    "price": "Cena",
+    "area": "Rozloha",
+    "rooms": "Izby",
+    "type": "Typ",
+    "location": "Lokalita",
+    "all": "Všetky",
+    "apply": "Použiť",
+    "reset": "Resetovať",
+    "sortBy": {
+      "newest": "Najnovšie",
+      "priceAsc": "Cena (od najnižšej)",
+      "priceDesc": "Cena (od najvyššej)",
+      "areaAsc": "Rozloha (od najmenšej)",
+      "areaDesc": "Rozloha (od najväčšej)"
+    },
+    "propertyTypes": {
+      "apartment": "Byt",
+      "house": "Dom",
+      "land": "Pozemok",
+      "commercial": "Komerčný priestor"
+    }
+  },
+  "propertyDetail": {
+    "addedOn": "Pridané",
+    "propertyID": "ID nehnuteľnosti",
+    "features": "Vybavenie",
+    "description": "Popis",
+    "location": "Lokalita",
+    "contactSeller": "Kontaktovať predajcu",
+    "contactInformation": "Kontaktné informácie",
+    "name": "Meno",
+    "phone": "Telefón",
+    "email": "Email",
+    "sendMessage": "Poslať správu",
+    "yourMessage": "Vaša správa",
+    "send": "Odoslať",
+    "similarProperties": "Podobné nehnuteľnosti"
+  },
+  "addProperty": {
+    "title": "Pridať nehnuteľnosť",
+    "subtitle": "Vyplňte formulár nižšie pre pridanie vašej nehnuteľnosti",
+    "basicInfo": "Základné informácie",
+    "propertyTitle": "Názov nehnuteľnosti",
+    "propertyType": "Typ nehnuteľnosti",
+    "price": "Cena",
+    "area": "Rozloha (m²)",
+    "rooms": "Počet izieb",
+    "bathrooms": "Počet kúpeľní",
+    "description": "Popis",
+    "location": "Lokalita",
+    "address": "Adresa",
+    "city": "Mesto",
+    "postalCode": "PSČ",
+    "features": "Vybavenie",
+    "selectFeatures": "Vyberte vybavenie",
+    "photos": "Fotografie",
+    "uploadPhotos": "Nahrať fotografie",
+    "dragAndDrop": "Presuňte sem obrázky alebo kliknite pre výber súborov",
+    "contactInfo": "Kontaktné informácie",
+    "contactName": "Meno kontaktu",
+    "contactPhone": "Telefón",
+    "contactEmail": "Email",
+    "contactVisibility": "Viditeľnosť kontaktných údajov",
+    "showAllContact": "Zobraziť všetky kontaktné údaje",
+    "showEmailOnly": "Zobraziť iba email",
+    "showPhoneOnly": "Zobraziť iba telefón",
+    "hideAllContact": "Skryť všetky kontaktné údaje (kontakt cez správy)",
+    "termsAndConditions": "Súhlasím s podmienkami používania a ochranou osobných údajov",
+    "submit": "Odoslať",
+    "success": {
+      "title": "Nehnuteľnosť úspešne pridaná",
+      "message": "Vaša nehnuteľnosť bola úspešne pridaná a čaká na schválenie. Budeme vás informovať, keď bude zverejnená.",
+      "backToHome": "Späť na domovskú stránku",
+      "viewProperty": "Zobraziť nehnuteľnosť"
+    }
+  },
+  "dashboard": {
+    "title": "Prehľad",
+    "subtitle": "Spravujte svoje nehnuteľnosti a interakcie",
+    "myProperties": "Moje nehnuteľnosti",
+    "favorites": "Obľúbené",
+    "messages": "Správy",
+    "notifications": "Upozornenia",
+    "noProperties": "Zatiaľ nemáte žiadne nehnuteľnosti. Pridajte svoju prvú nehnuteľnosť.",
+    "noFavorites": "Zatiaľ nemáte žiadne obľúbené nehnuteľnosti. Prehľadávajte nehnuteľnosti a označte si obľúbené.",
+    "noMessages": "Zatiaľ nemáte žiadne správy.",
+    "noNotifications": "Zatiaľ nemáte žiadne upozornenia.",
+    "propertyStatus": {
+      "pending": "Čaká na schválenie",
+      "active": "Aktívna",
+      "sold": "Predaná",
+      "rented": "Prenajatá",
+      "inactive": "Neaktívna"
+    },
+    "actions": {
+      "edit": "Upraviť",
+      "delete": "Odstrániť",
+      "markAsSold": "Označiť ako predanú",
+      "markAsRented": "Označiť ako prenajatú",
+      "deactivate": "Deaktivovať",
+      "activate": "Aktivovať"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Spravujte svoj účet a osobné informácie",
+    "personalInfo": "Osobné informácie",
+    "name": "Meno",
+    "email": "Email",
+    "phone": "Telefón",
+    "changePassword": "Zmeniť heslo",
+    "currentPassword": "Súčasné heslo",
+    "newPassword": "Nové heslo",
+    "confirmNewPassword": "Potvrdiť nové heslo",
+    "updateProfile": "Aktualizovať profil",
+    "updatePassword": "Aktualizovať heslo",
+    "deleteAccount": "Odstrániť účet",
+    "deleteAccountWarning": "Odstránenie účtu je nevratné. Všetky vaše údaje budú natrvalo odstránené.",
+    "confirmDelete": "Potvrdiť odstránenie"
+  },
+  "admin": {
+    "title": "Admin panel",
+    "subtitle": "Spravujte obsah a používateľov",
+    "dashboard": "Prehľad",
+    "properties": "Nehnuteľnosti",
+    "users": "Používatelia",
+    "messages": "Správy",
+    "reports": "Reporty",
+    "settings": "Nastavenia",
+    "pendingProperties": "Čakajúce nehnuteľnosti",
+    "totalProperties": "Celkový počet nehnuteľností",
+    "totalUsers": "Celkový počet používateľov",
+    "totalMessages": "Celkový počet správ",
+    "lastRegisteredUsers": "Posledne registrovaní používatelia",
+    "recentProperties": "Nedávno pridané nehnuteľnosti",
+    "viewAll": "Zobraziť všetky",
+    "approve": "Schváliť",
+    "reject": "Zamietnuť",
+    "viewDetails": "Zobraziť detaily",
+    "language": "Jazyk",
+    "theme": "Téma",
+    "siteSettings": "Nastavenia stránky"
+  },
+  "contact": {
+    "title": "Kontaktujte nás",
+    "subtitle": "Máte otázky? Napíšte nám",
+    "name": "Meno",
+    "email": "Email",
+    "phone": "Telefón",
+    "subject": "Predmet",
+    "message": "Správa",
+    "send": "Odoslať",
+    "success": "Vaša správa bola úspešne odoslaná. Čoskoro vás budeme kontaktovať.",
+    "error": "Vyskytla sa chyba pri odosielaní správy. Skúste to prosím znova neskôr."
+  },
+  "footer": {
+    "description": "Váš spoľahlivý partner pri hľadaní nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení predajcovia a kompletný servis.",
+    "quickLinks": "Rýchle odkazy",
+    "contactUs": "Kontaktujte nás",
+    "contact": {
+      "address": "Adresa",
+      "phone": "Telefón",
+      "email": "Email"
+    },
+    "copyright": "© 2025 Reality Portal. Všetky práva vyhradené.",
+    "terms": "Podmienky používania",
+    "privacy": "Ochrana osobných údajov",
+    "cookies": "Cookies"
+  },
+  "errors": {
+    "notFound": "Stránka nebola nájdená",
+    "goHome": "Späť na domovskú stránku",
+    "serverError": "Chyba servera",
+    "tryAgain": "Skúste to znova neskôr"
+  },
+  "settings": {
+    "languageOptions": {
+      "en": "English",
+      "cs": "Čeština",
+      "hu": "Magyar",
+      "sk": "Slovenčina"
+    }
+  }
+}

@@ -89,49 +89,9 @@ export default function Header() {
           </Link>
           
           {user ? (
-            <div className="relative">
-              <button 
-                className="btn btn-primary flex items-center"
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-              >
-                <span className="mr-2">{t('nav.myAccount')}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 transition-transform duration-300 ${userMenuOpen ? 'rotate-180' : ''}`}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                </svg>
-              </button>
-              
-              {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-10 animate-fadeIn">
-                  <Link 
-                    href="/dashboard" 
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    {t('nav.dashboard')}
-                  </Link>
-                  <Link 
-                    href="/dashboard/profile" 
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    {t('nav.profile')}
-                  </Link>
-                  <Link 
-                    href="/admin" 
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    {t('nav.admin')}
-                  </Link>
-                  <button 
-                    onClick={handleSignOut}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                  >
-                    {t('nav.signOut')}
-                  </button>
-                </div>
-              )}
-            </div>
+            <Link href="/dashboard" className="btn btn-primary">
+              {t('nav.myAccount')}
+            </Link>
           ) : (
             <div className="relative">
               <button 
@@ -237,21 +197,7 @@ export default function Header() {
                     className="btn btn-primary w-full justify-center" 
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {t('nav.dashboard')}
-                  </Link>
-                  <Link 
-                    href="/dashboard/profile" 
-                    className="btn btn-outline w-full justify-center" 
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {t('nav.profile')}
-                  </Link>
-                  <Link 
-                    href="/admin" 
-                    className="btn btn-outline w-full justify-center" 
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {t('nav.admin')}
+                    {t('nav.myAccount')}
                   </Link>
                   <button 
                     onClick={handleSignOut}

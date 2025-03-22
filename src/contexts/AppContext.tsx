@@ -7,7 +7,7 @@ import { db } from '@/utils/firebase';
 import { useAuth } from '@/utils/FirebaseAuthContext';
 
 // Define available languages
-export type Language = 'en' | 'cs' | 'hu';
+export type Language = 'en' | 'cs' | 'hu' | 'sk';
 
 // Define available themes
 export type ThemeType = 'earthy' | 'professional' | 'playful';
@@ -97,12 +97,14 @@ export const useApp = () => useContext(AppContext);
 import enCommon from '../../public/locales/en/common.json';
 import csCommon from '../../public/locales/cs/common.json';
 import huCommon from '../../public/locales/hu/common.json';
+import skCommon from '../../public/locales/sk/common.json';
 
 // Set up translations
 const translations: Record<Language, Record<string, any>> = {
   en: enCommon,
   cs: csCommon,
   hu: huCommon,
+  sk: skCommon,
 };
 
 // Get a nested translation value using a dot-notation path
@@ -160,7 +162,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           const localLang = localStorage.getItem('language') as Language;
           const localTheme = localStorage.getItem('theme') as ThemeType;
           
-          if (localLang && ['en', 'cs', 'hu'].includes(localLang)) {
+          if (localLang && ['en', 'cs', 'hu', 'sk'].includes(localLang)) {
             storedLanguage = localLang;
             setLanguageState(localLang);
           }
@@ -181,7 +183,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
               const data = userSettingsSnap.data();
               
               // Handle language preference
-              if (data.language && ['en', 'cs', 'hu'].includes(data.language)) {
+              if (data.language && ['en', 'cs', 'hu', 'sk'].includes(data.language)) {
                 setLanguageState(data.language);
                 if (typeof window !== 'undefined') {
                   localStorage.setItem('language', data.language);

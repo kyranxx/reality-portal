@@ -1,7 +1,7 @@
 'use client';
 
-// Force dynamic rendering to prevent Firebase initialization during build
-export const dynamic = 'force-dynamic';
+// Use SSR instead of Edge runtime to ensure proper Firebase initialization
+export const runtime = 'nodejs';
 
 import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
