@@ -130,8 +130,8 @@ try {
   // Fix path aliases before building
   ensurePathAliases();
   
-  // Run build with explicit output directory
-  execSync(`next build --output-standalone --outDir ${outputDir}`, { stdio: 'inherit' });
+  // Run build (output directory is configured in next.config.js)
+  execSync(`next build`, { stdio: 'inherit' });
   console.log('Build completed successfully!');
 } catch (error) {
   // Check if the error is related to the authentication pages
@@ -148,8 +148,8 @@ try {
     
     // Try to build again with stricter options
     try {
-      // Run with more permissive error handling
-      execSync(`next build --no-lint --output-standalone --outDir ${outputDir}`, { stdio: 'inherit' });
+      // Run with more permissive error handling (no-lint is a valid option)
+      execSync(`next build --no-lint`, { stdio: 'inherit' });
       console.log('Recovery build completed successfully!');
       fs.writeFileSync('.vercel-build-success', 'Recovery build completed');
       process.exit(0); // Exit with success code

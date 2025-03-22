@@ -68,7 +68,7 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   // Configure static generation behavior
   staticPageGenerationTimeout: 180,
-  distDir: '.next',
+  distDir: '.next-dynamic',
   
   // App Router doesn't support exportPathMap
   // Protected pages will be handled by the NoSSR component
