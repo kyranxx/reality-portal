@@ -249,7 +249,11 @@
     "copyright": "© 2025 Reality Portal. Všetky práva vyhradené.",
     "terms": "Podmienky používania",
     "privacy": "Ochrana osobných údajov",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "navigation": "Navigácia",
+    "categories": "Kategórie",
+    "commercial": "Komerčné priestory",
+    "rights": "Všetky práva vyhradené."
   },
   "errors": {
     "notFound": "Stránka nebola nájdená",

@@ -188,7 +188,7 @@ function LanguageSelector() {
               : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
           }`}
         >
-          {t('languages.en')}
+          {t('settings.languageOptions.en')}
         </button>
         <button
           onClick={() => setLanguage('cs')}
@@ -198,7 +198,7 @@ function LanguageSelector() {
               : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
           }`}
         >
-          {t('languages.cs')}
+          {t('settings.languageOptions.cs')}
         </button>
         <button
           onClick={() => setLanguage('hu')}
@@ -208,7 +208,7 @@ function LanguageSelector() {
               : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
           }`}
         >
-          {t('languages.hu')}
+          {t('settings.languageOptions.hu')}
         </button>
         <button
           onClick={() => setLanguage('sk')}
@@ -222,7 +222,7 @@ function LanguageSelector() {
         </button>
       </div>
       <p className="text-sm text-gray-500">
-        Aktuálny jazyk: <span className="font-medium">{t(`languages.${language}`)}</span>
+        Aktuálny jazyk: <span className="font-medium">{t(`settings.languageOptions.${language}`)}</span>
       </p>
     </div>
   );
