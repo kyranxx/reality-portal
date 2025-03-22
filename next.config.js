@@ -95,11 +95,23 @@ nextConfig.webpack = (config, { isServer }) => {
   config.resolve.alias['@/components'] = path.join(__dirname, 'src/components');
   config.resolve.alias['@/contexts'] = path.join(__dirname, 'src/contexts');
   
-  // If on the server side, add a null loader for client-only modules
+  // If on the server side or during build, replace Firebase Auth with stubs
   if (isServer) {
+    // Replace firebase/auth imports with our stub implementation in server/build environments
+    config.resolve.alias['firebase/auth'] = path.join(__dirname, 'src/utils/firebase-auth-stub.ts');
+    
+    // Also provide specific handling for direct firebase imports
     config.module.rules.push({
       test: /firebase\/auth/,
-      use: 'null-loader',
+      use: [
+        {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            configFile: path.resolve(__dirname, 'tsconfig.json'),
+          }
+        }
+      ],
     });
   }
   

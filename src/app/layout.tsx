@@ -18,8 +18,10 @@ export const metadata: Metadata = {
   keywords: 'reality, nehnuteľnosti, byty, domy, pozemky, predaj, prenájom, Slovensko',
 };
 
-// Allow static optimization for pages that don't need dynamic rendering
-// Individual pages that need dynamic rendering will specify it themselves
+// Static generation configuration with incremental regeneration for performance
+export const revalidate = 3600; // Revalidate content every hour by default
+
+// For pages that need dynamic rendering, they'll specify 'force-dynamic' individually
 
 export default function RootLayout({
   children,

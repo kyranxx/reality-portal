@@ -1,21 +1,59 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-// Import from firebase/auth with any types to suppress TypeScript errors
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendPasswordResetEmail
-} from '../utils/firebase-auth';
+// Import directly from firebase/auth in client components
+import * as firebaseAuthStubs from '../utils/firebase-auth-unified';
+import { auth, isFirebaseConfigured } from './firebase';
+
+// Import directly from firebase/auth when in client context
+// This ensures we get the real implementation at runtime
+let createUserWithEmailAndPassword: any;
+let signInWithEmailAndPassword: any;
+let firebaseSignOut: any; // Renamed to avoid collision with the signOut method
+let onAuthStateChanged: any;
+let GoogleAuthProvider: any;
+let signInWithPopup: any;
+let sendPasswordResetEmail: any;
+
+// Check if we're in a client context (this is a client component)
+if (typeof window !== 'undefined') {
+  try {
+    // Direct import will be used at runtime in browser
+    const firebaseAuth = require('firebase/auth');
+    
+    // Use the real Firebase Auth methods
+    createUserWithEmailAndPassword = firebaseAuth.createUserWithEmailAndPassword;
+    signInWithEmailAndPassword = firebaseAuth.signInWithEmailAndPassword;
+    firebaseSignOut = firebaseAuth.signOut; // Renamed to avoid collision
+    onAuthStateChanged = firebaseAuth.onAuthStateChanged;
+    GoogleAuthProvider = firebaseAuth.GoogleAuthProvider;
+    signInWithPopup = firebaseAuth.signInWithPopup;
+    sendPasswordResetEmail = firebaseAuth.sendPasswordResetEmail;
+  } catch (error) {
+    console.error('Failed to load Firebase Auth in FirebaseAuthContext:', error);
+    // Fallback to stubs if real import fails
+    createUserWithEmailAndPassword = firebaseAuthStubs.createUserWithEmailAndPassword;
+    signInWithEmailAndPassword = firebaseAuthStubs.signInWithEmailAndPassword;
+    firebaseSignOut = firebaseAuthStubs.signOut; // Renamed to avoid collision
+    onAuthStateChanged = firebaseAuthStubs.onAuthStateChanged;
+    GoogleAuthProvider = firebaseAuthStubs.GoogleAuthProvider;
+    signInWithPopup = firebaseAuthStubs.signInWithPopup;
+    sendPasswordResetEmail = firebaseAuthStubs.sendPasswordResetEmail;
+  }
+} else {
+  // Use stubs for SSR (should never execute in a use client component)
+  createUserWithEmailAndPassword = firebaseAuthStubs.createUserWithEmailAndPassword;
+  signInWithEmailAndPassword = firebaseAuthStubs.signInWithEmailAndPassword;
+  firebaseSignOut = firebaseAuthStubs.signOut; // Renamed to avoid collision
+  onAuthStateChanged = firebaseAuthStubs.onAuthStateChanged;
+  GoogleAuthProvider = firebaseAuthStubs.GoogleAuthProvider;
+  signInWithPopup = firebaseAuthStubs.signInWithPopup;
+  sendPasswordResetEmail = firebaseAuthStubs.sendPasswordResetEmail;
+}
 
 // Define types for Firebase Auth
 type User = any;
 type Auth = any;
-import { auth, isFirebaseConfigured } from './firebase';
 
 type AuthContextType = {
   user: User | null;

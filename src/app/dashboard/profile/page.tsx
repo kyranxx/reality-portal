@@ -1,16 +1,22 @@
-'use client';
+// Server component that uses the ClientComponentLoader
+import ClientComponentLoader from '@/components/ClientComponentLoader';
 
-// Using ProfileClient directly without the unnecessary wrapper
-import ProfileClient from './ProfileClient';
-import NoSSR from '@/components/NoSSR';
-
-// Only force dynamic rendering where absolutely necessary
+// Force dynamic rendering for authenticated profile pages
 export const dynamic = 'force-dynamic';
 
 export default function ProfilePage() {
+  // Use the ClientComponentLoader with the path to the ProfileClient component
   return (
-    <NoSSR>
-      <ProfileClient />
-    </NoSSR>
+    <ClientComponentLoader 
+      componentPath="app/dashboard/profile/ProfileClient" 
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
+            <div className="text-gray-400">Načítava sa...</div>
+          </div>
+        </div>
+      }
+    />
   );
 }
