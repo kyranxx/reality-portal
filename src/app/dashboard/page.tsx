@@ -3,7 +3,7 @@
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
+// Removed edge runtime for static generation support
 
 // This is a placeholder component that will be replaced with the actual client component
 export default function DashboardPage() {
