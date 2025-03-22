@@ -1,6 +1,8 @@
 {
-  "siteTitle": "Reality Portal",
-  "siteDescription": "Váš spoľahlivý partner pri hľadaní nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení predajcovia a kompletný servis.",
+  "site": {
+    "title": "Reality Portal",
+    "description": "Váš spoľahlivý partner pri hľadaní nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení predajcovia a kompletný servis."
+  },
   "nav": {
     "home": "Domov",
     "properties": "Nehnuteľnosti",
@@ -13,6 +15,89 @@
     "admin": "Admin",
     "signOut": "Odhlásiť sa",
     "signIn": "Prihlásiť sa"
+  },
+  "properties": {
+    "apartments": "Byty",
+    "houses": "Domy",
+    "land": "Pozemky",
+    "commercial": "Komerčné"
+  },
+  "property": {
+    "price": "Cena",
+    "area": "Rozloha",
+    "rooms": "Izby",
+    "location": "Lokalita",
+    "type": "Typ",
+    "sale": "Na predaj",
+    "rent": "Na prenájom"
+  },
+  "admin": {
+    "panel": "Admin panel",
+    "portalManagement": "Správa portálu",
+    "statistics": "Štatistiky",
+    "users": "Používatelia",
+    "propertiesSection": "Nehnuteľnosti",
+    "siteSettings": "Nastavenia webu",
+    "language": "Jazyk",
+    "theme": "Téma",
+    "email": "Email",
+    "name": "Meno",
+    "registered": "Registrovaný",
+    "actions": "Akcie",
+    "noUsers": "Žiadni používatelia",
+    "noProperties": "Žiadne nehnuteľnosti",
+    "propertyName": "Názov",
+    "propertyType": "Typ",
+    "propertyPrice": "Cena",
+    "propertyUser": "Používateľ",
+    "title": "Admin panel",
+    "subtitle": "Spravujte obsah a používateľov",
+    "dashboard": "Prehľad",
+    "messages": "Správy",
+    "reports": "Reporty",
+    "settings": "Nastavenia",
+    "pendingProperties": "Čakajúce nehnuteľnosti",
+    "totalProperties": "Celkový počet nehnuteľností",
+    "totalUsers": "Celkový počet používateľov",
+    "totalMessages": "Celkový počet správ",
+    "lastRegisteredUsers": "Posledne registrovaní používatelia",
+    "recentProperties": "Nedávno pridané nehnuteľnosti",
+    "viewAll": "Zobraziť všetky",
+    "approve": "Schváliť",
+    "reject": "Zamietnuť",
+    "viewDetails": "Zobraziť detaily"
+  },
+  "themes": {
+    "earthy": "Prírodný štýl",
+    "professional": "Profesionálny štýl",
+    "playful": "Hravý štýl",
+    "selectTheme": "Vybrať motív",
+    "applyTheme": "Použiť motív"
+  },
+  "languages": {
+    "en": "English",
+    "cs": "Čeština",
+    "hu": "Magyar",
+    "sk": "Slovenčina",
+    "selectLanguage": "Vybrať jazyk"
+  },
+  "footer": {
+    "description": "Váš spoľahlivý partner pri hľadaní nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení predajcovia a kompletný servis.",
+    "navigation": "Navigácia",
+    "categories": "Kategórie",
+    "contact": "Kontakt",
+    "apartments": "Byty",
+    "houses": "Domy",
+    "land": "Pozemky",
+    "commercial": "Komerčné priestory",
+    "address": "Adresa",
+    "phone": "Telefón",
+    "email": "Email",
+    "rights": "Všetky práva vyhradené.",
+    "terms": "Podmienky používania",
+    "privacy": "Ochrana osobných údajov",
+    "cookies": "Cookies",
+    "contactUs": "Kontaktujte nás"
   },
   "auth": {
     "login": "Prihlásenie",
@@ -72,36 +157,6 @@
         "title": "Rozhodnite sa",
         "description": "Urobte informované rozhodnutie a získajte svoj nový domov"
       }
-    }
-  },
-  "properties": {
-    "title": "Nehnuteľnosti",
-    "subtitle": "Prehľadávajte našu kompletnú ponuku nehnuteľností",
-    "search": "Vyhľadávanie",
-    "filters": "Filtre",
-    "sort": "Zoradiť",
-    "results": "Výsledky",
-    "noResults": "Neboli nájdené žiadne nehnuteľnosti. Skúste zmeniť vaše filtre.",
-    "price": "Cena",
-    "area": "Rozloha",
-    "rooms": "Izby",
-    "type": "Typ",
-    "location": "Lokalita",
-    "all": "Všetky",
-    "apply": "Použiť",
-    "reset": "Resetovať",
-    "sortBy": {
-      "newest": "Najnovšie",
-      "priceAsc": "Cena (od najnižšej)",
-      "priceDesc": "Cena (od najvyššej)",
-      "areaAsc": "Rozloha (od najmenšej)",
-      "areaDesc": "Rozloha (od najväčšej)"
-    },
-    "propertyTypes": {
-      "apartment": "Byt",
-      "house": "Dom",
-      "land": "Pozemok",
-      "commercial": "Komerčný priestor"
     }
   },
   "propertyDetail": {
@@ -202,29 +257,6 @@
     "deleteAccountWarning": "Odstránenie účtu je nevratné. Všetky vaše údaje budú natrvalo odstránené.",
     "confirmDelete": "Potvrdiť odstránenie"
   },
-  "admin": {
-    "title": "Admin panel",
-    "subtitle": "Spravujte obsah a používateľov",
-    "dashboard": "Prehľad",
-    "properties": "Nehnuteľnosti",
-    "users": "Používatelia",
-    "messages": "Správy",
-    "reports": "Reporty",
-    "settings": "Nastavenia",
-    "pendingProperties": "Čakajúce nehnuteľnosti",
-    "totalProperties": "Celkový počet nehnuteľností",
-    "totalUsers": "Celkový počet používateľov",
-    "totalMessages": "Celkový počet správ",
-    "lastRegisteredUsers": "Posledne registrovaní používatelia",
-    "recentProperties": "Nedávno pridané nehnuteľnosti",
-    "viewAll": "Zobraziť všetky",
-    "approve": "Schváliť",
-    "reject": "Zamietnuť",
-    "viewDetails": "Zobraziť detaily",
-    "language": "Jazyk",
-    "theme": "Téma",
-    "siteSettings": "Nastavenia stránky"
-  },
   "contact": {
     "title": "Kontaktujte nás",
     "subtitle": "Máte otázky? Napíšte nám",
@@ -236,24 +268,6 @@
     "send": "Odoslať",
     "success": "Vaša správa bola úspešne odoslaná. Čoskoro vás budeme kontaktovať.",
     "error": "Vyskytla sa chyba pri odosielaní správy. Skúste to prosím znova neskôr."
-  },
-  "footer": {
-    "description": "Váš spoľahlivý partner pri hľadaní nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení predajcovia a kompletný servis.",
-    "quickLinks": "Rýchle odkazy",
-    "contactUs": "Kontaktujte nás",
-    "contact": {
-      "address": "Adresa",
-      "phone": "Telefón",
-      "email": "Email"
-    },
-    "copyright": "© 2025 Reality Portal. Všetky práva vyhradené.",
-    "terms": "Podmienky používania",
-    "privacy": "Ochrana osobných údajov",
-    "cookies": "Cookies",
-    "navigation": "Navigácia",
-    "categories": "Kategórie",
-    "commercial": "Komerčné priestory",
-    "rights": "Všetky práva vyhradené."
   },
   "errors": {
     "notFound": "Stránka nebola nájdená",
@@ -268,15 +282,5 @@
       "hu": "Magyar",
       "sk": "Slovenčina"
     }
-  },
-  "themes": {
-    "earthy": "Prírodný štýl",
-    "professional": "Profesionálny štýl",
-    "playful": "Hravý štýl"
-  },
-  "properties": {
-    "apartments": "Byty",
-    "houses": "Domy",
-    "land": "Pozemky"
   }
 }
