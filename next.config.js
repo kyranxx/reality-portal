@@ -79,8 +79,22 @@ nextConfig.generateBuildId = async () => {
   return `build-${Date.now()}`;
 };
 
-// Add a custom webpack configuration to handle client-only modules
+// Add a custom webpack configuration to handle client-only modules and improve path resolution
 nextConfig.webpack = (config, { isServer }) => {
+  // Enhance path alias resolution
+  const path = require('path');
+  
+  // Ensure config.resolve exists
+  config.resolve = config.resolve || {};
+  // Ensure config.resolve.alias exists
+  config.resolve.alias = config.resolve.alias || {};
+  
+  // Add explicit path aliases that match tsconfig.json paths
+  config.resolve.alias['@'] = path.join(__dirname, 'src');
+  config.resolve.alias['@/utils'] = path.join(__dirname, 'src/utils');
+  config.resolve.alias['@/components'] = path.join(__dirname, 'src/components');
+  config.resolve.alias['@/contexts'] = path.join(__dirname, 'src/contexts');
+  
   // If on the server side, add a null loader for client-only modules
   if (isServer) {
     config.module.rules.push({

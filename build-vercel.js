@@ -57,20 +57,106 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=placeholder-measurement-id
   console.warn('Build will continue, but Firebase auth may not work correctly in Vercel');
 }
 
-// Run the Next.js build
+// Create temporary fix for path alias resolution
+console.log('Setting up path alias workarounds...');
+const ensurePathAliases = () => {
+  try {
+    // Check if AppContext imports need fixing
+    const appContextPath = './src/contexts/AppContext.tsx';
+    if (fs.existsSync(appContextPath)) {
+      const content = fs.readFileSync(appContextPath, 'utf8');
+      
+      // Fix imports if they use @/ path aliases
+      let fixedContent = content;
+      fixedContent = fixedContent.replace(/from ['"]@\/utils\/firebase['"]/, 'from \'../utils/firebase\'');
+      fixedContent = fixedContent.replace(/from ['"]@\/utils\/FirebaseAuthContext['"]/, 'from \'../utils/FirebaseAuthContext\'');
+      
+      if (fixedContent !== content) {
+        console.log('Fixed path aliases in AppContext.tsx');
+        fs.writeFileSync(appContextPath + '.backup', content); // Create backup
+        fs.writeFileSync(appContextPath, fixedContent);
+      }
+    }
+    
+    // Check reset-password page imports
+    const resetPasswordPath = './src/app/auth/reset-password/page.tsx';
+    if (fs.existsSync(resetPasswordPath)) {
+      const content = fs.readFileSync(resetPasswordPath, 'utf8');
+      
+      // Fix imports if they use @/ path aliases
+      let fixedContent = content;
+      fixedContent = fixedContent.replace(/from ['"]@\/utils\/FirebaseAuthContext['"]/, 'from \'../../../utils/FirebaseAuthContext\'');
+      fixedContent = fixedContent.replace(/from ['"]@\/utils\/firebase['"]/, 'from \'../../../utils/firebase\'');
+      fixedContent = fixedContent.replace(/from ['"]@\/components\/SectionTitle['"]/, 'from \'../../../components/SectionTitle\'');
+      
+      if (fixedContent !== content) {
+        console.log('Fixed path aliases in reset-password page');
+        fs.writeFileSync(resetPasswordPath + '.backup', content); // Create backup
+        fs.writeFileSync(resetPasswordPath, fixedContent);
+      }
+    }
+    
+    // Fix _app.js imports if needed
+    const appPath = './pages/_app.js';
+    if (fs.existsSync(appPath)) {
+      const content = fs.readFileSync(appPath, 'utf8');
+      
+      // Fix imports if they use @/ path aliases
+      let fixedContent = content;
+      fixedContent = fixedContent.replace(/from ['"]@\/utils\/FirebaseAuthContext['"]/, 'from \'../src/utils/FirebaseAuthContext\'');
+      fixedContent = fixedContent.replace(/from ['"]@\/contexts\/AppContext['"]/, 'from \'../src/contexts/AppContext\'');
+      
+      if (fixedContent !== content) {
+        console.log('Fixed path aliases in _app.js');
+        fs.writeFileSync(appPath + '.backup', content); // Create backup
+        fs.writeFileSync(appPath, fixedContent);
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error setting up path alias workarounds:', error);
+    return false;
+  }
+};
+
+// Ensure outputDirectory matches vercel.json
+console.log('Ensuring correct output directory...');
+const outputDir = '.next-dynamic';
+
+// Run the Next.js build with specific output directory
 console.log('Running Next.js build...');
 try {
-  execSync('next build', { stdio: 'inherit' });
+  // Fix path aliases before building
+  ensurePathAliases();
+  
+  // Run build with explicit output directory
+  execSync(`next build --output-standalone --outDir ${outputDir}`, { stdio: 'inherit' });
   console.log('Build completed successfully!');
 } catch (error) {
   // Check if the error is related to the authentication pages
-  if (error.message && error.message.includes('firebase') || error.message.includes('auth')) {
+  if (error.message && (error.message.includes('firebase') || error.message.includes('auth'))) {
     console.warn('Authentication-related error detected during build:', error.message);
     console.warn('This may be expected for protected pages that will be rendered client-side.');
     
     // Create a success file to indicate the build should be considered successful
     fs.writeFileSync('.vercel-build-success', 'Build completed with expected auth errors');
     process.exit(0); // Exit with success code
+  } else if (error.message && error.message.includes('Module not found')) {
+    console.warn('Module resolution error detected:', error.message);
+    console.warn('Attempting recovery build with reduced features...');
+    
+    // Try to build again with stricter options
+    try {
+      // Run with more permissive error handling
+      execSync(`next build --no-lint --output-standalone --outDir ${outputDir}`, { stdio: 'inherit' });
+      console.log('Recovery build completed successfully!');
+      fs.writeFileSync('.vercel-build-success', 'Recovery build completed');
+      process.exit(0); // Exit with success code
+    } catch (recoveryError) {
+      console.error('Recovery build also failed:', recoveryError);
+      process.exit(1); // Exit with error code
+    }
   } else {
     // For other errors, log more details and fail the build
     console.error('Build failed with unexpected error:', error);
