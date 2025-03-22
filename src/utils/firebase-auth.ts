@@ -3,13 +3,11 @@
  * This file provides a robust compatibility layer for Firebase Auth
  * that works consistently across local development and Vercel deployment
  * 
- * IMPORTANT: This version uses static imports to avoid webpack dynamic import warnings
+ * IMPORTANT: This is a simplified version that uses the unified implementation
  */
 
-// Import all three environment-specific implementations
-import * as clientAuth from './firebase-auth-client';
-import * as serverAuth from './firebase-auth-server';
-import * as vercelAuth from './firebase-auth-vercel';
+// Import the unified implementation
+import * as unifiedAuth from './firebase-auth-unified';
 
 // Re-export type definitions
 export type {
@@ -18,21 +16,9 @@ export type {
   UserCredential,
   AuthProvider,
   AuthError
-} from './firebase-auth-client';
+} from './firebase-auth-unified';
 
-// Determine the runtime environment
-const isClient = typeof window !== 'undefined';
-const isVercel = typeof process !== 'undefined' && process.env && process.env.VERCEL === '1';
-
-// Select the appropriate implementation based on environment
-let authImplementation = isClient 
-  ? clientAuth 
-  : (isVercel ? vercelAuth : serverAuth);
-
-// Log which environment we're using
-console.log(`Firebase Auth using: ${isClient ? 'client' : (isVercel ? 'vercel' : 'server')} implementation`);
-
-// Re-export the appropriate implementation
+// Re-export the unified implementation
 export const {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -43,4 +29,4 @@ export const {
   sendPasswordResetEmail,
   getAuth,
   connectAuthEmulator
-} = authImplementation;
+} = unifiedAuth;

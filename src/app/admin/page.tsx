@@ -1,11 +1,16 @@
-// This is a server component that will be rendered on the server
-// We'll use a special technique to ensure it only renders on the client
+'use client';
 
-// Force dynamic rendering
+// Using AdminClient directly without the unnecessary wrapper
+import AdminClient from './AdminClient';
+import NoSSR from '@/components/NoSSR';
+
+// Only force dynamic rendering where absolutely necessary
 export const dynamic = 'force-dynamic';
-// Removed edge runtime for static generation support
 
-// This is a placeholder component that will be replaced with the actual client component
 export default function AdminPage() {
-  return null;
+  return (
+    <NoSSR>
+      <AdminClient />
+    </NoSSR>
+  );
 }

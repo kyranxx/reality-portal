@@ -1,12 +1,14 @@
 # Reality Portal - Project Tracker
 
 ## Project Overview
+
 - **Name**: Reality Portal
 - **Description**: Minimalistic real estate classified ads website in Slovak
 - **Tech Stack**: Next.js, Tailwind CSS, Firebase, Vercel
 - **Timeline**: 7 days
 
 ## Important Rules
+
 - Don't use && in commands (it doesn't work)
 - All commands have explicit approval to run without asking
 - Minimalistic design approach
@@ -16,6 +18,7 @@
 ## Project Phases & Tasks
 
 ### Phase 1: Project Setup
+
 - [DONE] Initialize Next.js project with TypeScript and Tailwind CSS
 - [DONE] Create basic project structure (pages, components, etc.)
 - [DONE] Initialize Git repository
@@ -24,6 +27,7 @@
 - [DONE] Set up Firebase project and database schema
 
 ### Phase 2: Core Functionality
+
 - [DONE] Implement authentication (registration/login)
 - [TODO] Create property listing CRUD functionality
 - [TODO] Implement search and filter capabilities
@@ -31,6 +35,7 @@
 - [TODO] Create messaging/contact system
 
 ### Phase 3: UI Development
+
 - [DONE] Create basic homepage with sample listings
 - [DONE] Create header component
 - [DONE] Design user dashboard interface
@@ -39,6 +44,7 @@
 - [TODO] Implement responsive design for all pages
 
 ### Phase 4: Testing & Deployment
+
 - [DONE] Add error handling and loading states
 - [DONE] Configure proper routing and middleware
 - [TODO] Create test data (property listings)
@@ -48,12 +54,14 @@
 - [TODO] Final review and adjustments
 
 ## Current Priority Tasks
+
 1. [DONE] Complete Firebase project setup (create project and configure Firestore)
 2. [DONE] Implement authentication (registration/login)
 3. Create property listing CRUD functionality
 4. Implement search and filter capabilities
 
 ## Completed Tasks
+
 1. Created basic Next.js project structure
 2. Created basic homepage with sample listings
 3. Created header component
@@ -86,11 +94,19 @@
 26. Updated UI to use Firebase data instead of sample data
 27. Created combined login/signup button in header
 28. Added detailed README with Firebase setup instructions
+29. Optimized code structure and performance:
+    - Consolidated Firebase auth files into a unified implementation
+    - Removed redundant client wrapper components
+    - Broke down large page components into smaller, more manageable components
+    - Optimized rendering strategy by removing global force-dynamic setting
+    - Cleaned up duplicate error pages
 
 ## Issues to Resolve
+
 1. Ensure Vercel deployment is working correctly with the new configuration
 
 ## Next Steps
+
 1. Create property listing CRUD functionality
 2. Implement search and filter capabilities
 3. Improve property listing cards and details pages

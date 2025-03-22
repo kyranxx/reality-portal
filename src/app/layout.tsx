@@ -18,11 +18,8 @@ export const metadata: Metadata = {
   keywords: 'reality, nehnuteľnosti, byty, domy, pozemky, predaj, prenájom, Slovensko',
 };
 
-// Disable static optimization for the entire app to ensure proper authentication handling
-export const dynamic = 'force-dynamic';
-
-// Disable static generation for the entire app
-export const revalidate = 0;
+// Allow static optimization for pages that don't need dynamic rendering
+// Individual pages that need dynamic rendering will specify it themselves
 
 export default function RootLayout({
   children,
