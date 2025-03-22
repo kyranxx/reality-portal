@@ -25,17 +25,15 @@ execSync('npm install --include=dev', { stdio: 'inherit' });
 console.log('Ensuring correct Firebase version...');
 execSync('npm install firebase@10.7.0 --save', { stdio: 'inherit' });
 
-// Simplified Firebase auth compatibility setup
+// Streamlined Firebase auth compatibility setup - using TypeScript modules
 console.log('Setting up Firebase auth compatibility...');
 try {
-  // Create a minimal firebase-auth-vercel.js if it doesn't exist in node_modules
-  const nodeModulesAuthPath = './node_modules/firebase-auth-vercel.js';
-  const sourceAuthPath = './src/utils/firebase-auth-vercel.js';
+  // Using static TypeScript modules instead of the older JavaScript approach
+  console.log('Using static TypeScript modules for Firebase Auth');
   
-  if (fs.existsSync(sourceAuthPath) && !fs.existsSync(nodeModulesAuthPath)) {
-    fs.copyFileSync(sourceAuthPath, nodeModulesAuthPath);
-    console.log('Copied firebase-auth-vercel.js to node_modules');
-  }
+  // Set environment variable for the build process
+  process.env.VERCEL = '1';
+  console.log('Set VERCEL=1 environment variable for firebase-auth modules');
   
   // Create a simple .env.local file for Firebase config if it doesn't exist
   if (!fs.existsSync('.env.local')) {
