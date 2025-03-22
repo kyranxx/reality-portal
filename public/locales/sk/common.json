@@ -268,5 +268,15 @@
       "hu": "Magyar",
       "sk": "Slovenčina"
     }
+  },
+  "themes": {
+    "earthy": "Prírodný štýl",
+    "professional": "Profesionálny štýl",
+    "playful": "Hravý štýl"
+  },
+  "properties": {
+    "apartments": "Byty",
+    "houses": "Domy",
+    "land": "Pozemky"
   }
 }

@@ -259,7 +259,9 @@ function ThemeSelector() {
                 style={{ backgroundColor: themeObj.colors.accent }}
               ></div>
             </div>
-            <div className="text-sm font-medium">{t(`themes.${themeId}`)}</div>
+            <div className="text-sm font-medium">
+              {t(`themes.${themeId}`, themeObj.name)}
+            </div>
             {theme.id === themeId && (
               <div className="absolute top-2 right-2 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -271,7 +273,7 @@ function ThemeSelector() {
         ))}
       </div>
       <p className="text-sm text-gray-500">
-        Aktuálny dizajn: <span className="font-medium">{t(`themes.${theme.id}`)}</span>
+        Aktuálny dizajn: <span className="font-medium">{t(`themes.${theme.id}`, theme.name)}</span>
       </p>
     </div>
   );

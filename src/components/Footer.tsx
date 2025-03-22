@@ -74,17 +74,17 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link href="/nehnutelnosti/byty" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  {t('properties.apartments')}
+                  {t('home.categories.apartments')}
                 </Link>
               </li>
               <li>
                 <Link href="/nehnutelnosti/domy" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  {t('properties.houses')}
+                  {t('home.categories.houses')}
                 </Link>
               </li>
               <li>
                 <Link href="/nehnutelnosti/pozemky" className="text-gray-500 hover:text-primary transition-colors duration-300 inline-block">
-                  {t('properties.land')}
+                  {t('home.categories.land')}
                 </Link>
               </li>
               <li>

@@ -58,26 +58,41 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
     // Skip Firebase initialization if not configured or not on client
     if (!isClient) {
       setIsLoading(false);
-      return;
+      return () => {};
     }
 
     if (!isFirebaseConfigured || !auth) {
       console.warn('Firebase is not configured. Authentication features will be disabled.');
       setIsLoading(false);
-      return;
+      return () => {};
     }
 
-    // Listen for auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
-      setUser(currentUser);
+    let unsubscribe: () => void;
+    
+    try {
+      // Listen for auth state changes with better error handling
+      unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
+        setUser(currentUser);
+        setIsLoading(false);
+      }, (error: any) => {
+        console.error('Auth state change error:', error);
+        setError('Authentication error: ' + (error.message || 'Unknown error'));
+        setIsLoading(false);
+      });
+    } catch (err: any) {
+      console.error('Failed to initialize Firebase auth listener:', err);
+      setError('Failed to initialize authentication system');
       setIsLoading(false);
-    }, (error: any) => {
-      console.error('Auth state change error:', error);
-      setError(error.message);
-      setIsLoading(false);
-    });
+      return () => {};
+    }
 
-    return () => unsubscribe();
+    return () => {
+      try {
+        unsubscribe();
+      } catch (err) {
+        console.error('Error unsubscribing from auth state:', err);
+      }
+    };
   }, []);
 
   const signUp = async (email: string, password: string) => {
