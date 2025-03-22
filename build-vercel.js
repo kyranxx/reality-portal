@@ -148,8 +148,11 @@ try {
     
     // Try to build again with stricter options
     try {
-      // Run with more permissive error handling (no-lint is a valid option)
-      execSync(`next build --no-lint`, { stdio: 'inherit' });
+  // Run with more permissive error handling (no-lint is a valid option)
+  // Make sure TypeScript is installed first in case it wasn't included as a dependency
+  console.log('Ensuring TypeScript is installed for the build...');
+  execSync('npm install --no-save typescript@5.3.0', { stdio: 'inherit' });
+  execSync(`next build --no-lint`, { stdio: 'inherit' });
       console.log('Recovery build completed successfully!');
       fs.writeFileSync('.vercel-build-success', 'Recovery build completed');
       process.exit(0); // Exit with success code
