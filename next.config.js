@@ -92,7 +92,7 @@ nextConfig.webpack = (config, { isServer }) => {
   // Exclude .backup files from being processed by webpack
   config.module.rules.push({
     test: /\.backup$/,
-    loader: 'ignore-loader',
+    use: 'null-loader',
     include: path.resolve(__dirname, 'src'),
   });
   
