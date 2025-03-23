@@ -1,10 +1,16 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 
+// Define the allowed component paths as a type to ensure type safety
+type AllowedComponentPath = 
+  | 'app/dashboard/DashboardClient'
+  | 'app/dashboard/profile/ProfileClient'
+  | 'app/admin/AdminClient';
+
 interface ClientComponentLoaderProps {
-  componentPath: string;
+  componentPath: AllowedComponentPath;
   fallback?: React.ReactNode;
 }
 
@@ -21,20 +27,20 @@ const ClientComponentLoader = ({
     </div>
   </div>
 }: ClientComponentLoaderProps) => {
-  // Ensure we're only importing client components
+  // Define allowed client component paths to prevent accidentally loading server components
+  const allowedPaths = {
+    // Dashboard components
+    'app/dashboard/DashboardClient': () => import('../app/dashboard/DashboardClient'),
+    'app/dashboard/profile/ProfileClient': () => import('../app/dashboard/profile/ProfileClient'),
+    // Admin components
+    'app/admin/AdminClient': () => import('../app/admin/AdminClient'),
+  };
+
+  // Use a safer dynamic component loading approach that doesn't use string templates
   const Component = dynamic(
     () => {
-      // Prevent importing layout components or other server components
-      if (componentPath.includes('layout') || componentPath.includes('page.tsx')) {
-        console.error(`Cannot load server component: ${componentPath}`);
-        return Promise.resolve(() => (
-          <div className="p-4 bg-red-50 text-red-700 rounded-lg">
-            <p>Error: Cannot load server components via ClientComponentLoader.</p>
-          </div>
-        ));
-      }
-      
-      return import(`@/${componentPath}`).catch(err => {
+      // Check if the path is in the allowed list
+      return allowedPaths[componentPath]().catch((err: Error) => {
         console.error(`Failed to load component: ${componentPath}`, err);
         // Return a fallback component on error
         return () => (
