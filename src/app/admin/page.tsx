@@ -3,6 +3,12 @@ import { UniversalComponentLoader } from '../_client-loader';
 
 // Force dynamic rendering for authenticated admin pages
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+// Ensure the page is never statically rendered during build
+export const generateStaticParams = () => {
+  return [];
+};
 
 export default function AdminPage() {
   return (
