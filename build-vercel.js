@@ -57,6 +57,20 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=placeholder-measurement-id
   console.warn('Build will continue, but Firebase auth may not work correctly in Vercel');
 }
 
+// Ensure required dependencies for build validation are installed
+console.log('Ensuring required dependencies for validation are installed...');
+try {
+  try {
+    require.resolve('glob');
+    console.log('✓ glob package is already installed');
+  } catch (error) {
+    console.log('Installing glob package (required for validation)...');
+    execSync('npm install --save glob', { stdio: 'inherit' });
+  }
+} catch (depError) {
+  console.warn('Warning: Could not ensure glob dependency, but will continue build:', depError.message);
+}
+
 // Ensure universal client component architecture is properly set up
 console.log('Verifying universal client component architecture...');
 try {
