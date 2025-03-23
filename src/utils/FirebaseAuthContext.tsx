@@ -107,16 +107,35 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
     let unsubscribe: () => void;
     
-    try {
-      // Listen for auth state changes with better error handling
-      unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
-        setUser(currentUser);
+  try {
+      // Check if auth object has onAuthStateChanged method
+      if (auth && typeof (auth as any).onAuthStateChanged === 'function') {
+        // Type assertion to access onAuthStateChanged
+        unsubscribe = (auth as any).onAuthStateChanged((currentUser: any) => {
+          setUser(currentUser);
+          setIsLoading(false);
+        }, (error: any) => {
+          console.error('Auth state change error:', error);
+          setError('Authentication error: ' + (error.message || 'Unknown error'));
+          setIsLoading(false);
+        });
+      } else if (typeof onAuthStateChanged === 'function') {
+        // Fall back to imported onAuthStateChanged function
+        unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
+          setUser(currentUser);
+          setIsLoading(false);
+        }, (error: any) => {
+          console.error('Auth state change error:', error);
+          setError('Authentication error: ' + (error.message || 'Unknown error'));
+          setIsLoading(false);
+        });
+      } else {
+        // If neither approach works, gracefully handle the failure
+        console.error('Firebase Auth initialized incorrectly - onAuthStateChanged not available');
+        setError('Authentication system unavailable');
         setIsLoading(false);
-      }, (error: any) => {
-        console.error('Auth state change error:', error);
-        setError('Authentication error: ' + (error.message || 'Unknown error'));
-        setIsLoading(false);
-      });
+        return () => {};
+      }
     } catch (err: any) {
       console.error('Failed to initialize Firebase auth listener:', err);
       setError('Failed to initialize authentication system');

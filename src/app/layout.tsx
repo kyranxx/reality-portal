@@ -1,10 +1,12 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+
+// Server-side imports
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { FirebaseAuthProvider } from '@/utils/FirebaseAuthContext';
 import { AppProvider } from '@/contexts/AppContext';
-import { Inter } from 'next/font/google';
+import { FirebaseAuthProvider } from '@/utils/FirebaseAuthContext';
 
 const inter = Inter({ 
   subsets: ['latin', 'latin-ext'],
@@ -12,6 +14,7 @@ const inter = Inter({
   display: 'swap',
 });
 
+// Metadata must be in a server component (no 'use client' directive on this file)
 export const metadata: Metadata = {
   title: 'Reality Portal - Realitný portál',
   description: 'Realitný portál pre predaj a prenájom nehnuteľností na Slovensku',
