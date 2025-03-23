@@ -2,7 +2,8 @@
 
 /**
  * Pre-build validation script to catch client/server component issues
- * Run this before deployment to catch potential build errors
+ * This enhanced script validates the new architecture that uses explicit component registry
+ * instead of dynamic imports to prevent Vercel deployment errors.
  */
 
 const fs = require('fs');
@@ -13,9 +14,10 @@ const glob = require('glob');
 const RED = '\x1b[31m';
 const GREEN = '\x1b[32m';
 const YELLOW = '\x1b[33m';
+const CYAN = '\x1b[36m';
 const RESET = '\x1b[0m';
 
-console.log('Running pre-build validation for server/client components...');
+console.log(`${CYAN}Running enhanced pre-build validation for production deployments...${RESET}`);
 
 let errors = 0;
 let warnings = 0;
@@ -28,82 +30,112 @@ if (backupFiles.length > 0) {
   errors++;
 }
 
-// Check for client components outside the client directory pattern
-const clientComponentFiles = glob.sync('src/**/*.{js,jsx,ts,tsx}');
+// Check for proper architecture implementation
+const pageFiles = glob.sync('src/app/**/page.{js,jsx,ts,tsx}');
+pageFiles.forEach(file => {
+  const content = fs.readFileSync(file, 'utf8');
+  
+  // Check that pages use the UniversalComponentLoader instead of ClientComponentLoader
+  if (content.includes('ClientComponentLoader') && !content.includes('UniversalComponentLoader')) {
+    console.error(`${RED}ERROR: Page using deprecated ClientComponentLoader instead of UniversalComponentLoader: ${file}${RESET}`);
+    errors++;
+  }
+  
+  // Check that no path aliases are used for critical components
+  if (content.includes('import') && content.includes('@/client')) {
+    console.error(`${RED}ERROR: Page using @/client path alias which fails in production: ${file}${RESET}`);
+    errors++;
+  }
+});
+
+// Check client components
+const clientComponentFiles = glob.sync('src/**/*Client.{jsx,tsx}');
 clientComponentFiles.forEach(file => {
-  if (file.includes('/client/') || file.includes('Client.')) {
-    // This should be a client component - validate it has 'use client'
-    const content = fs.readFileSync(file, 'utf8');
-    if (!content.trim().startsWith("'use client'") && !content.trim().startsWith('"use client"')) {
-      console.warn(`${YELLOW}WARNING: Client component missing 'use client' directive: ${file}${RESET}`);
-      warnings++;
-    }
-  } else {
-    // This should be a server component - validate it DOESN'T export metadata AND have 'use client'
-    const content = fs.readFileSync(file, 'utf8');
-    const hasMetadata = content.includes('export const metadata');
-    const hasUseClient = content.trim().startsWith("'use client'") || content.trim().startsWith('"use client"');
-    
-    if (hasMetadata && hasUseClient) {
+  // All client components must have 'use client' directive
+  const content = fs.readFileSync(file, 'utf8');
+  if (!content.trim().startsWith("'use client'") && !content.trim().startsWith('"use client"')) {
+    console.error(`${RED}ERROR: Client component missing 'use client' directive: ${file}${RESET}`);
+    errors++;
+  }
+});
+
+// Validate server components
+const serverComponentFiles = glob.sync('src/app/**/*.{js,jsx,ts,tsx}');
+serverComponentFiles.forEach(file => {
+  // Skip client components and special files
+  if (file.includes('Client.') || file.includes('/_client-loader') || file.includes('/_components')) {
+    return;
+  }
+  
+  // Server components shouldn't have 'use client'
+  const content = fs.readFileSync(file, 'utf8');
+  const hasMetadata = content.includes('export const metadata');
+  const hasUseClient = content.trim().startsWith("'use client'") || content.trim().startsWith('"use client"');
+  
+  if (hasUseClient) {
+    if (hasMetadata) {
       console.error(`${RED}ERROR: Server component with metadata is marked as client: ${file}${RESET}`);
       errors++;
+    } else {
+      console.warn(`${YELLOW}WARNING: Server component marked with 'use client': ${file}${RESET}`);
+      warnings++;
     }
   }
 });
 
-// Check for old style dynamic imports - more thorough check
+// Verify components registry has all required components
+let componentsRegistryContent = '';
+try {
+  componentsRegistryContent = fs.readFileSync(path.join(process.cwd(), 'src/app/_components.tsx'), 'utf8');
+} catch (error) {
+  console.error(`${RED}ERROR: Missing src/app/_components.tsx registry file${RESET}`);
+  errors++;
+}
+
+if (componentsRegistryContent) {
+  // Check that each client component is in the registry
+  clientComponentFiles.forEach(file => {
+    const componentName = path.basename(file).replace(/\.(jsx|tsx)$/, '');
+    // Skip ClientComponentLoader
+    if (componentName === 'ClientComponentLoader') {
+      return;
+    }
+    
+    if (!componentsRegistryContent.includes(`${componentName}:`) && 
+        !componentsRegistryContent.includes(`'${componentName}'`) &&
+        !componentsRegistryContent.includes(`"${componentName}"`)) {
+      console.error(`${RED}ERROR: Client component not registered in _components.tsx: ${componentName}${RESET}`);
+      errors++;
+    }
+  });
+}
+
+// Check for problematic dynamic imports
 const oldStyleImports = glob.sync('src/**/*.{js,jsx,ts,tsx}').filter(file => {
-  // Skip safe files that use dynamic imports in a controlled way
-  if (file.includes('firebase-auth-unified.ts')) {
+  // Skip known safe files
+  if (file.includes('firebase-auth-unified.ts') || 
+      file.includes('/_client-loader') || 
+      file.includes('/_components')) {
     return false;
   }
   
   const content = fs.readFileSync(file, 'utf8');
   
-  // Safe dynamic imports (hard-coded paths)
-  const safeImportPattern = /import\(['"`]([^${}]+)['"`]\)/;
-  const hasDynamicImport = content.includes('import(');
+  // Detect string template imports and path aliases in dynamic imports
+  const problematicPatterns = [
+    /import\([`'"]\$\{/,           // String template literals
+    /import\([`'"]@\//,            // Path aliases
+    /import\([`'"]\.\.\/\.\.\/\.\.\//  // Deep relative paths that might be problematic
+  ];
   
-  // If it has a dynamic import but all instances match the safe pattern,
-  // don't flag it as problematic
-  if (hasDynamicImport) {
-    const lines = content.split('\n');
-    for (const line of lines) {
-      if (line.includes('import(') && !safeImportPattern.test(line)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  return false;
+  return problematicPatterns.some(pattern => pattern.test(content));
 });
 
 if (oldStyleImports.length > 0) {
-  console.warn(`${YELLOW}WARNING: Found ${oldStyleImports.length} files with string template imports that may cause issues:${RESET}`);
-  oldStyleImports.forEach(file => console.warn(`  - ${file}`));
-  warnings++;
+  console.error(`${RED}ERROR: Found ${oldStyleImports.length} files with problematic dynamic imports:${RESET}`);
+  oldStyleImports.forEach(file => console.error(`  - ${file}`));
+  errors++;
 }
-
-// Check registry completeness - all client components should be registered
-// Only check components that should be registered (exclude the loader itself)
-const allClientFiles = glob.sync('src/**/Client*.{jsx,tsx}');
-const clientFiles = allClientFiles.filter(file => {
-  const filename = path.basename(file);
-  // Skip ClientComponentLoader.tsx file regardless of path
-  return filename !== 'ClientComponentLoader.tsx';
-});
-
-const registryContent = fs.readFileSync(path.join(__dirname, '../src/client/registry.ts'), 'utf8');
-
-clientFiles.forEach(file => {
-  const componentName = path.basename(file).replace(/\.(jsx|tsx)$/, '');
-  if (!registryContent.includes(`'${componentName}'`) && !registryContent.includes(`"${componentName}"`) &&
-      !registryContent.includes(`${componentName}:`)) {
-    console.warn(`${YELLOW}WARNING: Client component not registered in registry: ${componentName}${RESET}`);
-    warnings++;
-  }
-});
 
 // Summary
 if (errors === 0 && warnings === 0) {

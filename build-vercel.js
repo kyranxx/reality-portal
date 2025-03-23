@@ -25,19 +25,21 @@ execSync('npm install --include=dev', { stdio: 'inherit' });
 console.log('Ensuring correct Firebase version...');
 execSync('npm install firebase@10.7.0 --save', { stdio: 'inherit' });
 
+// Setup additional environment variables for the Vercel build
+console.log('Setting up Vercel-specific environment variables...');
+process.env.VERCEL = '1';
+process.env.VERCEL_ENV = 'production';
+process.env.NEXT_PUBLIC_IS_VERCEL = 'true';
+
 // Streamlined Firebase auth compatibility setup - using TypeScript modules
 console.log('Setting up Firebase auth compatibility...');
 try {
   // Using static TypeScript modules instead of the older JavaScript approach
   console.log('Using static TypeScript modules for Firebase Auth');
   
-  // Set environment variable for the build process
-  process.env.VERCEL = '1';
-  console.log('Set VERCEL=1 environment variable for firebase-auth modules');
-  
   // Create a simple .env.local file for Firebase config if it doesn't exist
   if (!fs.existsSync('.env.local')) {
-    console.log('Creating .env.local file...');
+    console.log('Creating .env.local file with normalized values...');
     const envContent = `# Firebase configuration (placeholder values)
 NEXT_PUBLIC_FIREBASE_API_KEY=placeholder-api-key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=placeholder-auth-domain
@@ -55,61 +57,111 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=placeholder-measurement-id
   console.warn('Build will continue, but Firebase auth may not work correctly in Vercel');
 }
 
-// Create temporary fix for path alias resolution
+// Ensure universal client component architecture is properly set up
+console.log('Verifying universal client component architecture...');
+try {
+  // Check if _components.tsx exists
+  if (!fs.existsSync('./src/app/_components.tsx')) {
+    throw new Error('Missing required file: src/app/_components.tsx');
+  }
+  
+  // Check if _client-loader.tsx exists
+  if (!fs.existsSync('./src/app/_client-loader.tsx')) {
+    throw new Error('Missing required file: src/app/_client-loader.tsx');
+  }
+  
+  // Run pre-build validation to ensure all components are properly registered
+  console.log('Running pre-build validation...');
+  execSync('node scripts/pre-build-validation.js', { stdio: 'inherit' });
+} catch (error) {
+  console.error('Failed to verify universal client component architecture:', error.message);
+  process.exit(1); // This is a critical error that must stop the build
+}
+
+// Create temporary fix for path alias resolution - enhanced to handle client components
 console.log('Setting up path alias workarounds...');
 const ensurePathAliases = () => {
   try {
-    // Check if AppContext imports need fixing
-    const appContextPath = './src/contexts/AppContext.tsx';
-    if (fs.existsSync(appContextPath)) {
-      const content = fs.readFileSync(appContextPath, 'utf8');
-      
-      // Fix imports if they use @/ path aliases
-      let fixedContent = content;
-      fixedContent = fixedContent.replace(/from ['"]@\/utils\/firebase['"]/, 'from \'../utils/firebase\'');
-      fixedContent = fixedContent.replace(/from ['"]@\/utils\/FirebaseAuthContext['"]/, 'from \'../utils/FirebaseAuthContext\'');
-      
-      if (fixedContent !== content) {
-        console.log('Fixed path aliases in AppContext.tsx');
-        fs.writeFileSync(appContextPath + '.backup', content); // Create backup
-        fs.writeFileSync(appContextPath, fixedContent);
-      }
-    }
+    // Process each page file to fix relative imports
+    console.log('Checking for path alias usage in page files...');
+    const pages = glob.sync('./src/app/**/page.{js,jsx,ts,tsx}');
     
-    // Check reset-password page imports
-    const resetPasswordPath = './src/app/auth/reset-password/page.tsx';
-    if (fs.existsSync(resetPasswordPath)) {
-      const content = fs.readFileSync(resetPasswordPath, 'utf8');
-      
-      // Fix imports if they use @/ path aliases
-      let fixedContent = content;
-      fixedContent = fixedContent.replace(/from ['"]@\/utils\/FirebaseAuthContext['"]/, 'from \'../../../utils/FirebaseAuthContext\'');
-      fixedContent = fixedContent.replace(/from ['"]@\/utils\/firebase['"]/, 'from \'../../../utils/firebase\'');
-      fixedContent = fixedContent.replace(/from ['"]@\/components\/SectionTitle['"]/, 'from \'../../../components/SectionTitle\'');
-      
-      if (fixedContent !== content) {
-        console.log('Fixed path aliases in reset-password page');
-        fs.writeFileSync(resetPasswordPath + '.backup', content); // Create backup
-        fs.writeFileSync(resetPasswordPath, fixedContent);
+    pages.forEach(pagePath => {
+      if (fs.existsSync(pagePath)) {
+        const content = fs.readFileSync(pagePath, 'utf8');
+        
+        // Check if this page uses the old client component loader
+        if (content.includes('@/client')) {
+          // Fix imports that use @/client path aliases
+          const fixedContent = content.replace(
+            /from ['"]@\/client(?:\/([^'"]+))?['"]/g, 
+            (match, subPath) => {
+              // Determine relative path depth based on file location
+              const depth = pagePath.split('/').length - 3; // Adjust for src/app
+              const relPath = '../'.repeat(depth);
+              
+              if (subPath) {
+                return `from '${relPath}_client-loader'`;
+              } else {
+                return `from '${relPath}_client-loader'`;
+              }
+            }
+          );
+          
+          if (fixedContent !== content) {
+            console.log(`Fixed client imports in ${pagePath}`);
+            fs.writeFileSync(pagePath, fixedContent);
+          }
+        }
       }
-    }
+    });
     
-    // Fix _app.js imports if needed
-    const appPath = './pages/_app.js';
-    if (fs.existsSync(appPath)) {
-      const content = fs.readFileSync(appPath, 'utf8');
-      
-      // Fix imports if they use @/ path aliases
-      let fixedContent = content;
-      fixedContent = fixedContent.replace(/from ['"]@\/utils\/FirebaseAuthContext['"]/, 'from \'../src/utils/FirebaseAuthContext\'');
-      fixedContent = fixedContent.replace(/from ['"]@\/contexts\/AppContext['"]/, 'from \'../src/contexts/AppContext\'');
-      
-      if (fixedContent !== content) {
-        console.log('Fixed path aliases in _app.js');
-        fs.writeFileSync(appPath + '.backup', content); // Create backup
-        fs.writeFileSync(appPath, fixedContent);
+    // Standard path alias fixes for specific files
+    const knownFiles = [
+      { 
+        path: './src/contexts/AppContext.tsx',
+        replacements: [
+          { from: /from ['"]@\/utils\/firebase['"]/, to: 'from \'../utils/firebase\'' },
+          { from: /from ['"]@\/utils\/FirebaseAuthContext['"]/, to: 'from \'../utils/FirebaseAuthContext\'' }
+        ]
+      },
+      { 
+        path: './src/app/auth/reset-password/page.tsx',
+        replacements: [
+          { from: /from ['"]@\/utils\/FirebaseAuthContext['"]/, to: 'from \'../../../utils/FirebaseAuthContext\'' },
+          { from: /from ['"]@\/utils\/firebase['"]/, to: 'from \'../../../utils/firebase\'' },
+          { from: /from ['"]@\/components\/SectionTitle['"]/, to: 'from \'../../../components/SectionTitle\'' }
+        ]
+      },
+      { 
+        path: './pages/_app.js',
+        replacements: [
+          { from: /from ['"]@\/utils\/FirebaseAuthContext['"]/, to: 'from \'../src/utils/FirebaseAuthContext\'' },
+          { from: /from ['"]@\/contexts\/AppContext['"]/, to: 'from \'../src/contexts/AppContext\'' }
+        ]
       }
-    }
+    ];
+    
+    // Apply fixes for known files
+    knownFiles.forEach(({ path: filePath, replacements }) => {
+      if (fs.existsSync(filePath)) {
+        let content = fs.readFileSync(filePath, 'utf8');
+        let fixed = false;
+        
+        replacements.forEach(({ from, to }) => {
+          const updatedContent = content.replace(from, to);
+          if (updatedContent !== content) {
+            content = updatedContent;
+            fixed = true;
+          }
+        });
+        
+        if (fixed) {
+          console.log(`Fixed path aliases in ${filePath}`);
+          fs.writeFileSync(filePath, content);
+        }
+      }
+    });
     
     return true;
   } catch (error) {
@@ -117,6 +169,16 @@ const ensurePathAliases = () => {
     return false;
   }
 };
+
+// Make sure the glob package is available
+let glob;
+try {
+  glob = require('glob');
+} catch (error) {
+  console.log('Installing glob package for path resolution...');
+  execSync('npm install --no-save glob', { stdio: 'inherit' });
+  glob = require('glob');
+}
 
 // Ensure outputDirectory matches vercel.json
 console.log('Ensuring correct output directory...');

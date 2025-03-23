@@ -1,12 +1,12 @@
-// Server component that uses the ClientComponentLoader
-import ClientComponentLoader from '@/client/ClientComponentLoader';
+// Server component that uses the Universal Component Loader
+import { UniversalComponentLoader } from '../_client-loader';
 
 // Force dynamic rendering for authenticated admin pages
 export const dynamic = 'force-dynamic';
 
 export default function AdminPage() {
   return (
-    <ClientComponentLoader 
+    <UniversalComponentLoader 
       componentKey="AdminClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">

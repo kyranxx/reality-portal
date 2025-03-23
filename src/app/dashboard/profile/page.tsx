@@ -1,12 +1,12 @@
-// Server component that uses the ClientComponentLoader
-import ClientComponentLoader from '@/client/ClientComponentLoader';
+// Server component that uses the Universal Component Loader
+import { UniversalComponentLoader } from '../../_client-loader';
 
 // Force dynamic rendering for authenticated profile pages
 export const dynamic = 'force-dynamic';
 
 export default function ProfilePage() {
   return (
-    <ClientComponentLoader 
+    <UniversalComponentLoader 
       componentKey="ProfileClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">

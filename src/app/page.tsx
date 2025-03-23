@@ -1,12 +1,12 @@
-// Server component that uses the ClientComponentLoader
-import { ClientComponentLoader } from '@/client';
+// Server component that uses the Universal Component Loader
+import { UniversalComponentLoader } from './_client-loader';
 
 // Optional dynamic rendering for pages that need it
 export const dynamic = 'force-dynamic';
 
 export default function Home() {
   return (
-    <ClientComponentLoader 
+    <UniversalComponentLoader 
       componentKey="HomeClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">
