@@ -1,77 +1,21 @@
-'use client';
+// Server component that uses the ClientComponentLoader
+import { ClientComponentLoader } from '@/client';
 
 // Optional dynamic rendering for pages that need it
 export const dynamic = 'force-dynamic';
 
-import { useEffect, useState } from 'react';
-import HeroSection from '@/components/HeroSection';
-import SearchBar from '@/components/SearchBar';
-import StatsSection from '@/components/home/StatsSection';
-import CategorySection from '@/components/home/CategorySection';
-import FeaturedPropertySection from '@/components/home/FeaturedPropertySection';
-import FeaturedPropertiesSection from '@/components/home/FeaturedPropertiesSection';
-import CtaSection from '@/components/home/CtaSection';
-import { Property } from '@/utils/firebase';
-import { getFeaturedProperties, getNewProperties } from '@/utils/firestore';
-
 export default function Home() {
-  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const featured = await getFeaturedProperties(7); // Get 7 featured properties
-        setFeaturedProperties(featured);
-      } catch (error) {
-        console.error('Error fetching properties:', error);
-        // Fallback to sample data if Firebase is not configured
-        import('@/data/sampleProperties').then(({ featuredProperties }) => {
-          setFeaturedProperties(featuredProperties as unknown as Property[]);
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProperties();
-  }, []);
-
-  if (loading || featuredProperties.length === 0) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
-          <div className="text-gray-400">Načítava sa...</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <>
-      {/* Hero Section */}
-      <HeroSection />
-      
-      {/* Search Bar */}
-      <div className="container">
-        <SearchBar />
-      </div>
-      
-      {/* Stats Section */}
-      <StatsSection />
-      
-      {/* Property Categories */}
-      <CategorySection />
-      
-      {/* Featured Property of the Week */}
-      <FeaturedPropertySection property={featuredProperties[0]} />
-      
-      {/* Featured Properties */}
-      <FeaturedPropertiesSection properties={featuredProperties.slice(1, 7)} />
-      
-      {/* CTA Section */}
-      <CtaSection />
-    </>
+    <ClientComponentLoader 
+      componentKey="HomeClient"
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
+            <div className="text-gray-400">Načítava sa...</div>
+          </div>
+        </div>
+      }
+    />
   );
 }

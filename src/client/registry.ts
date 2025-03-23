@@ -4,6 +4,7 @@
 import DashboardClient from '../app/dashboard/DashboardClient';
 import ProfileClient from '../app/dashboard/profile/ProfileClient';
 import AdminClient from '../app/admin/AdminClient';
+import HomeClient from '../app/HomeClient';
 
 /**
  * Registry of all available client components
@@ -15,6 +16,8 @@ export const clientComponentRegistry = {
   'ProfileClient': ProfileClient,
   // Admin components
   'AdminClient': AdminClient,
+  // Home page component
+  'HomeClient': HomeClient,
 } as const;
 
 // Create a type from the registry keys for type safety

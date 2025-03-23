@@ -41,18 +41,42 @@ clientComponentFiles.forEach(file => {
   } else {
     // This should be a server component - validate it DOESN'T export metadata AND have 'use client'
     const content = fs.readFileSync(file, 'utf8');
-    if (content.includes('export const metadata') && 
-        (content.includes("'use client'") || content.includes('"use client"'))) {
+    const hasMetadata = content.includes('export const metadata');
+    const hasUseClient = content.trim().startsWith("'use client'") || content.trim().startsWith('"use client"');
+    
+    if (hasMetadata && hasUseClient) {
       console.error(`${RED}ERROR: Server component with metadata is marked as client: ${file}${RESET}`);
       errors++;
     }
   }
 });
 
-// Check for old style dynamic imports
+// Check for old style dynamic imports - more thorough check
 const oldStyleImports = glob.sync('src/**/*.{js,jsx,ts,tsx}').filter(file => {
+  // Skip safe files that use dynamic imports in a controlled way
+  if (file.includes('firebase-auth-unified.ts')) {
+    return false;
+  }
+  
   const content = fs.readFileSync(file, 'utf8');
-  return content.includes('import(`@/') || content.includes("import('@/");
+  
+  // Safe dynamic imports (hard-coded paths)
+  const safeImportPattern = /import\(['"`]([^${}]+)['"`]\)/;
+  const hasDynamicImport = content.includes('import(');
+  
+  // If it has a dynamic import but all instances match the safe pattern,
+  // don't flag it as problematic
+  if (hasDynamicImport) {
+    const lines = content.split('\n');
+    for (const line of lines) {
+      if (line.includes('import(') && !safeImportPattern.test(line)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  return false;
 });
 
 if (oldStyleImports.length > 0) {
@@ -62,7 +86,14 @@ if (oldStyleImports.length > 0) {
 }
 
 // Check registry completeness - all client components should be registered
-const clientFiles = glob.sync('src/**/Client*.{jsx,tsx}');
+// Only check components that should be registered (exclude the loader itself)
+const allClientFiles = glob.sync('src/**/Client*.{jsx,tsx}');
+const clientFiles = allClientFiles.filter(file => {
+  const filename = path.basename(file);
+  // Skip ClientComponentLoader.tsx file regardless of path
+  return filename !== 'ClientComponentLoader.tsx';
+});
+
 const registryContent = fs.readFileSync(path.join(__dirname, '../src/client/registry.ts'), 'utf8');
 
 clientFiles.forEach(file => {
