@@ -89,6 +89,13 @@ nextConfig.webpack = (config, { isServer }) => {
   // Ensure config.resolve.alias exists
   config.resolve.alias = config.resolve.alias || {};
   
+  // Exclude .backup files from being processed by webpack
+  config.module.rules.push({
+    test: /\.backup$/,
+    loader: 'ignore-loader',
+    include: path.resolve(__dirname, 'src'),
+  });
+  
   // Add explicit path aliases that match tsconfig.json paths
   config.resolve.alias['@'] = path.join(__dirname, 'src');
   config.resolve.alias['@/utils'] = path.join(__dirname, 'src/utils');

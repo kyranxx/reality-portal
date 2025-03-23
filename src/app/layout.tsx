@@ -1,6 +1,6 @@
 import './globals.css';
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { metadata } from './metadata';
 
 // Server-side imports
 import Header from '@/components/Header';
@@ -13,13 +13,6 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 });
-
-// Metadata must be in a server component (no 'use client' directive on this file)
-export const metadata: Metadata = {
-  title: 'Reality Portal - Realitný portál',
-  description: 'Realitný portál pre predaj a prenájom nehnuteľností na Slovensku',
-  keywords: 'reality, nehnuteľnosti, byty, domy, pozemky, predaj, prenájom, Slovensko',
-};
 
 // Static generation configuration with incremental regeneration for performance
 export const revalidate = 3600; // Revalidate content every hour by default
