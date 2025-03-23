@@ -21,17 +21,29 @@ const ClientComponentLoader = ({
     </div>
   </div>
 }: ClientComponentLoaderProps) => {
-  // Dynamic import with error handling
+  // Ensure we're only importing client components
   const Component = dynamic(
-    () => import(`@/${componentPath}`).catch(err => {
-      console.error(`Failed to load component: ${componentPath}`, err);
-      // Return a fallback component on error
-      return () => (
-        <div className="p-4 bg-red-50 text-red-700 rounded-lg">
-          <p>Failed to load component. Please try refreshing the page.</p>
-        </div>
-      );
-    }),
+    () => {
+      // Prevent importing layout components or other server components
+      if (componentPath.includes('layout') || componentPath.includes('page.tsx')) {
+        console.error(`Cannot load server component: ${componentPath}`);
+        return Promise.resolve(() => (
+          <div className="p-4 bg-red-50 text-red-700 rounded-lg">
+            <p>Error: Cannot load server components via ClientComponentLoader.</p>
+          </div>
+        ));
+      }
+      
+      return import(`@/${componentPath}`).catch(err => {
+        console.error(`Failed to load component: ${componentPath}`, err);
+        // Return a fallback component on error
+        return () => (
+          <div className="p-4 bg-red-50 text-red-700 rounded-lg">
+            <p>Failed to load component. Please try refreshing the page.</p>
+          </div>
+        );
+      });
+    },
     { 
       loading: () => <>{fallback}</>,
       // Set SSR to false to ensure component only loads on client side
