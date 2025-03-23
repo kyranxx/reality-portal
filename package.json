@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
+    "validate": "node scripts/pre-build-validation.js",
     "prebuild": "node prebuild.js",
-    "build": "npm run prebuild && next build",
-    "build:vercel": "node build-vercel.js",
+    "build": "npm run validate && npm run prebuild && next build",
+    "build:vercel": "node scripts/pre-build-validation.js && node build-vercel.js",
     "start": "next start",
     "lint": "next lint",
     "clean": "rimraf .next out",

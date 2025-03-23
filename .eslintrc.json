@@ -1,0 +1,40 @@
+{
+  "extends": "next/core-web-vitals",
+  "plugins": ["react"],
+  "rules": {
+    // Enforce proper use of 'use client' directive
+    "react/function-component-definition": [
+      "warn",
+      {
+        "namedComponents": "function-declaration",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    // Prevent server components being marked as client components
+    "react/no-unknown-property": [
+      "error",
+      {
+        "ignore": ["jsx", "global"]
+      }
+    ]
+  },
+  "overrides": [
+    // Rules for client components
+    {
+      "files": ["src/client/**/*.{js,ts,jsx,tsx}", "src/**/Client*.{js,ts,jsx,tsx}"],
+      "rules": {
+        // Ensure all client components have 'use client' directive
+        "react/no-unknown-property": "off"
+      }
+    },
+    // Rules for server components
+    {
+      "files": ["src/app/**/*.{js,ts,jsx,tsx}", "src/components/**/*.{js,ts,jsx,tsx}"],
+      "excludedFiles": ["src/**/Client*.{js,ts,jsx,tsx}"],
+      "rules": {
+        // Server components shouldn't use client hooks/APIs
+        "react/react-in-jsx-scope": "off"
+      }
+    }
+  ]
+}

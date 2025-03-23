@@ -1,14 +1,13 @@
 // Server component that uses the ClientComponentLoader
-import ClientComponentLoader from '@/components/ClientComponentLoader';
+import ClientComponentLoader from '@/client/ClientComponentLoader';
 
 // Force dynamic rendering for authenticated pages
 export const dynamic = 'force-dynamic';
 
 export default function DashboardPage() {
-  // Use the ClientComponentLoader with the path to the DashboardClient component
   return (
     <ClientComponentLoader 
-      componentPath="app/dashboard/DashboardClient" 
+      componentKey="DashboardClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">
           <div className="animate-pulse flex flex-col items-center">
