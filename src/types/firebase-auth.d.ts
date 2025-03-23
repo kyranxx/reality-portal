@@ -1,56 +1,67 @@
 /**
  * Type declarations for @firebase/auth
  * This file helps TypeScript understand the structure of the @firebase/auth module
- * by re-exporting types from firebase/auth
+ * by re-exporting simplified types that won't cause issues during build
  */
 
 declare module '@firebase/auth' {
-  // Re-export all types from firebase/auth
-  export * from 'firebase/auth';
-
-  // Explicitly declare the functions that are imported from @firebase/auth
+  // Define simpler type interfaces to avoid complex imports
+  export type Auth = any;
+  export type User = any;
+  export type UserCredential = { user: User };
+  export type AuthProvider = any;
+  
+  // Explicitly declare the functions using simplified types
   export function createUserWithEmailAndPassword(
-    auth: import('firebase/auth').Auth,
+    auth: Auth,
     email: string,
     password: string
-  ): Promise<import('firebase/auth').UserCredential>;
+  ): Promise<UserCredential>;
 
   export function signInWithEmailAndPassword(
-    auth: import('firebase/auth').Auth,
+    auth: Auth,
     email: string,
     password: string
-  ): Promise<import('firebase/auth').UserCredential>;
+  ): Promise<UserCredential>;
 
   export function signOut(
-    auth: import('firebase/auth').Auth
+    auth: Auth
   ): Promise<void>;
 
-  export class GoogleAuthProvider implements import('firebase/auth').AuthProvider {
+  export class GoogleAuthProvider {
     static PROVIDER_ID: string;
     providerId: string;
-    addScope(scope: string): import('firebase/auth').AuthProvider;
+    addScope(scope: string): GoogleAuthProvider;
     setCustomParameters(
       customOAuthParameters: Object
-    ): import('firebase/auth').AuthProvider;
+    ): GoogleAuthProvider;
+    static credential(idToken?: string, accessToken?: string): any;
   }
 
   export function signInWithPopup(
-    auth: import('firebase/auth').Auth,
-    provider: import('firebase/auth').AuthProvider
-  ): Promise<import('firebase/auth').UserCredential>;
+    auth: Auth,
+    provider: AuthProvider
+  ): Promise<UserCredential>;
 
   export function sendPasswordResetEmail(
-    auth: import('firebase/auth').Auth,
+    auth: Auth,
     email: string
   ): Promise<void>;
 
   export function getAuth(
-    app?: import('firebase/app').FirebaseApp
-  ): import('firebase/auth').Auth;
+    app?: any
+  ): Auth;
 
   export function connectAuthEmulator(
-    auth: import('firebase/auth').Auth,
+    auth: Auth,
     url: string,
     options?: { disableWarnings?: boolean }
   ): void;
+
+  export function onAuthStateChanged(
+    auth: Auth,
+    nextOrObserver: any,
+    error?: any,
+    completed?: any
+  ): () => void;
 }
