@@ -5,6 +5,9 @@
  * that works consistently across client, server, and Vercel environments.
  */
 
+// Import FirebaseApp type
+import { FirebaseApp } from 'firebase/app';
+
 // Define type definitions for better type safety
 export type Auth = any;
 export type User = any;
@@ -59,7 +62,7 @@ export const sendPasswordResetEmail = async () => {
   throw new Error('Authentication operations cannot be performed on the server');
 };
 
-export const getAuth = (app?) => {
+export const getAuth = (app?: FirebaseApp) => {
   console.log(`Server-side getAuth called (no-op)`);
   return {};
 };
