@@ -1,42 +1,100 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-// This middleware handles client-side navigation for protected routes
+/**
+ * Middleware for handling global application concerns like CORS and security headers
+ * This runs before any route or API handler
+ */
 export function middleware(request: NextRequest) {
-  const url = request.nextUrl.clone();
-  const { pathname } = url;
+  // Get the pathname of the request
+  const { pathname, origin } = request.nextUrl;
+  
+  // Get the host from the request
+  const hostName = request.headers.get('host') || '';
+  
+  // Initialize response with forwarded request
+  const response = NextResponse.next();
 
-  // Check if the request is for a protected route
-  const isProtectedRoute = 
-    pathname.startsWith('/dashboard') || 
-    pathname.startsWith('/admin');
+  // Extract Vercel environment information from headers
+  const isVercelEnv = process.env.VERCEL === '1' || request.headers.has('x-vercel-deployment-url');
+  const isPreviewDeployment = !!request.headers.get('x-vercel-deployment-url')?.includes('preview');
+  
+  /**
+   * CORS Headers Configuration
+   * Set headers conditionally based on resource type and environment
+   */ 
+  
+  // Set basic CORS headers for all responses
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept');
 
-  // If it's a protected route, rewrite to the client component
-  if (isProtectedRoute) {
-    // For dashboard routes
-    if (pathname === '/dashboard') {
-      url.pathname = '/dashboard/client';
-      return NextResponse.rewrite(url);
-    }
+  // Set extra security headers
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  
+  // For static assets, add caching headers
+  if (
+    pathname.includes('/_next/static') ||
+    pathname.includes('/images/') ||
+    pathname.includes('/fonts/') ||
+    pathname.match(/\.(js|css|png|jpg|jpeg|gif|webp|ico|svg)$/)
+  ) {
+    // Cache static assets for up to 1 year (far-future expiry)
+    response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
     
-    // For dashboard/profile routes
-    if (pathname === '/dashboard/profile') {
-      url.pathname = '/dashboard/profile/client';
-      return NextResponse.rewrite(url);
-    }
+    // Set stricter CORS for static resources (allow all origins for assets)
+    response.headers.set('Access-Control-Allow-Origin', '*');
     
-    // For admin routes
-    if (pathname === '/admin') {
-      url.pathname = '/admin/client';
-      return NextResponse.rewrite(url);
+    // Allow credentials for cross-origin requests
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
+  }
+  
+  // For API routes, customize CORS differently
+  if (pathname.startsWith('/api/')) {
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Authorization');
+    
+    // Handle preflight requests
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, { 
+        status: 200,
+        headers: response.headers,
+      });
     }
   }
-
-  // Continue to the requested page for non-protected routes
-  return NextResponse.next();
+  
+  // Add monitoring headers to track deployments and environments
+  if (isVercelEnv) {
+    response.headers.set('X-Deployment-Environment', isPreviewDeployment ? 'preview' : 'production');
+  }
+  
+  // Special handling for root domain vs. preview deployments
+  if (isVercelEnv && hostName.includes('vercel.app')) {
+    const isPreviewUrl = /-[a-z0-9]+-[a-z0-9]+\.vercel\.app$/.test(hostName);
+    if (isPreviewUrl) {
+      // This is a preview deployment
+      response.headers.set('X-Preview-Deployment', 'true');
+      
+      // Allow cross-domain access between preview and production
+      response.headers.set('Access-Control-Allow-Origin', '*');
+    }
+  }
+  
+  return response;
 }
 
-// Match all routes except static files and API routes
+/**
+ * Configure which paths this middleware is run for
+ * This middleware will run for all paths
+ */
 export const config = {
-  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  matcher: [
+    // Match all paths except for:
+    // - API routes that handle their own CORS
+    // - Static files with extensions (handled by Vercel Edge config)
+    // - Next.js internal paths
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
 };

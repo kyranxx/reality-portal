@@ -1,14 +1,46 @@
 /** @type {import('next').NextConfig} */
 
+// Determine the current environment
+const isVercel = process.env.VERCEL === '1';
+const isPreviewDeployment = process.env.VERCEL_ENV === 'preview';
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
+
+// Get the base URL for asset prefixing
+const getBaseUrl = () => {
+  if (isVercel) {
+    // For preview deployments, we don't set a specific assetPrefix to avoid CORS issues
+    if (isPreviewDeployment) {
+      return '';
+    }
+    // For production deployments, we use the canonical URL
+    return 'https://reality-portal.vercel.app';
+  }
+  // For local development
+  return '';
+};
+
 const nextConfig = {
-  output: process.env.VERCEL === '1' ? 'standalone' : undefined,
+  output: isVercel ? 'standalone' : undefined,
   reactStrictMode: true,
-  experimental: {
-    // The appDir flag is no longer needed in Next.js 14+
-    // The staticAppRouterPages option is also deprecated
+  
+  // Configure asset prefixing based on environment
+  assetPrefix: getBaseUrl(),
+  
+  // Configure public runtime variables
+  publicRuntimeConfig: {
+    baseUrl: getBaseUrl(),
+    vercelEnvironment: process.env.VERCEL_ENV || 'development',
+    isVercel: isVercel || false,
   },
+  
+  // Configure image component
   images: {
-    domains: ['firebasestorage.googleapis.com', 'via.placeholder.com'],
+    domains: [
+      'firebasestorage.googleapis.com', 
+      'via.placeholder.com',
+      'reality-portal.vercel.app'
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -24,12 +56,50 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.googleusercontent.com',
         pathname: '/**',
+      },
+      // Add patterns for Vercel deployments to allow cross-origin image loading
+      {
+        protocol: 'https',
+        hostname: '*.vercel.app',
+        pathname: '/**',
       }
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  
+  // Add headers for specific paths - these work in conjunction with middleware.ts
+  async headers() {
+    return [
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+    ];
   },
   webpack: (config, { isServer }) => {
     // Handle specific module issues in the build
@@ -48,20 +118,37 @@ const nextConfig = {
       'bufferutil': 'commonjs bufferutil',
     });
     
+    // Optimize chunks for better loading performance
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+        // Create a separate chunk for the font loader
+        fontLoader: {
+          test: /[\\/]node_modules[\\/]next[\\/]dist[\\/]client[\\/]font/,
+          name: 'font-loader',
+          chunks: 'all',
+          priority: 10,
+        },
+      },
+    };
+    
     return config;
   },
-  // Handle environment-specific settings
+  
+  // Environment variables
   env: {
     PUBLIC_URL: process.env.PUBLIC_URL || '',
     VERCEL_ENV: process.env.VERCEL_ENV || '',
     VERCEL: process.env.VERCEL || '',
     NEXT_PUBLIC_VERCEL_URL: process.env.VERCEL_URL || 'localhost:3000',
+    // Add an asset base path variable for client-side use
+    NEXT_PUBLIC_ASSET_PREFIX: getBaseUrl(),
   },
-  // Add specific configuration for Vercel deployment
-  ...(process.env.VERCEL === '1' ? {
-    assetPrefix: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
-    basePath: '',
-  } : {}),
 };
 
 module.exports = nextConfig;
