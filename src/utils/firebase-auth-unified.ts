@@ -59,7 +59,7 @@ export const sendPasswordResetEmail = async () => {
   throw new Error('Authentication operations cannot be performed on the server');
 };
 
-export const getAuth = () => {
+export const getAuth = (app?) => {
   console.log(`Server-side getAuth called (no-op)`);
   return {};
 };

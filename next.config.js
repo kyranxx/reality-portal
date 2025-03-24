@@ -4,10 +4,8 @@ const nextConfig = {
   output: process.env.VERCEL === '1' ? 'standalone' : undefined,
   reactStrictMode: true,
   experimental: {
-    // This flag ensures error pages work correctly with the app router
-    appDir: true,
-    // Disables static rendering of app directory pages because they use dynamic client components
-    staticAppRouterPages: false,
+    // The appDir flag is no longer needed in Next.js 14+
+    // The staticAppRouterPages option is also deprecated
   },
   images: {
     domains: ['firebasestorage.googleapis.com', 'via.placeholder.com'],
