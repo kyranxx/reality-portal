@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { AppProvider } from '@/contexts/AppContext';
 import { FirebaseAuthProvider } from '@/utils/FirebaseAuthContext';
+import ClientWrapper from './ClientWrapper';
 
 const inter = Inter({ 
   subsets: ['latin', 'latin-ext'],
@@ -33,12 +34,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        {/* Preconnect to important domains to improve performance */}
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
+        <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
+      </head>
       <body className="flex flex-col min-h-screen">
         <FirebaseAuthProvider>
           <AppProvider>
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
+            <ClientWrapper>
+              <Header />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </ClientWrapper>
           </AppProvider>
         </FirebaseAuthProvider>
       </body>

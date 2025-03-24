@@ -28,39 +28,92 @@ export const isFirebaseConfigured =
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';
 
-// Initialize Firebase only on the client side
+// Initialize Firebase variables
 let app: ReturnType<typeof initializeApp> | undefined;
 let auth: ReturnType<typeof getAuth> | undefined;
 let db: ReturnType<typeof getFirestore> | undefined;
 let storage: ReturnType<typeof getStorage> | undefined;
 
-if (isClient && isFirebaseConfigured) {
+// Maximum number of retries for Firebase initialization
+const MAX_INIT_RETRIES = 3;
+
+// Initialize Firebase with retry mechanism
+const initializeFirebase = (retryCount = 0) => {
+  // Skip initialization if not on client or not configured
+  if (!isClient || !isFirebaseConfigured) {
+    if (!isFirebaseConfigured && isClient) {
+      console.warn(
+        'Firebase environment variables are not set. Authentication and database features will not work properly. ' +
+        'Please ensure NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, and NEXT_PUBLIC_FIREBASE_PROJECT_ID are set in your environment.'
+      );
+    }
+    return;
+  }
+
   try {
-    // Initialize Firebase
+    // Initialize Firebase app if not already initialized
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
+    
+    // Initialize auth with proper error handling
+    try {
+      auth = getAuth(app);
+      console.log('Firebase Auth initialized successfully');
+    } catch (authError) {
+      console.error('Firebase Auth initialization error:', authError);
+      // We continue even if auth fails, to allow other services to work
+    }
+    
+    // Initialize Firestore with proper error handling
+    try {
+      db = getFirestore(app);
+      console.log('Firebase Firestore initialized successfully');
+    } catch (dbError) {
+      console.error('Firebase Firestore initialization error:', dbError);
+    }
+    
+    // Initialize Storage with proper error handling
+    try {
+      storage = getStorage(app);
+      console.log('Firebase Storage initialized successfully');
+    } catch (storageError) {
+      console.error('Firebase Storage initialization error:', storageError);
+    }
 
     // Connect to emulators in development environment only (never on Vercel)
     if (process.env.NODE_ENV === 'development' && 
         process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' && 
         process.env.VERCEL !== '1') {
-      connectAuthEmulator(auth, 'http://localhost:9099');
-      connectFirestoreEmulator(db, 'localhost', 8080);
-      connectStorageEmulator(storage, 'localhost', 9199);
+      try {
+        if (auth) connectAuthEmulator(auth, 'http://localhost:9099');
+        if (db) connectFirestoreEmulator(db, 'localhost', 8080);
+        if (storage) connectStorageEmulator(storage, 'localhost', 9199);
+        console.log('Connected to Firebase emulators successfully');
+      } catch (emulatorError) {
+        console.error('Error connecting to Firebase emulators:', emulatorError);
+      }
     }
+    
+    console.log('Firebase initialization completed');
   } catch (error) {
-    console.error('Firebase initialization error:', error);
+    console.error(`Firebase initialization attempt ${retryCount + 1} failed:`, error);
+    
+    // Retry initialization with exponential backoff
+    if (retryCount < MAX_INIT_RETRIES) {
+      const delay = Math.pow(2, retryCount) * 500; // Exponential backoff: 500ms, 1s, 2s, ...
+      console.log(`Retrying Firebase initialization in ${delay}ms...`);
+      
+      setTimeout(() => {
+        initializeFirebase(retryCount + 1);
+      }, delay);
+    } else {
+      console.error(`Failed to initialize Firebase after ${MAX_INIT_RETRIES} attempts`);
+    }
   }
-} else {
-  // Log a warning if environment variables are not set
-  if (!isFirebaseConfigured && isClient) {
-    console.warn(
-      'Firebase environment variables are not set. Authentication and database features will not work properly. ' +
-      'Please ensure NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, and NEXT_PUBLIC_FIREBASE_PROJECT_ID are set in your environment.'
-    );
-  }
+};
+
+// Run initialization
+if (isClient) {
+  initializeFirebase();
 }
 
 // Types for our database collections

@@ -1,55 +1,48 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-// Import directly from firebase/auth in client components
-import * as firebaseAuthStubs from '../utils/firebase-auth-unified';
 import { auth, isFirebaseConfigured } from './firebase';
 
-// Import directly from firebase/auth when in client context
-// This ensures we get the real implementation at runtime
+// Import Firebase auth safely
+// We use a dynamic import to ensure this runs only in the browser
+let firebaseAuth: any = null;
+
+// Initialize Firebase auth functions
 let createUserWithEmailAndPassword: any;
 let signInWithEmailAndPassword: any;
-let firebaseSignOut: any; // Renamed to avoid collision with the signOut method
+let firebaseSignOut: any;
 let onAuthStateChanged: any;
 let GoogleAuthProvider: any;
 let signInWithPopup: any;
 let sendPasswordResetEmail: any;
 
-// Check if we're in a client context (this is a client component)
-if (typeof window !== 'undefined') {
+// Safe initialization function for Firebase Auth
+const initializeAuth = () => {
+  // Only run in client environment
+  if (typeof window === 'undefined') return false;
+
   try {
-    // Direct import will be used at runtime in browser
-    const firebaseAuth = require('firebase/auth');
+    // Import synchronously since we're in a client component
+    firebaseAuth = require('firebase/auth');
     
-    // Use the real Firebase Auth methods
+    // Store function references
     createUserWithEmailAndPassword = firebaseAuth.createUserWithEmailAndPassword;
     signInWithEmailAndPassword = firebaseAuth.signInWithEmailAndPassword;
-    firebaseSignOut = firebaseAuth.signOut; // Renamed to avoid collision
+    firebaseSignOut = firebaseAuth.signOut;
     onAuthStateChanged = firebaseAuth.onAuthStateChanged;
     GoogleAuthProvider = firebaseAuth.GoogleAuthProvider;
     signInWithPopup = firebaseAuth.signInWithPopup;
     sendPasswordResetEmail = firebaseAuth.sendPasswordResetEmail;
+    
+    return true;
   } catch (error) {
-    console.error('Failed to load Firebase Auth in FirebaseAuthContext:', error);
-    // Fallback to stubs if real import fails
-    createUserWithEmailAndPassword = firebaseAuthStubs.createUserWithEmailAndPassword;
-    signInWithEmailAndPassword = firebaseAuthStubs.signInWithEmailAndPassword;
-    firebaseSignOut = firebaseAuthStubs.signOut; // Renamed to avoid collision
-    onAuthStateChanged = firebaseAuthStubs.onAuthStateChanged;
-    GoogleAuthProvider = firebaseAuthStubs.GoogleAuthProvider;
-    signInWithPopup = firebaseAuthStubs.signInWithPopup;
-    sendPasswordResetEmail = firebaseAuthStubs.sendPasswordResetEmail;
+    console.error('Failed to initialize Firebase Auth:', error);
+    return false;
   }
-} else {
-  // Use stubs for SSR (should never execute in a use client component)
-  createUserWithEmailAndPassword = firebaseAuthStubs.createUserWithEmailAndPassword;
-  signInWithEmailAndPassword = firebaseAuthStubs.signInWithEmailAndPassword;
-  firebaseSignOut = firebaseAuthStubs.signOut; // Renamed to avoid collision
-  onAuthStateChanged = firebaseAuthStubs.onAuthStateChanged;
-  GoogleAuthProvider = firebaseAuthStubs.GoogleAuthProvider;
-  signInWithPopup = firebaseAuthStubs.signInWithPopup;
-  sendPasswordResetEmail = firebaseAuthStubs.sendPasswordResetEmail;
-}
+};
+
+// Initialize auth in client environments
+const isAuthInitialized = initializeAuth();
 
 // Define types for Firebase Auth
 type User = any;
@@ -93,59 +86,104 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Skip Firebase initialization if not configured or not on client
-    if (!isClient) {
+    // Early return if not in client environment
+    if (typeof window === 'undefined') {
       setIsLoading(false);
       return () => {};
     }
 
-    if (!isFirebaseConfigured || !auth) {
+    // Check if Firebase is configured
+    if (!isFirebaseConfigured) {
       console.warn('Firebase is not configured. Authentication features will be disabled.');
       setIsLoading(false);
       return () => {};
     }
 
-    let unsubscribe: () => void;
+    // Check if auth is available
+    if (!auth) {
+      console.error('Firebase auth object is not available');
+      setError('Authentication system unavailable');
+      setIsLoading(false);
+      return () => {};
+    }
+
+    // Check if auth initialization was successful
+    if (!isAuthInitialized) {
+      console.error('Firebase Auth failed to initialize');
+      setError('Authentication system failed to initialize');
+      setIsLoading(false);
+      return () => {};
+    }
+
+    let unsubscribe: () => void = () => {};
     
-  try {
-      // Check if auth object has onAuthStateChanged method
-      if (auth && typeof (auth as any).onAuthStateChanged === 'function') {
-        // Type assertion to access onAuthStateChanged
-        unsubscribe = (auth as any).onAuthStateChanged((currentUser: any) => {
-          setUser(currentUser);
-          setIsLoading(false);
-        }, (error: any) => {
-          console.error('Auth state change error:', error);
-          setError('Authentication error: ' + (error.message || 'Unknown error'));
-          setIsLoading(false);
-        });
-      } else if (typeof onAuthStateChanged === 'function') {
-        // Fall back to imported onAuthStateChanged function
-        unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
-          setUser(currentUser);
-          setIsLoading(false);
-        }, (error: any) => {
-          console.error('Auth state change error:', error);
-          setError('Authentication error: ' + (error.message || 'Unknown error'));
-          setIsLoading(false);
-        });
-      } else {
-        // If neither approach works, gracefully handle the failure
-        console.error('Firebase Auth initialized incorrectly - onAuthStateChanged not available');
-        setError('Authentication system unavailable');
-        setIsLoading(false);
-        return () => {};
+    try {
+      // Setup auth state listener with retry mechanism
+      const setupAuthListener = () => {
+        try {
+          // Use the imported onAuthStateChanged function (safer approach)
+          unsubscribe = onAuthStateChanged(
+            auth,
+            (currentUser: any) => {
+              setUser(currentUser);
+              setIsLoading(false);
+              console.log('Auth state changed:', currentUser ? 'User logged in' : 'No user');
+            },
+            (error: any) => {
+              console.error('Auth state change error:', error);
+              setError('Authentication error: ' + (error.message || 'Unknown error'));
+              setIsLoading(false);
+            }
+          );
+          
+          console.log('Auth listener registered successfully');
+          return true;
+        } catch (listenerError) {
+          console.error('Error setting up auth listener:', listenerError);
+          return false;
+        }
+      };
+      
+      // Try to set up the listener, with a fallback approach if it fails
+      if (!setupAuthListener() && auth) {
+        console.warn('Falling back to alternative auth approach');
+        // Wait a moment and try again with a direct approach
+        setTimeout(() => {
+          try {
+            if (auth && typeof auth.onAuthStateChanged === 'function') {
+              unsubscribe = auth.onAuthStateChanged(
+                (currentUser: any) => {
+                  setUser(currentUser);
+                  setIsLoading(false);
+                },
+                (error: any) => {
+                  console.error('Auth state change error (fallback):', error);
+                  setError('Authentication error: ' + (error.message || 'Unknown error'));
+                  setIsLoading(false);
+                }
+              );
+            } else {
+              setError('Authentication system unavailable');
+              setIsLoading(false);
+            }
+          } catch (fallbackError) {
+            console.error('Even fallback auth approach failed:', fallbackError);
+            setError('Authentication system unavailable');
+            setIsLoading(false);
+          }
+        }, 100);
       }
     } catch (err: any) {
       console.error('Failed to initialize Firebase auth listener:', err);
       setError('Failed to initialize authentication system');
       setIsLoading(false);
-      return () => {};
     }
 
+    // Clean up function
     return () => {
       try {
         unsubscribe();
+        console.log('Auth listener unsubscribed');
       } catch (err) {
         console.error('Error unsubscribing from auth state:', err);
       }
