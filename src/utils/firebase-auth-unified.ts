@@ -67,7 +67,7 @@ export const getAuth = (app?: FirebaseApp) => {
   return {};
 };
 
-export const connectAuthEmulator = () => {
+export const connectAuthEmulator = (auth: Auth, url: string) => {
   console.log(`Server-side connectAuthEmulator called (no-op)`);
 };
 

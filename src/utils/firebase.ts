@@ -42,8 +42,10 @@ if (isClient && isFirebaseConfigured) {
     db = getFirestore(app);
     storage = getStorage(app);
 
-    // Connect to emulators in development environment
-    if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
+    // Connect to emulators in development environment only (never on Vercel)
+    if (process.env.NODE_ENV === 'development' && 
+        process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' && 
+        process.env.VERCEL !== '1') {
       connectAuthEmulator(auth, 'http://localhost:9099');
       connectFirestoreEmulator(db, 'localhost', 8080);
       connectStorageEmulator(storage, 'localhost', 9199);
