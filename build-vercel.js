@@ -31,6 +31,52 @@ process.env.VERCEL = '1';
 process.env.VERCEL_ENV = 'production';
 process.env.NEXT_PUBLIC_IS_VERCEL = 'true';
 
+// Apply comprehensive browser polyfills for server environment
+console.log('Applying comprehensive browser polyfills for server environment...');
+try {
+  // Import dedicated polyfill module to ensure consistent environment
+  const polyfillPath = './src/utils/browser-polyfills.js';
+  
+  // Direct require for immediate execution in build context
+  if (require('fs').existsSync(polyfillPath)) {
+    console.log('Loading polyfills from:', polyfillPath);
+    require(polyfillPath);
+  } else {
+    console.log('Polyfill file not found, applying minimal polyfills directly');
+    // Minimal polyfills as fallback
+    global.self = global;
+    global.window = global;
+    global.document = { createElement: () => ({}), querySelector: () => null };
+    global.navigator = { userAgent: 'Node.js' };
+  }
+  
+  // Set up error tracking for browser globals
+  const originalPrepareStackTrace = Error.prepareStackTrace;
+  Error.prepareStackTrace = function(error, stack) {
+    // This will help identify browser API usage in server code
+    if (error.message && (
+      error.message.includes('self is not defined') ||
+      error.message.includes('window is not defined') ||
+      error.message.includes('document is not defined')
+    )) {
+      console.warn('[Build Warning] Browser API reference detected:', error.message);
+      console.warn('  Location:', stack[0].getFileName(), 'line:', stack[0].getLineNumber());
+      // Don't throw error, just warn
+    }
+    return originalPrepareStackTrace ? originalPrepareStackTrace(error, stack) : stack;
+  };
+  
+  console.log('Browser polyfills applied successfully');
+} catch (error) {
+  console.warn('Warning: Failed to apply browser polyfills:', error.message);
+  console.warn('This may cause issues with browser-specific code in server context');
+  console.warn('Continuing build process with basic polyfills');
+  
+  // Apply minimalist polyfills as absolute fallback
+  global.self = global;
+  global.window = global;
+}
+
 // Streamlined Firebase auth compatibility setup - using TypeScript modules
 console.log('Setting up Firebase auth compatibility...');
 try {
@@ -198,8 +244,32 @@ try {
 console.log('Ensuring correct output directory...');
 const outputDir = '.next-dynamic';
 
-  // Run the Next.js build with specific output directory
-console.log('Running Next.js build...');
+// Create a .env.production file with the correct output directory
+try {
+  console.log(`Setting output directory to: ${outputDir}`);
+  
+  // Add NEXT_DIST_DIR if it doesn't exist in the environment
+  if (!process.env.NEXT_DIST_DIR) {
+    process.env.NEXT_DIST_DIR = outputDir;
+    
+    // Also write to .env.production for Next.js to pick it up
+    let envContent = '';
+    if (fs.existsSync('.env.production')) {
+      envContent = fs.readFileSync('.env.production', 'utf8');
+    }
+    
+    if (!envContent.includes('NEXT_DIST_DIR')) {
+      fs.writeFileSync('.env.production', 
+        `${envContent}\nNEXT_DIST_DIR=${outputDir}\n`);
+      console.log('Added NEXT_DIST_DIR to .env.production');
+    }
+  }
+} catch (error) {
+  console.warn('Warning: Could not set output directory:', error.message);
+}
+
+// Run the Next.js build with specific output directory
+console.log('Running Next.js build with custom output directory...');
 try {
   // Fix path aliases before building
   ensurePathAliases();

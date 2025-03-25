@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 import { initializeMonitoring } from '@/utils/monitoring';
 import { auth } from '@/utils/firebase';
+// Import browser polyfills to ensure proper environment handling
+import ensurePolyfills from '@/utils/browser-polyfills';
 
 interface ClientWrapperProps {
   children: React.ReactNode;

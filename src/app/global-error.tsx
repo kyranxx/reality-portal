@@ -3,6 +3,8 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { trackError } from '@/utils/monitoring';
+// Import browser polyfills to handle global objects like 'self' in server context
+import ensurePolyfills from '@/utils/browser-polyfills';
 
 // Global error component for App Router
 // This handles errors that occur during rendering of the root layout

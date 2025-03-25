@@ -125,7 +125,9 @@ const nextConfig = {
         commons: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all',
+          // Critical fix: For server builds, only chunk async code
+          // This prevents browser-only code with 'self' references from being in server bundles
+          chunks: isServer ? 'async' : 'all',
         },
         // Create a separate chunk for the font loader
         fontLoader: {
@@ -136,6 +138,16 @@ const nextConfig = {
         },
       },
     };
+    
+    // Add server-specific externals for browser-only modules
+    if (isServer) {
+      // Exclude browser-only modules from server builds
+      config.externals.push({
+        // Common browser-only modules that might use 'self'
+        'crypto-browserify': 'commonjs crypto-browserify',
+        'browser-env': 'commonjs browser-env',
+      });
+    }
     
     return config;
   },

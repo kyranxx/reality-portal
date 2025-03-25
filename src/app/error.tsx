@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+// Import browser polyfills to handle global objects like 'self' in server context
+import ensurePolyfills from '@/utils/browser-polyfills';
 
 export default function Error({
   error,
