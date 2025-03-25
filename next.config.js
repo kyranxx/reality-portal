@@ -24,6 +24,11 @@ const nextConfig = {
   output: isVercel ? 'standalone' : undefined,
   reactStrictMode: true,
   
+  // Enable ESLint during build
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+  
   // Configure asset prefixing based on environment
   assetPrefix: getBaseUrl(),
   

@@ -1,4 +1,4 @@
-'use client';
+'use client'; // Required for Next.js Error Components
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';

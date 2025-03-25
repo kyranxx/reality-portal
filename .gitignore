@@ -39,3 +39,8 @@ next-env.d.ts
 
 # logs
 vercel-errors.txt
+errors-log.txt
+
+# generated assets
+# public/fonts/ (removed to allow committing fonts)
+public/images/placeholder.*
