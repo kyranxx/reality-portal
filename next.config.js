@@ -39,7 +39,8 @@ const nextConfig = {
     domains: [
       'firebasestorage.googleapis.com', 
       'via.placeholder.com',
-      'reality-portal.vercel.app'
+      'reality-portal.vercel.app',
+      'placehold.co'
     ],
     remotePatterns: [
       {
@@ -61,6 +62,18 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.vercel.app',
+        pathname: '/**',
+      },
+      // Add support for Unsplash images
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      // Add placeholder.com as a reliable fallback
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
         pathname: '/**',
       }
     ],
