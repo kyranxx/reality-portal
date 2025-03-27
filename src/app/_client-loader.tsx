@@ -1,4 +1,4 @@
-'use client';
+'use client'; // Essential for client components
 
 import React, { Suspense, lazy } from 'react';
 import { CLIENT_COMPONENTS, ClientComponentKey } from './_components';
@@ -35,13 +35,14 @@ export function UniversalComponentLoader({
     </div>
   </div>
 }: UniversalComponentLoaderProps) {
-  // Try to get component from the static registry first (safest for prerendering)
+  // Use static registry first (faster startup and safer for production)
+  // This prevents client/server mismatch errors during hydration
   const StaticComponent = STATIC_COMPONENTS[componentKey];
   
-  // Fall back to dynamic registry for any new components added later
+  // Only fall back to dynamic registry if needed (new components added later)
   const DynamicComponent = CLIENT_COMPONENTS[componentKey];
   
-  // Choose the first available component
+  // Choose the first available component with a clear preference for static
   const Component = StaticComponent || DynamicComponent;
   
   if (!Component) {

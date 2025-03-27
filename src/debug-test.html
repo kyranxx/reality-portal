@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reality Portal Diagnostics</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #0066cc;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    
+    .card {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    
+    button:hover {
+      background: #0055aa;
+    }
+    
+    pre {
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 4px;
+      overflow: auto;
+      margin-top: 20px;
+    }
+    
+    .issue {
+      margin-bottom: 15px;
+      padding: 12px;
+      border-radius: 4px;
+    }
+    
+    .error {
+      background-color: rgba(255, 0, 0, 0.1);
+      border-left: 4px solid #ff0000;
+    }
+    
+    .warning {
+      background-color: rgba(255, 165, 0, 0.1);
+      border-left: 4px solid #ff9900;
+    }
+    
+    .info {
+      background-color: rgba(0, 0, 255, 0.1);
+      border-left: 4px solid #0066cc;
+    }
+    
+    .issue-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .issue-details {
+      margin-left: 10px;
+      font-size: 14px;
+    }
+    
+    .issue-fix {
+      margin-left: 10px;
+      font-size: 14px;
+      font-style: italic;
+      color: #0066cc;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background: #f1f1f1;
+      margin-right: 5px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+    
+    .tab.active {
+      background: #0066cc;
+      color: white;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    #results-count {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    
+    #browser-info {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reality Portal Diagnostics</h1>
+    
+    <div id="browser-info"></div>
+    
+    <div class="card">
+      <h2>Run Diagnostics</h2>
+      <p>Click the button below to run all diagnostic tests on the current page. This will check for:</p>
+      <ul>
+        <li>Global JavaScript errors</li>
+        <li>Performance issues</li>
+        <li>Resource loading problems</li>
+        <li>React-specific errors</li>
+        <li>Firebase configuration issues</li>
+        <li>Network request problems</li>
+        <li>Accessibility concerns</li>
+        <li>Browser compatibility issues</li>
+      </ul>
+      <button id="run-diagnostics">Run All Diagnostics</button>
+      <button id="monitor-only">Enable Monitoring Only</button>
+    </div>
+    
+    <div id="results-count"></div>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="issues">Issues</div>
+      <div class="tab" data-tab="console">Console Output</div>
+      <div class="tab" data-tab="details">Technical Details</div>
+    </div>
+    
+    <div id="issues" class="tab-content active">
+      <div id="issues-container"></div>
+    </div>
+    
+    <div id="console" class="tab-content">
+      <pre id="console-output"></pre>
+    </div>
+    
+    <div id="details" class="tab-content">
+      <div class="card">
+        <h3>How to Use These Tools</h3>
+        <p>This diagnostic tool works by analyzing the current state of your web application and identifying potential issues.</p>
+        <p><strong>Run All Diagnostics</strong> - Performs a comprehensive scan of the page</p>
+        <p><strong>Enable Monitoring Only</strong> - Sets up error tracking without running active checks</p>
+        <p>You can also include debug-tools.js directly in your application and call <code>runDiagnostics()</code> from the console.</p>
+      </div>
+      
+      <div class="card">
+        <h3>Debugging in Chrome DevTools</h3>
+        <p>For additional debugging, use Chrome DevTools:</p>
+        <ol>
+          <li>Press F12 or Ctrl+Shift+I (Cmd+Option+I on Mac) to open DevTools</li>
+          <li>Navigate to the Console tab to see JavaScript errors</li>
+          <li>Check the Network tab to monitor resource loading</li>
+          <li>Use the Performance tab to identify bottlenecks</li>
+          <li>Check the Application tab to examine storage and service workers</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the diagnostics tools
+    import runDiagnostics, { initializeMonitoring } from './utils/debug-tools.js';
+    
+    // Display browser info
+    const browserInfoEl = document.getElementById('browser-info');
+    browserInfoEl.textContent = `Browser: ${navigator.userAgent}`;
+    
+    // Set up tab navigation
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        tabs.forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        // Show corresponding tab content
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Run diagnostics button
+    document.getElementById('run-diagnostics').addEventListener('click', async () => {
+      const issuesContainer = document.getElementById('issues-container');
+      issuesContainer.innerHTML = '<p>Running diagnostics...</p>';
+      
+      // Allow UI to update
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
+      try {
+        const issues = runDiagnostics();
+        
+        // Display results count
+        const resultsCount = document.getElementById('results-count');
+        resultsCount.textContent = `Found ${issues.length} issue(s)`;
+        
+        // Clear container
+        issuesContainer.innerHTML = '';
+        
+        if (issues.length === 0) {
+          issuesContainer.innerHTML = '<p>No issues detected! 🎉</p>';
+        } else {
+          // Display each issue
+          issues.forEach((issue, index) => {
+            const issueEl = document.createElement('div');
+            issueEl.className = `issue ${issue.severity}`;
+            
+            const titleEl = document.createElement('div');
+            titleEl.className = 'issue-title';
+            titleEl.textContent = `${index + 1}. [${issue.severity.toUpperCase()}] ${issue.message}`;
+            issueEl.appendChild(titleEl);
+            
+            if (issue.details) {
+              const detailsEl = document.createElement('div');
+              detailsEl.className = 'issue-details';
+              detailsEl.textContent = `Details: ${issue.details}`;
+              issueEl.appendChild(detailsEl);
+            }
+            
+            if (issue.fix) {
+              const fixEl = document.createElement('div');
+              fixEl.className = 'issue-fix';
+              fixEl.textContent = `Fix: ${issue.fix}`;
+              issueEl.appendChild(fixEl);
+            }
+            
+            issuesContainer.appendChild(issueEl);
+          });
+        }
+        
+        // Update console output
+        document.getElementById('console-output').textContent = window.consoleOutput || 'No console output captured';
+        
+      } catch (error) {
+        issuesContainer.innerHTML = `<p>Error running diagnostics: ${error.message}</p>`;
+        console.error('Diagnostics error:', error);
+      }
+    });
+    
+    // Monitor only button
+    document.getElementById('monitor-only').addEventListener('click', () => {
+      initializeMonitoring();
+      alert('Monitoring enabled. Errors will be tracked in the console.');
+    });
+  </script>
+</body>
+</html>

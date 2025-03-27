@@ -41,12 +41,6 @@ const nextConfig = {
   
   // Configure image component
   images: {
-    domains: [
-      'firebasestorage.googleapis.com', 
-      'via.placeholder.com',
-      'reality-portal.vercel.app',
-      'placehold.co'
-    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -63,19 +57,16 @@ const nextConfig = {
         hostname: '*.googleusercontent.com',
         pathname: '/**',
       },
-      // Add patterns for Vercel deployments to allow cross-origin image loading
       {
         protocol: 'https',
         hostname: '*.vercel.app',
         pathname: '/**',
       },
-      // Add support for Unsplash images
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
         pathname: '/**',
       },
-      // Add placeholder.com as a reliable fallback
       {
         protocol: 'https',
         hostname: 'placehold.co',
@@ -88,7 +79,7 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
-  // Add headers for specific paths - these work in conjunction with middleware.ts
+  // Add headers for specific paths
   async headers() {
     return [
       {
@@ -119,6 +110,8 @@ const nextConfig = {
       },
     ];
   },
+  
+  // Configure webpack
   webpack: (config, { isServer }) => {
     // Handle specific module issues in the build
     if (!isServer) {
@@ -143,11 +136,8 @@ const nextConfig = {
         commons: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          // Critical fix: For server builds, only chunk async code
-          // This prevents browser-only code with 'self' references from being in server bundles
           chunks: isServer ? 'async' : 'all',
         },
-        // Create a separate chunk for the font loader
         fontLoader: {
           test: /[\\/]node_modules[\\/]next[\\/]dist[\\/]client[\\/]font/,
           name: 'font-loader',
@@ -175,8 +165,7 @@ const nextConfig = {
     PUBLIC_URL: process.env.PUBLIC_URL || '',
     VERCEL_ENV: process.env.VERCEL_ENV || '',
     VERCEL: process.env.VERCEL || '',
-    NEXT_PUBLIC_VERCEL_URL: process.env.VERCEL_URL || 'localhost:3000',
-    // Add an asset base path variable for client-side use
+    NEXT_PUBLIC_VERCEL_URL: process.env.VERCEL_URL || 'localhost:3002',
     NEXT_PUBLIC_ASSET_PREFIX: getBaseUrl(),
   },
 };
