@@ -36,6 +36,7 @@ next-env.d.ts
 
 # editor
 .vscode/
+.diagnostic/
 
 # logs
 vercel-errors.txt
