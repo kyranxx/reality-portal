@@ -1,0 +1,83 @@
+// Firestore Security Rules for Reality Portal
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Base functions for user validation
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // User profiles - users can read any profile but only edit their own
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // User settings - private to the user
+    match /userSettings/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+    }
+
+    // Properties - read by anyone, written only by owner or admin
+    match /properties/{propertyId} {
+      allow read: if true; // Public read access
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+
+      // Nested collections for property-specific data
+      match /images/{imageId} {
+        allow read: if true;
+        allow write: if isSignedIn() && (
+          get(/databases/$(database)/documents/properties/$(propertyId)).data.userId == request.auth.uid || isAdmin()
+        );
+      }
+    }
+
+    // Featured properties can be read by anyone, updated only by admins
+    match /featuredProperties/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Messages - only readable/writable by sender or recipient
+    match /messages/{messageId} {
+      allow read, write: if isSignedIn() && (
+        resource.data.senderId == request.auth.uid || 
+        resource.data.recipientId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // Favorites - personal to each user
+    match /favorites/{favoriteId} {
+      allow read, write: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+    }
+
+    // Admin documents - only accessible by admins
+    match /admins/{adminId} {
+      allow read, write: if isAdmin();
+    }
+
+    // System settings - public readable, admin writable
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

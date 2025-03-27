@@ -6,11 +6,10 @@ import { useApp } from '@/contexts/AppContext';
 import { useState, useEffect } from 'react';
 
 export default function Header() {
-  const { user, signOut, signInWithGoogle } = useAuth();
+  const { user, signOut } = useAuth();
   const { language, setLanguage, t } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [authMenuOpen, setAuthMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   // Handle scroll effect
@@ -93,29 +92,9 @@ export default function Header() {
               {t('nav.myAccount')}
             </Link>
           ) : (
-            <div className="relative">
-              <button 
-                className="btn btn-primary flex items-center"
-                onClick={() => setAuthMenuOpen(!authMenuOpen)}
-              >
-                <span className="mr-2">{t('nav.myAccount')}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 transition-transform duration-300 ${authMenuOpen ? 'rotate-180' : ''}`}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                </svg>
-              </button>
-              
-              {authMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-10 animate-fadeIn">
-                  <Link 
-                    href="/auth/unified" 
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
-                    onClick={() => setAuthMenuOpen(false)}
-                  >
-                    {t('nav.signIn')}
-                  </Link>
-                </div>
-              )}
-            </div>
+            <Link href="/auth/unified" className="btn btn-primary">
+              {t('nav.signIn')}
+            </Link>
           )}
         </div>
         
