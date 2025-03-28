@@ -5,9 +5,13 @@ import { useRouter } from 'next/navigation';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
 import { useAuth } from '@/utils/FirebaseAuthContext';
+import { getTranslation, validateTranslations } from '@/locales/translation-fixes';
 
 // Define available languages
 export type Language = 'en' | 'cs' | 'hu' | 'sk';
+
+// Default language for the application
+export const DEFAULT_LANGUAGE: Language = 'sk';
 
 // Define available themes
 export type ThemeType = 'earthy' | 'professional' | 'playful';
@@ -82,7 +86,7 @@ type AppContextType = {
 
 // Create the context with default values
 const AppContext = createContext<AppContextType>({
-  language: 'en',
+  language: DEFAULT_LANGUAGE,
   setLanguage: () => {},
   theme: themes.professional,
   setTheme: () => {},
@@ -124,7 +128,7 @@ const getNestedValue = (obj: any, path: string): string => {
 
 // Provider component
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
   const [theme, setThemeState] = useState<Theme>(themes.professional);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -278,26 +282,21 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Translation function
+  // Enhanced translation function using the centralized translation utility
   const t = (key: string, fallback?: string): string => {
-    // Get the translation from the current language
-    const translation = getNestedValue(translations[language], key);
-
-    // If the translation is the same as the key, it means it wasn't found
-    if (translation === key) {
-      // Try to get the translation from English as a fallback
-      if (language !== 'en') {
-        const enTranslation = getNestedValue(translations.en, key);
-        if (enTranslation !== key) {
-          return enTranslation;
-        }
-      }
-      // Return the provided fallback or the key itself
-      return fallback || key;
-    }
-
-    return translation;
+    return getTranslation(language, key, fallback);
   };
+
+  // Validate translations in development mode
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      const validationResult = validateTranslations();
+      if (!validationResult.valid) {
+        console.warn('Translation validation issues detected:');
+        validationResult.issues.forEach(issue => console.warn(` - ${issue}`));
+      }
+    }
+  }, []);
 
   return (
     <AppContext.Provider value={{ language, setLanguage, theme, setTheme, isLoading, t }}>

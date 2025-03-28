@@ -1,5 +1,6 @@
 // Server component that uses the Universal Component Loader
 import { UniversalComponentLoader } from './_client-loader';
+import { Viewport } from 'next';
 
 // Disable static rendering and force dynamic for Vercel production
 export const dynamic = 'force-dynamic';
@@ -8,6 +9,13 @@ export const revalidate = 0;
 // Ensure the page is never statically rendered during build
 export const generateStaticParams = () => {
   return [];
+};
+
+// Add viewport export to fix metadata warning
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  userScalable: true
 };
 
 export default function Home() {

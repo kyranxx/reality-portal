@@ -1,83 +1,74 @@
-// Firestore Security Rules for Reality Portal
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Base functions for user validation
+    // Helper functions
     function isSignedIn() {
       return request.auth != null;
     }
     
     function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+      return request.auth.uid == userId;
     }
-
+    
     function isAdmin() {
       return isSignedIn() && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+            exists(/databases/$(database)/documents/roles/$(request.auth.uid)) &&
+            get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.isAdmin == true;
     }
-
-    // User profiles - users can read any profile but only edit their own
-    match /users/{userId} {
-      allow get: if isSignedIn();
-      allow list: if isAdmin();
-      allow create: if isOwner(userId);
-      allow update: if isOwner(userId) || isAdmin();
-      allow delete: if isAdmin();
-    }
-
-    // User settings - private to the user
-    match /userSettings/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
-    }
-
-    // Properties - read by anyone, written only by owner or admin
+    
+    // Public read for properties, authenticated create/update/delete
     match /properties/{propertyId} {
-      allow read: if true; // Public read access
-      allow create: if isSignedIn();
-      allow update, delete: if isSignedIn() && (
-        resource.data.userId == request.auth.uid || isAdmin()
-      );
-
-      // Nested collections for property-specific data
+      allow read: if true; // Anyone can read property listings
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow delete: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      
+      // Property images subcollection
       match /images/{imageId} {
         allow read: if true;
-        allow write: if isSignedIn() && (
-          get(/databases/$(database)/documents/properties/$(propertyId)).data.userId == request.auth.uid || isAdmin()
-        );
+        allow write: if isSignedIn() && (isOwner(get(/databases/$(database)/documents/properties/$(propertyId)).data.userId) || isAdmin());
       }
     }
-
-    // Featured properties can be read by anyone, updated only by admins
-    match /featuredProperties/{documentId} {
-      allow read: if true;
-      allow write: if isAdmin();
+    
+    // User settings - only the user or admin can access
+    match /userSettings/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
     }
-
-    // Messages - only readable/writable by sender or recipient
+    
+    // User profiles - read is public, write is restricted
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+    
+    // Messages - only between sender and recipient
     match /messages/{messageId} {
-      allow read, write: if isSignedIn() && (
-        resource.data.senderId == request.auth.uid || 
-        resource.data.recipientId == request.auth.uid ||
-        isAdmin()
-      );
+      allow read: if isSignedIn() && (isOwner(resource.data.senderId) || isOwner(resource.data.recipientId));
+      allow create: if isSignedIn() && isOwner(request.resource.data.senderId);
+      allow update: if isSignedIn() && (isOwner(resource.data.senderId) || isOwner(resource.data.recipientId));
+      allow delete: if isAdmin();
     }
-
-    // Favorites - personal to each user
+    
+    // Favorites - only accessible by the user who created them
     match /favorites/{favoriteId} {
-      allow read, write: if isSignedIn() && (
-        resource.data.userId == request.auth.uid || isAdmin()
-      );
+      allow read: if isSignedIn() && isOwner(resource.data.userId);
+      allow create: if isSignedIn() && isOwner(request.resource.data.userId);
+      allow update: if isSignedIn() && isOwner(resource.data.userId);
+      allow delete: if isSignedIn() && isOwner(resource.data.userId);
     }
-
-    // Admin documents - only accessible by admins
-    match /admins/{adminId} {
-      allow read, write: if isAdmin();
-    }
-
-    // System settings - public readable, admin writable
-    match /settings/{settingId} {
-      allow read: if true;
+    
+    // Admin roles - only admins can read/write
+    match /roles/{userId} {
+      allow read: if isAdmin();
       allow write: if isAdmin();
+    }
+    
+    // Default deny for all other documents
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

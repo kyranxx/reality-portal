@@ -225,6 +225,18 @@ class FirebaseService {
    * Get the current authenticated user
    * @returns Current user or null if not authenticated
    */
+  /**
+   * Check if Firebase is fully initialized
+   * @returns Boolean indicating whether Firebase is initialized
+   */
+  public isInitialized(): boolean {
+    return this.initState === 'initialized';
+  }
+
+  /**
+   * Get the current authenticated user
+   * @returns Current user or null if not authenticated
+   */
   public getCurrentUser(): User | null {
     return this.currentUser;
   }

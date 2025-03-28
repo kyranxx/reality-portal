@@ -29,6 +29,10 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   
+  // Remove explicit Turbopack configuration to avoid conflicts
+  // Turbopack can be used via --turbo flag with the dev:turbo script
+  experimental: {},
+  
   // Configure asset prefixing based on environment
   assetPrefix: getBaseUrl(),
   

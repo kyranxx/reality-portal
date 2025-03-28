@@ -35,7 +35,8 @@ let db: ReturnType<typeof getFirestore> | undefined;
 let storage: ReturnType<typeof getStorage> | undefined;
 
 // Maximum number of retries for Firebase initialization
-const MAX_INIT_RETRIES = 3;
+// Use fewer retries in development for faster startup
+const MAX_INIT_RETRIES = process.env.NODE_ENV === 'development' ? 1 : 3;
 
 // Initialize Firebase with retry mechanism
 const initializeFirebase = (retryCount = 0) => {
@@ -99,7 +100,9 @@ const initializeFirebase = (retryCount = 0) => {
     
     // Retry initialization with exponential backoff
     if (retryCount < MAX_INIT_RETRIES) {
-      const delay = Math.pow(2, retryCount) * 500; // Exponential backoff: 500ms, 1s, 2s, ...
+      // Use shorter delays in development for faster startup
+      const baseDelay = process.env.NODE_ENV === 'development' ? 100 : 500;
+      const delay = Math.pow(2, retryCount) * baseDelay; // Development: 100ms, 200ms; Production: 500ms, 1s, 2s
       console.log(`Retrying Firebase initialization in ${delay}ms...`);
       
       setTimeout(() => {

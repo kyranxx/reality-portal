@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import BaseServerPage, { generateMetadata as genMeta } from '@/app/base-server-page';
 import { redirect } from 'next/navigation';
 
@@ -14,6 +14,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
+// Separate viewport export as required by Next.js 14
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 /**
  * Server Component for Property Detail Page
  * 
@@ -27,10 +35,10 @@ export default function PropertyPage({ params }: Props) {
     redirect('/nehnutelnosti');
   }
   
-  // Use the base server page to handle proper rendering
+  // Use the base server page to handle proper rendering with PropertyDetailClient
   return (
     <BaseServerPage 
-      clientComponent="HomeClient" // Note: Replace with "PropertyDetailClient" once it's implemented
+      clientComponent="PropertyDetailClient"
       title={`Property ${params.id} | Reality Portal`}
       description="View detailed information about this property"
     />

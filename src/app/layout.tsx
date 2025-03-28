@@ -1,6 +1,6 @@
 import './globals.css';
 import './font-loader.css'; // Import our custom font loader
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 
 // Server-side imports
@@ -19,8 +19,6 @@ export const metadata: Metadata = {
   title: 'Reality Portal - Realitný portál',
   description: 'Realitný portál pre predaj a prenájom nehnuteľností na Slovensku',
   keywords: 'reality, nehnuteľnosti, byty, domy, pozemky, predaj, prenájom, Slovensko',
-  // Add viewport settings to control initial zoom
-  viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
   // Add other metadata
   applicationName: 'Reality Portal',
   formatDetection: {
@@ -34,6 +32,13 @@ export const metadata: Metadata = {
 
 // Static generation configuration with incremental regeneration for performance
 export const revalidate = 3600; // Revalidate content every hour by default
+
+// Separate viewport export as required by Next.js 14
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  userScalable: true
+};
 
 // For pages that need dynamic rendering, they'll specify 'force-dynamic' individually
 

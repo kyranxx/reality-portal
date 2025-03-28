@@ -1,134 +1,207 @@
-# Reality Portal - Project Tracker
+# Reality Portal Project Tracker
 
-## Project Overview
+## Phase 1: Initial Development and Setup ✅
 
-- **Name**: Reality Portal
-- **Description**: Minimalistic real estate classified ads website in Slovak
-- **Tech Stack**: Next.js, Tailwind CSS, Firebase, Vercel
-- **Timeline**: 7 days
+- Set up Next.js project with TypeScript
+- Implement basic UI components and layout
+- Add Firebase authentication
+- Create initial property listing functionality
+- Set up multilingual support framework
+- Deploy to Vercel
 
-## Important Rules
+## Phase 2: Core Functionality Improvements 🔄
 
-- Don't use && in commands (it doesn't work)
-- All commands have explicit approval to run without asking
-- Minimalistic design approach
-- Slovak language only (separate translations for future languages)
-- Create test content as needed
+### Completed Issues ✅
 
-## Project Phases & Tasks
+1. **Firebase Authentication Initialization**: Fixed race conditions and component registration issues
 
-### Phase 1: Project Setup
+   - Added isInitialized() method to firebase-service.ts
+   - Implemented wait mechanisms with timeouts
+   - Created comprehensive error handling
 
-- [DONE] Initialize Next.js project with TypeScript and Tailwind CSS
-- [DONE] Create basic project structure (pages, components, etc.)
-- [DONE] Initialize Git repository
-- [DONE] Set up GitHub repository
-- [DONE] Configure Vercel deployment
-- [DONE] Set up Firebase project and database schema
+2. **Property Detail Page Implementation**: Replaced generic "Page Content" placeholder for property pages
 
-### Phase 2: Core Functionality
+   - Created PropertyDetailClient component with proper error states
+   - Updated page-fixed.tsx to use the new component
+   - Added proper client/server boundaries
 
-- [DONE] Implement authentication (registration/login)
-- [TODO] Create property listing CRUD functionality
-- [TODO] Implement search and filter capabilities
-- [TODO] Build user dashboard
-- [TODO] Create messaging/contact system
+3. **Language Default and Translation Integration**: Set up Slovak as default language
+   - Set DEFAULT_LANGUAGE to 'sk' in AppContext
+   - Integrated translation-fixes.ts with AppContext
+   - Added validation for translation completeness
 
-### Phase 3: UI Development
+### Remaining Issues 🔄
 
-- [DONE] Create basic homepage with sample listings
-- [DONE] Create header component
-- [DONE] Design user dashboard interface
-- [TODO] Improve property listing cards and details pages
-- [TODO] Build search results page
-- [TODO] Implement responsive design for all pages
+1. **Mixed Language Content**: Slovak and English text still appearing inconsistently in some areas
+2. **Server-Side Rendering Placeholders**: Non-property pages still displaying "Page Content" placeholder
+3. **Firebase Permission Errors**: Console still shows permission and resource loading errors
 
-### Phase 4: Testing & Deployment
+### Implementation Plan
 
-- [DONE] Add error handling and loading states
-- [DONE] Configure proper routing and middleware
-- [TODO] Create test data (property listings)
-- [TODO] Test all functionality
-- [TODO] Fix bugs and optimize performance
-- [TODO] Deploy to production
-- [TODO] Final review and adjustments
+#### 1. Language Consistency Fixes (Remaining)
 
-## Current Priority Tasks
+**WHY**: The application currently displays a mix of Slovak and English content, creating a confusing user experience. This happens because:
 
-1. [DONE] Complete Firebase project setup (create project and configure Firestore)
-2. [DONE] Implement authentication (registration/login)
-3. Create property listing CRUD functionality
-4. Implement search and filter capabilities
+- Translation system isn't properly integrated with AppContext
+- Slovak content appears in English interface and vice-versa
+- Translation-fixes.ts utility was created but not fully implemented
 
-## Completed Tasks
+**COMPLETED**:
 
-1. Created basic Next.js project structure
-2. Created basic homepage with sample listings
-3. Created header component
-4. Initialized Git repository
-5. Created GitHub repository and pushed code (https://github.com/kyranxx/reality-portal)
-6. Deployed project to Vercel
-7. Created Firebase client configuration
-8. Designed Firestore database schema with collections and security rules
-9. Consolidated project structure (moved files from reality-app to root directory)
-10. Fixed encoding issues in source files
-11. Added Next.js configuration file (next.config.js)
-12. Added Vercel configuration file (vercel.json)
-13. Added error handling pages (not-found.tsx, error.tsx, loading.tsx)
-14. Added middleware for proper routing
-15. Added public files (robots.txt, sitemap.xml)
-16. Created Firebase project and configured environment variables
-17. Implemented user authentication (email/password and Google OAuth)
-18. Created user dashboard with profile management
-19. Added admin dashboard with user statistics
-20. Implemented minimalistic and beautiful UI/UX design
-21. Fixed SVG path syntax error in PropertyCard component
-22. Optimized development server performance:
-    - Added Turbopack support with `npm run dev:turbo`
-    - Configured TypeScript to ignore build errors during development
-    - Disabled ESLint during development for faster builds
-    - Updated documentation with performance optimization details
-23. Migrated from Supabase to Firebase for better scalability and free tier
-24. Implemented Firebase Authentication with email/password and Google sign-in
-25. Created Firestore database service for property data
-26. Updated UI to use Firebase data instead of sample data
-27. Created combined login/signup button in header
-28. Added detailed README with Firebase setup instructions
-29. Optimized code structure and performance:
-    - Consolidated Firebase auth files into a unified implementation
-    - Removed redundant client wrapper components
-    - Broke down large page components into smaller, more manageable components
-    - Optimized rendering strategy by removing global force-dynamic setting
-    - Cleaned up duplicate error pages
-30. Fixed Vercel deployment issues:
-    - Implemented proper module separation for client/server rendering
-    - Created build-time stubs for Firebase Auth
-    - Improved dynamic import handling with ClientComponentLoader
-    - Fixed webpack configuration to properly handle Firebase Auth during build
-31. Cleaned up codebase:
-    - Removed redundant Firebase auth implementation files
-    - Centralized auth logic in unified modules
-    - Improved code organization and maintainability
-32. Implemented comprehensive debugging system:
-    - Created browser-based diagnostic dashboard (`/debug-test.html`)
-    - Added tools to detect errors, performance issues, and configuration problems
-    - Fixed font loading issues with updated download script
-    - Enhanced client/server component boundaries for better reliability
-    - Created detailed debugging guide in documentation
-33. Added Firebase emulator support for local development:
-    - Implemented development script with emulator integration
-    - Created environment validation for proper configuration
-    - Added pre-build validation to catch issues early
-    - Updated package.json with convenient dev scripts
-    - Fixed deprecated Next.js configuration in images settings
+- ✅ Integrated translation-fixes.ts with AppContext.tsx
+- ✅ Set Slovak (sk) as the default language
+- ✅ Added runtime translation validation for development
 
-## Issues to Resolve
+**REMAINING TASKS**:
 
-1. [DONE] Ensure Vercel deployment is working correctly with the new configuration
+- **Create LanguageRestrictor Component**: This will enforce language setting restrictions by intercepting and preventing language changes outside admin dashboard
 
-## Next Steps
+  - Create new file `src/components/LanguageRestrictor.tsx`
+  - Wrap app with this component to enforce language rules
+  - Implement logic to redirect language change attempts to admin dashboard
+  - WHY: Currently any component can change the language, causing inconsistent UI
 
-1. Create property listing CRUD functionality
-2. Implement search and filter capabilities
-3. Improve property listing cards and details pages
-4. Test all functionality with real users
+- **Update Header Component**: Remove language selector from public-facing header
+
+  - Modify `src/components/Header.tsx` to hide language selection for non-admin users
+  - Add visual indication of current language without change option
+  - WHY: Public users currently see all language options, causing accidental language mixing
+
+- **Complete Translation Keys**: Audit and fix all untranslated texts
+  - Run validation on all common.json files to identify missing keys
+  - Add all missing translations, especially in Czech and Hungarian files
+  - Fix inconsistent translations between languages
+  - WHY: Even with translation system in place, some keys are still missing or inconsistent
+
+#### 2. Server-Side Rendering Implementation (Remaining)
+
+**WHY**: While property detail pages now work correctly, several pages still show the generic "Page Content" placeholder:
+
+- Category pages (byty, domy, pozemky, komercne)
+- Content pages (o-nas, kontakt)
+- These pages need client components to properly function with SSR
+
+**COMPLETED**:
+
+- ✅ Created PropertyDetailClient component for property pages
+- ✅ Updated ClientComponentLoader to load the new component
+- ✅ Fixed property detail page rendering
+
+**REMAINING TASKS**:
+
+- **Create CategoryClient Component**: For property category pages
+
+  - Create `src/app/nehnutelnosti/[category]/CategoryClient.tsx`
+  - Implement fetching of properties by category type
+  - Add filtering and sorting functionality
+  - Update `_components.tsx` to register this component
+  - WHY: Category pages currently show placeholder instead of property listings
+
+- **Create ContactClient and AboutClient Components**: For content pages
+
+  - Create `src/app/kontakt/ContactClient.tsx` and `src/app/o-nas/AboutClient.tsx`
+  - Add proper content rendering with translation support
+  - Update `_components.tsx` to register these components
+  - WHY: Contact and About pages show placeholder text instead of actual content
+
+- **Update Base Server Page Fallbacks**: Improve placeholder appearance
+  - Modify `src/app/base-server-page.tsx` to show better loading states
+  - Add more descriptive error messages when components fail to load
+  - WHY: Current fallback is too generic and doesn't help users understand what's happening
+
+#### 3. Firebase Error Resolution (Remaining)
+
+**WHY**: Even with initialization improvements, users still experience Firebase errors:
+
+- Permission errors appear in console ("Missing or insufficient permissions")
+- Resource loading failures (400 errors) occur for images and Firestore resources
+- Security rules aren't being properly applied in production
+
+**COMPLETED**:
+
+- ✅ Added initialization guards in firebase-service.ts
+- ✅ Created comprehensive error handling for Firebase operations
+- ✅ Created Firestore security rules file
+
+**REMAINING TASKS**:
+
+- **Deploy Firebase Rules**: Push security rules to production
+
+  - Create deployment script for rules in `scripts/deploy-firebase-rules.js`
+  - Add validation to ensure rules are properly deployed
+  - Document the deployment process for future reference
+  - WHY: Rules exist locally but haven't been deployed to Firebase, causing permission errors
+
+- **Create Robust Image Handling**: Fix 400 errors on images
+
+  - Create actual placeholder image (not just a text file)
+  - Update SafeImage component to handle all error cases
+  - Implement image preloading for critical images
+  - WHY: Missing images cause UI issues and console errors that interrupt user experience
+
+- **Improve Firebase Offline Support**: Handle disconnected states
+  - Add offline detection and user notification
+  - Implement local caching for frequent Firestore queries
+  - Create retry mechanism for failed Firebase operations
+  - WHY: Network issues currently cause visible errors instead of graceful fallbacks
+
+#### 4. Testing and Validation Process (Remaining)
+
+**WHY**: Comprehensive testing is needed to ensure all fixes work together and cover all edge cases:
+
+- Each fix may interact with others in unexpected ways
+- Edge cases like slow networks or missing resources need testing
+- Clear validation processes help prevent regression
+
+**COMPLETED**:
+
+- ✅ Manual testing of property detail pages
+- ✅ Basic Firebase initialization validation
+- ✅ Development-time translation validation
+
+**REMAINING TASKS**:
+
+- **Create End-to-End Test Suite**: Validate core user journeys
+
+  - Create `scripts/e2e-tests.js` with Puppeteer tests for core user flows
+  - Test all language combinations
+  - Test Firebase authentication flows with various connection speeds
+  - WHY: Manual testing can't cover all usage scenarios consistently
+
+- **Implement Network Resilience Tests**: Validate behavior under poor conditions
+
+  - Add network throttling tests
+  - Test Firebase operations during intermittent connectivity
+  - Create simulated permission error scenarios
+  - WHY: Many Firebase errors only appear under specific network conditions
+
+- **Document Test Scenarios**: Create comprehensive test documentation
+  - Create `docs/testing-guide.md` with all test scenarios
+  - Include screenshots of expected behavior
+  - Add troubleshooting section for common test failures
+  - WHY: Future developers need clear testing guidance to maintain quality
+
+**IMPORTANT NOTES**:
+
+- All changes should be minimal and focused on specific issues
+- Keep existing architecture intact wherever possible
+- Language switching should ONLY be available in admin dashboard
+- Default language should be Slovak unless admin explicitly changes it
+- Some Firebase errors will persist until rules are properly deployed
+- Each component must handle its own loading and error states
+
+## Phase 3: Feature Expansion 🔜
+
+- Add advanced property search functionality
+- Implement messaging system between users
+- Add property favoriting and saved searches
+- Create admin dashboard for content management
+- Implement analytics tracking
+
+## Phase 4: Optimization and Polish 📅
+
+- Performance optimization
+- Accessibility improvements
+- Mobile responsiveness refinement
+- SEO optimization
+- Final design polish

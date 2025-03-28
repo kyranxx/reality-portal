@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "predev": "node scripts/validate-environment.js",
-    "dev": "next dev --turbo -p 3002",
-    "dev:webpack": "next dev -p 3002",
+    "dev": "next dev -p 3002",
+    "dev:turbo": "next dev --turbo -p 3002",
+    "dev:with-turbo": "node scripts/validate-environment.js && next dev --turbo -p 3002",
+    "dev:fast": "next dev -p 3002",
+    "dev:quick": "node scripts/quick-start.js",
     "dev:emulators": "node scripts/start-dev-with-emulators.js",
     "validate": "node scripts/pre-build-validation.js",
     "validate:deploy": "node scripts/validate-deployment.js",

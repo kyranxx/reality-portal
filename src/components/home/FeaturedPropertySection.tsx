@@ -16,7 +16,7 @@ const FeaturedPropertySection = ({ property }: FeaturedPropertySectionProps) => 
           <div className="lg:w-1/2">
             <div className="relative rounded-2xl overflow-hidden shadow-xl">
               <Image 
-                src={property.images?.[0] || '/images/placeholder.txt'}
+                src={property.images?.[0] || '/images/logo.svg'}
                 alt="Featured Property"
                 width={600}
                 height={400}
