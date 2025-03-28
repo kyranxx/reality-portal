@@ -1,23 +1,25 @@
 /**
  * Firebase Auth Stubs for Server/Build environments
- * 
+ *
  * This file provides stub implementations for Firebase Auth methods
  * to be used during server rendering and build time.
- * 
+ *
  * IMPORTANT: This file is specifically designed to be used in build environments
  * and contains no actual Firebase functionality.
  */
 
 // Type definitions
 export type Auth = any;
-export type User = any; 
+export type User = any;
 export type UserCredential = any;
 export type AuthProvider = any;
 export type AuthError = any;
 
 // Stub class implementations
 export class GoogleAuthProvider {
-  static credential() { return {}; }
+  static credential() {
+    return {};
+  }
   addScope() {}
   setCustomParameters() {}
 }

@@ -12,7 +12,7 @@ export const generateStaticParams = () => {
 
 export default function ProfilePage() {
   return (
-    <UniversalComponentLoader 
+    <UniversalComponentLoader
       componentKey="ProfileClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">

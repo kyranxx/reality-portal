@@ -48,24 +48,24 @@ export default function HomeClient() {
     <>
       {/* Hero Section */}
       <HeroSection />
-      
+
       {/* Search Bar */}
       <div className="container">
         <SearchBar />
       </div>
-      
+
       {/* Stats Section */}
       <StatsSection />
-      
+
       {/* Property Categories */}
       <CategorySection />
-      
+
       {/* Featured Property of the Week */}
       <FeaturedPropertySection property={featuredProperties[0]} />
-      
+
       {/* Featured Properties */}
       <FeaturedPropertiesSection properties={featuredProperties.slice(1, 7)} />
-      
+
       {/* CTA Section */}
       <CtaSection />
     </>

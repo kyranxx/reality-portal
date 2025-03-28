@@ -15,12 +15,12 @@ export const generateStaticParams = () => {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  userScalable: true
+  userScalable: true,
 };
 
 export default function Home() {
   return (
-    <UniversalComponentLoader 
+    <UniversalComponentLoader
       componentKey="HomeClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">

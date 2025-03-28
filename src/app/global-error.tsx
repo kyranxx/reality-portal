@@ -19,7 +19,7 @@ export default function GlobalError({
   useEffect(() => {
     // Track the global error with enhanced context
     trackError(error, 'global-error-boundary');
-    
+
     // Log additional diagnostic info
     console.error('Global error detected:', {
       message: error.message,
@@ -31,9 +31,9 @@ export default function GlobalError({
   }, [error]);
 
   // Determine if this is an auth-related error
-  const isAuthError = 
-    error.message?.includes('auth') || 
-    error.message?.includes('firebase') || 
+  const isAuthError =
+    error.message?.includes('auth') ||
+    error.message?.includes('firebase') ||
     error.message?.includes('useAuth') ||
     error.message?.includes('permission');
 
@@ -42,16 +42,18 @@ export default function GlobalError({
       <body>
         <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
           <h1 className="text-3xl font-bold mb-4">Oops! Niečo sa pokazilo</h1>
-          
+
           <p className="text-gray-600 mb-6 max-w-md">
             {isAuthError
               ? 'Nastala chyba pri overovaní používateľa. Prosím, prihláste sa znova.'
               : 'Nastala globálna chyba aplikácie. Skúste to znova neskôr.'}
           </p>
-          
+
           {process.env.NODE_ENV !== 'production' && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md max-w-md text-left overflow-auto">
-              <p className="font-mono text-sm text-red-700 mb-2">{error.name}: {error.message}</p>
+              <p className="font-mono text-sm text-red-700 mb-2">
+                {error.name}: {error.message}
+              </p>
               {error.digest && (
                 <p className="font-mono text-xs text-red-500">Digest: {error.digest}</p>
               )}
@@ -62,7 +64,7 @@ export default function GlobalError({
               )}
             </div>
           )}
-          
+
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => {
@@ -84,13 +86,19 @@ export default function GlobalError({
             >
               Skúsiť znova
             </button>
-            
-            <Link href="/" className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+
+            <Link
+              href="/"
+              className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               Späť na domovskú stránku
             </Link>
-            
+
             {isAuthError && (
-              <Link href="/auth/login" className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <Link
+                href="/auth/login"
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Prihlásiť sa
               </Link>
             )}

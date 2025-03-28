@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Set up error tracking and monitoring
     initializeMonitoring(auth);
-    
+
     // Log important environment information
     if (process.env.NODE_ENV !== 'production') {
       console.log('Environment:', process.env.NODE_ENV);
@@ -35,13 +35,18 @@ function MyApp({ Component, pageProps }) {
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
       </Head>
       <AppProvider>
-        <AuthErrorBoundary fallback={
-          <div className="auth-error-fallback">
-            <h2>Authentication Issue</h2>
-            <p>We're experiencing an issue with the authentication system. Please try again in a moment.</p>
-            <button onClick={() => window.location.reload()}>Retry</button>
-          </div>
-        }>
+        <AuthErrorBoundary
+          fallback={
+            <div className="auth-error-fallback">
+              <h2>Authentication Issue</h2>
+              <p>
+                We're experiencing an issue with the authentication system. Please try again in a
+                moment.
+              </p>
+              <button onClick={() => window.location.reload()}>Retry</button>
+            </div>
+          }
+        >
           <FirebaseAuthProvider>
             <Component {...pageProps} />
           </FirebaseAuthProvider>

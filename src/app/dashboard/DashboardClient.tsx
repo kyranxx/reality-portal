@@ -36,7 +36,7 @@ function DashboardClientContent() {
         if (userData) {
           setProfile({
             name: userData.name,
-            phone: userData.phone
+            phone: userData.phone,
           });
         }
       } catch (error) {

@@ -38,6 +38,7 @@ yarn install
 ```
 
 3. Create a Firebase project:
+
    - Go to [Firebase Console](https://console.firebase.google.com/)
    - Create a new project
    - Add a web app to your project
@@ -99,19 +100,19 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null && request.auth.uid == resource.data.userId;
     }
-    
+
     // Allow users to read and write their own data
     match /users/{userId} {
       allow read: if true;
       allow write: if request.auth != null && request.auth.uid == userId;
     }
-    
+
     // Allow users to read and write their own favorites
     match /favorites/{favoriteId} {
       allow read: if request.auth != null && request.auth.uid == resource.data.userId;
       allow write: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
-    
+
     // Allow users to read and write their own messages
     match /messages/{messageId} {
       allow read: if request.auth != null && (request.auth.uid == resource.data.senderId || request.auth.uid == resource.data.recipientId);

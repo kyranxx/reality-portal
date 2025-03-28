@@ -2,12 +2,12 @@
 
 /**
  * Verify Browser Globals Polyfill Fixes
- * 
+ *
  * This script checks if all the browser globals polyfills are properly applied
  * and functioning in the server environment.
  */
 
-// Import the browser polyfills 
+// Import the browser polyfills
 require('./src/utils/browser-polyfills');
 
 console.log('Verifying browser globals polyfill fixes...');
@@ -21,7 +21,7 @@ const browserGlobals = [
   { name: 'localStorage', expected: 'object' },
   { name: 'sessionStorage', expected: 'object' },
   { name: 'fetch', expected: 'function' },
-  { name: 'requestAnimationFrame', expected: 'function' }
+  { name: 'requestAnimationFrame', expected: 'function' },
 ];
 
 // Check each global
@@ -37,9 +37,9 @@ browserGlobals.forEach(({ name, expected }) => {
   const exists = typeof value !== 'undefined';
   const type = exists ? typeof value : 'undefined';
   const pass = exists && type === expected;
-  
+
   if (!pass) allPassed = false;
-  
+
   console.log(`│ ${name.padEnd(19)} │ ${pass ? '✓ PASS ' : '✗ FAIL '} │ ${type.padEnd(8)} │`);
 });
 
@@ -49,26 +49,41 @@ console.log('└─────────────────────�
 console.log('\nTesting common browser API access patterns:');
 
 const tests = [
-  { 
+  {
     name: 'self reference',
-    code: () => { const x = self; return true; }
+    code: () => {
+      const x = self;
+      return true;
+    },
   },
   {
     name: 'window.location',
-    code: () => { const loc = window.location; return true; }
+    code: () => {
+      const loc = window.location;
+      return true;
+    },
   },
   {
     name: 'document.createElement',
-    code: () => { const div = document.createElement('div'); return true; }
+    code: () => {
+      const div = document.createElement('div');
+      return true;
+    },
   },
   {
     name: 'localStorage.getItem',
-    code: () => { localStorage.getItem('test'); return true; }
+    code: () => {
+      localStorage.getItem('test');
+      return true;
+    },
   },
   {
     name: 'fetch API',
-    code: () => { typeof fetch === 'function'; return true; }
-  }
+    code: () => {
+      typeof fetch === 'function';
+      return true;
+    },
+  },
 ];
 
 tests.forEach(({ name, code }) => {
@@ -85,7 +100,9 @@ tests.forEach(({ name, code }) => {
 console.log('\nVerification Summary:');
 if (allPassed) {
   console.log('✅ All browser globals polyfills are working correctly!');
-  console.log('   Your Vercel deployment should no longer encounter the "self is not defined" error.');
+  console.log(
+    '   Your Vercel deployment should no longer encounter the "self is not defined" error.'
+  );
 } else {
   console.log('❌ Some polyfills are not functioning correctly.');
   console.log('   Review the output above and update browser-polyfills.js as needed.');

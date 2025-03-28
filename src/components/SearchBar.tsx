@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
 export default function SearchBar() {
@@ -9,20 +9,20 @@ export default function SearchBar() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [minSize, setMinSize] = useState('');
   const [bedrooms, setBedrooms] = useState('');
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, this would redirect to search results
-    console.log('Search:', { 
-      searchType, 
-      propertyType, 
-      location, 
+    console.log('Search:', {
+      searchType,
+      propertyType,
+      location,
       priceRange,
       minSize: minSize ? parseInt(minSize) : undefined,
-      bedrooms: bedrooms ? parseInt(bedrooms) : undefined
+      bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
     });
   };
-  
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     if (e.target.name === 'minPrice') {
@@ -31,7 +31,7 @@ export default function SearchBar() {
       setPriceRange([priceRange[0], value]);
     }
   };
-  
+
   return (
     <div className="glass-effect rounded-xl shadow-md p-6 -mt-16 relative z-10 border border-white/30">
       <form onSubmit={handleSubmit}>
@@ -42,8 +42,8 @@ export default function SearchBar() {
               <button
                 type="button"
                 className={`flex-1 py-2 px-4 text-sm font-medium rounded-full transition-all duration-300 ${
-                  searchType === 'buy' 
-                    ? 'bg-primary text-white shadow-sm' 
+                  searchType === 'buy'
+                    ? 'bg-primary text-white shadow-sm'
                     : 'bg-transparent text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => setSearchType('buy')}
@@ -53,8 +53,8 @@ export default function SearchBar() {
               <button
                 type="button"
                 className={`flex-1 py-2 px-4 text-sm font-medium rounded-full transition-all duration-300 ${
-                  searchType === 'rent' 
-                    ? 'bg-primary text-white shadow-sm' 
+                  searchType === 'rent'
+                    ? 'bg-primary text-white shadow-sm'
                     : 'bg-transparent text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => setSearchType('rent')}
@@ -63,7 +63,7 @@ export default function SearchBar() {
               </button>
             </div>
           </div>
-          
+
           <div>
             <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700 mb-2">
               Typ nehnuteľnosti
@@ -72,7 +72,7 @@ export default function SearchBar() {
               <select
                 id="propertyType"
                 value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
+                onChange={e => setPropertyType(e.target.value)}
                 className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-4 pr-10 text-sm bg-white appearance-none"
               >
                 <option value="all">Všetky typy</option>
@@ -82,13 +82,24 @@ export default function SearchBar() {
                 <option value="commercial">Komerčné priestory</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  />
                 </svg>
               </div>
             </div>
           </div>
-          
+
           <div>
             <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
               Lokalita
@@ -98,52 +109,100 @@ export default function SearchBar() {
                 type="text"
                 id="location"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={e => setLocation(e.target.value)}
                 placeholder="Mesto, okres alebo PSČ"
                 className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-4 pl-10 text-sm"
               />
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+                  />
                 </svg>
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-end">
             <button
               type="submit"
               className="w-full btn btn-primary py-2.5 px-4 text-sm flex items-center justify-center"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 mr-2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-4 h-4 mr-2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
               </svg>
               Vyhľadať
             </button>
           </div>
         </div>
-        
+
         <div className="mt-4 flex justify-between items-center">
           <div className="flex flex-wrap gap-2">
             <span className="text-xs text-gray-500 mr-1">Populárne:</span>
-            <a href="#" className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors">Bratislava</a>
-            <a href="#" className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors">Košice</a>
-            <a href="#" className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors">Žilina</a>
+            <a
+              href="#"
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Bratislava
+            </a>
+            <a
+              href="#"
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Košice
+            </a>
+            <a
+              href="#"
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Žilina
+            </a>
           </div>
-          
-          <button 
-            type="button" 
+
+          <button
+            type="button"
             className="text-xs text-primary font-medium flex items-center hover:underline"
             onClick={() => setShowAdvanced(!showAdvanced)}
           >
             {showAdvanced ? 'Skryť' : 'Rozšírené'} vyhľadávanie
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-3 h-3 ml-1 transition-transform duration-300 ${showAdvanced ? 'rotate-180' : ''}`}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className={`w-3 h-3 ml-1 transition-transform duration-300 ${showAdvanced ? 'rotate-180' : ''}`}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
           </button>
         </div>
-        
+
         {/* Advanced search options */}
         {showAdvanced && (
           <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
@@ -181,7 +240,7 @@ export default function SearchBar() {
                 </div>
               </div>
             </div>
-            
+
             <div>
               <label htmlFor="minSize" className="block text-sm font-medium text-gray-700 mb-2">
                 Minimálna plocha (m²)
@@ -190,12 +249,12 @@ export default function SearchBar() {
                 type="number"
                 id="minSize"
                 value={minSize}
-                onChange={(e) => setMinSize(e.target.value)}
+                onChange={e => setMinSize(e.target.value)}
                 placeholder="Minimálna plocha"
                 className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
               />
             </div>
-            
+
             <div>
               <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700 mb-2">
                 Počet izieb
@@ -203,7 +262,7 @@ export default function SearchBar() {
               <select
                 id="bedrooms"
                 value={bedrooms}
-                onChange={(e) => setBedrooms(e.target.value)}
+                onChange={e => setBedrooms(e.target.value)}
                 className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
               >
                 <option value="">Nezáleží</option>

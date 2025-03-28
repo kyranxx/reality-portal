@@ -1,6 +1,6 @@
 /**
  * STATIC CLIENT COMPONENTS EXPORT
- * 
+ *
  * This file provides explicit exports of all client components to avoid dynamic import issues in production.
  * No dynamic imports or path aliases are used here to ensure compatibility with all build environments.
  */
@@ -21,11 +21,11 @@ export const PropertyDetailClient = PropertyDetailClientComponent;
 
 // Map of all available client components for static resolution
 export const CLIENT_COMPONENTS = {
-  'HomeClient': HomeClientComponent,
-  'DashboardClient': DashboardClientComponent,
-  'ProfileClient': ProfileClientComponent,
-  'AdminClient': AdminClientComponent,
-  'PropertyDetailClient': PropertyDetailClientComponent,
+  HomeClient: HomeClientComponent,
+  DashboardClient: DashboardClientComponent,
+  ProfileClient: ProfileClientComponent,
+  AdminClient: AdminClientComponent,
+  PropertyDetailClient: PropertyDetailClientComponent,
 };
 
 // Type for client component keys

@@ -1,25 +1,25 @@
 /**
  * Firestore utilities for safer data operations
- * 
+ *
  * This file provides utilities to make Firestore operations more robust,
  * with built-in auth state verification, error handling, and retry mechanisms.
  */
 
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  setDoc, 
-  updateDoc, 
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  setDoc,
+  updateDoc,
   deleteDoc,
   QueryConstraint,
   DocumentData,
   DocumentReference,
   WithFieldValue,
-  SetOptions
+  SetOptions,
 } from 'firebase/firestore';
 import { db, auth } from './firebase';
 import { useAuthErrorHandler } from '../components/AuthErrorBoundary';
@@ -55,10 +55,10 @@ export function verifyAuthBeforeDbOperation(): boolean {
  * Safely get a document with authentication check and error handling
  */
 export async function safeGetDoc<T>(
-  collectionName: string, 
+  collectionName: string,
   docId: string,
   requireAuth = true
-): Promise<T & { id: string } | null> {
+): Promise<(T & { id: string }) | null> {
   if (requireAuth) {
     verifyAuthBeforeDbOperation();
   }
@@ -74,7 +74,7 @@ export async function safeGetDoc<T>(
     try {
       const docRef = doc(db, collectionName, docId);
       const docSnap = await getDoc(docRef);
-      
+
       if (docSnap.exists()) {
         return { id: docSnap.id, ...docSnap.data() } as T & { id: string };
       } else {
@@ -82,10 +82,11 @@ export async function safeGetDoc<T>(
       }
     } catch (error: any) {
       lastError = error;
-      
+
       // Check if this is a permission error
-      const isPermissionError = error.code === 'permission-denied' || error.message?.includes('permission');
-      
+      const isPermissionError =
+        error.code === 'permission-denied' || error.message?.includes('permission');
+
       if (isPermissionError && requireAuth) {
         // Only retry permission errors if we required auth
         console.error(`Permission error on attempt ${attempt + 1} for ${collectionName}/${docId}`);
@@ -93,10 +94,7 @@ export async function safeGetDoc<T>(
         attempt++;
       } else {
         // For other errors, don't retry
-        throw new FirestoreError(
-          error.message || 'Error getting document',
-          error.code
-        );
+        throw new FirestoreError(error.message || 'Error getting document', error.code);
       }
     }
   }
@@ -132,17 +130,18 @@ export async function safeGetDocs<T>(
       const collectionRef = collection(db, collectionName);
       const q = query(collectionRef, ...queryConstraints);
       const querySnapshot = await getDocs(q);
-      
+
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       })) as (T & { id: string })[];
     } catch (error: any) {
       lastError = error;
-      
+
       // Check if this is a permission error
-      const isPermissionError = error.code === 'permission-denied' || error.message?.includes('permission');
-      
+      const isPermissionError =
+        error.code === 'permission-denied' || error.message?.includes('permission');
+
       if (isPermissionError && requireAuth) {
         // Only retry permission errors if we required auth
         console.error(`Permission error on attempt ${attempt + 1} for ${collectionName} query`);
@@ -150,10 +149,7 @@ export async function safeGetDocs<T>(
         attempt++;
       } else {
         // For other errors, don't retry
-        throw new FirestoreError(
-          error.message || 'Error querying documents',
-          error.code
-        );
+        throw new FirestoreError(error.message || 'Error querying documents', error.code);
       }
     }
   }
@@ -195,7 +191,7 @@ export async function safeSetDoc<T extends DocumentData>(
     try {
       // Use a type assertion that avoids the generic type constraint issue
       const docRef = doc(db, collectionName, docIdToUse as string);
-      
+
       // Only pass options if defined
       if (options !== undefined) {
         await setDoc(docRef, data as any, options);
@@ -205,20 +201,20 @@ export async function safeSetDoc<T extends DocumentData>(
       return docIdToUse as string;
     } catch (error: any) {
       lastError = error;
-      
+
       // Check if this is a permission error
-      const isPermissionError = error.code === 'permission-denied' || error.message?.includes('permission');
-      
+      const isPermissionError =
+        error.code === 'permission-denied' || error.message?.includes('permission');
+
       if (isPermissionError) {
-        console.error(`Permission error on attempt ${attempt + 1} for setting ${collectionName}/${docIdToUse}`);
+        console.error(
+          `Permission error on attempt ${attempt + 1} for setting ${collectionName}/${docIdToUse}`
+        );
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 500));
         attempt++;
       } else {
         // For other errors, don't retry
-        throw new FirestoreError(
-          error.message || 'Error setting document',
-          error.code
-        );
+        throw new FirestoreError(error.message || 'Error setting document', error.code);
       }
     }
   }
@@ -254,20 +250,20 @@ export async function safeUpdateDoc<T>(
       return;
     } catch (error: any) {
       lastError = error;
-      
+
       // Check if this is a permission error
-      const isPermissionError = error.code === 'permission-denied' || error.message?.includes('permission');
-      
+      const isPermissionError =
+        error.code === 'permission-denied' || error.message?.includes('permission');
+
       if (isPermissionError) {
-        console.error(`Permission error on attempt ${attempt + 1} for updating ${collectionName}/${docId}`);
+        console.error(
+          `Permission error on attempt ${attempt + 1} for updating ${collectionName}/${docId}`
+        );
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 500));
         attempt++;
       } else {
         // For other errors, don't retry
-        throw new FirestoreError(
-          error.message || 'Error updating document',
-          error.code
-        );
+        throw new FirestoreError(error.message || 'Error updating document', error.code);
       }
     }
   }
@@ -282,10 +278,7 @@ export async function safeUpdateDoc<T>(
 /**
  * Safely delete a document with authentication check and error handling
  */
-export async function safeDeleteDoc(
-  collectionName: string,
-  docId: string
-): Promise<void> {
+export async function safeDeleteDoc(collectionName: string, docId: string): Promise<void> {
   verifyAuthBeforeDbOperation();
 
   if (!db) {
@@ -302,20 +295,20 @@ export async function safeDeleteDoc(
       return;
     } catch (error: any) {
       lastError = error;
-      
+
       // Check if this is a permission error
-      const isPermissionError = error.code === 'permission-denied' || error.message?.includes('permission');
-      
+      const isPermissionError =
+        error.code === 'permission-denied' || error.message?.includes('permission');
+
       if (isPermissionError) {
-        console.error(`Permission error on attempt ${attempt + 1} for deleting ${collectionName}/${docId}`);
+        console.error(
+          `Permission error on attempt ${attempt + 1} for deleting ${collectionName}/${docId}`
+        );
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 500));
         attempt++;
       } else {
         // For other errors, don't retry
-        throw new FirestoreError(
-          error.message || 'Error deleting document',
-          error.code
-        );
+        throw new FirestoreError(error.message || 'Error deleting document', error.code);
       }
     }
   }
@@ -332,18 +325,18 @@ export async function safeDeleteDoc(
  */
 export function useFirestoreErrorHandler() {
   const { reportAuthError } = useAuthErrorHandler();
-  
+
   return {
     handleFirestoreError: (error: any) => {
       console.error('Firestore operation error:', error);
-      
+
       if (error.code === 'permission-denied' || error.message?.includes('permission')) {
         // If this is a permission error, it might be auth-related
         reportAuthError(new Error('Firebase permission error: ' + error.message));
       }
-      
+
       // Return the error message for UI display
       return error.message || 'An error occurred with the database';
-    }
+    },
   };
 }

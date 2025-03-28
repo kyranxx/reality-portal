@@ -1,23 +1,35 @@
 /**
  * Firebase Service
- * 
- * A robust service layer for all Firebase operations with proper initialization 
+ *
+ * A robust service layer for all Firebase operations with proper initialization
  * sequence, atomic operations, and comprehensive error handling.
  */
 
 import { FirebaseApp, initializeApp, getApps } from 'firebase/app';
-import { 
-  Auth, User, UserCredential, 
+import {
+  Auth,
+  User,
+  UserCredential,
   getAuth as getFirebaseAuth,
-  onAuthStateChanged, signOut as firebaseSignOut,
+  onAuthStateChanged,
+  signOut as firebaseSignOut,
   createUserWithEmailAndPassword as firebaseCreateUser,
   signInWithEmailAndPassword as firebaseSignIn,
   signInWithPopup as firebaseSignInWithPopup,
-  GoogleAuthProvider
+  GoogleAuthProvider,
 } from 'firebase/auth';
-import { 
-  Firestore, getFirestore, 
-  collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where 
+import {
+  Firestore,
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
 } from 'firebase/firestore';
 import { getStorage, ref, StorageReference } from 'firebase/storage';
 
@@ -95,9 +107,9 @@ class FirebaseService {
       // Initialize auth with proper error handling
       try {
         this.auth = getFirebaseAuth(this.app);
-        
+
         // Create auth initialization promise
-        this.authInitPromise = new Promise<void>((resolve) => {
+        this.authInitPromise = new Promise<void>(resolve => {
           // Using the unsubscribe pattern to ensure we don't leak listeners
           const unsubscribe = onAuthStateChanged(
             this.auth as Auth,
@@ -105,7 +117,7 @@ class FirebaseService {
               this.currentUser = user;
               unsubscribe();
               resolve();
-              
+
               // Set up permanent auth state listener
               onAuthStateChanged(this.auth as Auth, (user: User | null) => {
                 this.currentUser = user;
@@ -149,7 +161,7 @@ class FirebaseService {
         this.googleProvider.addScope('profile');
         this.googleProvider.addScope('email');
         this.googleProvider.setCustomParameters({
-          prompt: 'select_account'
+          prompt: 'select_account',
         });
       } catch (error) {
         console.error('Firebase Service: Google provider initialization error:', error);
@@ -157,7 +169,7 @@ class FirebaseService {
 
       this.initState = 'initialized';
       console.log('Firebase Service: Initialization complete');
-      
+
       // Process queued operations
       this.processQueue();
     } catch (error) {
@@ -173,9 +185,7 @@ class FirebaseService {
     while (this.operationQueue.length > 0) {
       const queuedOp = this.operationQueue.shift();
       if (queuedOp) {
-        queuedOp.operation()
-          .then(queuedOp.resolve)
-          .catch(queuedOp.reject);
+        queuedOp.operation().then(queuedOp.resolve).catch(queuedOp.reject);
       }
     }
   }
@@ -206,7 +216,7 @@ class FirebaseService {
       this.operationQueue.push({
         operation,
         resolve,
-        reject
+        reject,
       });
     });
   }
@@ -248,12 +258,12 @@ class FirebaseService {
    */
   public onAuthStateChange(listener: (user: User | null) => void): () => void {
     this.authStateListeners.push(listener);
-    
+
     // Immediately call with current user
     if (isClient) {
       listener(this.currentUser);
     }
-    
+
     // Return unsubscribe function
     return () => {
       this.authStateListeners = this.authStateListeners.filter(l => l !== listener);
@@ -269,7 +279,7 @@ class FirebaseService {
   public async signInWithEmailPassword(email: string, password: string): Promise<UserCredential> {
     return this.executeWithInitGuard(async () => {
       if (!this.auth) throw new Error('Auth not initialized');
-      
+
       try {
         return await firebaseSignIn(this.auth, email, password);
       } catch (error) {
@@ -288,7 +298,7 @@ class FirebaseService {
       if (!this.auth || !this.googleProvider) {
         throw new Error('Auth or Google provider not initialized');
       }
-      
+
       try {
         return await firebaseSignInWithPopup(this.auth, this.googleProvider);
       } catch (error: any) {
@@ -298,7 +308,7 @@ class FirebaseService {
         } else if (error.code === 'auth/popup-closed-by-user') {
           throw new Error('Authentication was cancelled. Please try again.');
         }
-        
+
         const processed = handleFirebaseError(error, 'signInWithGoogle');
         throw new Error(processed.message);
       }
@@ -311,10 +321,13 @@ class FirebaseService {
    * @param password User password
    * @returns Promise with UserCredential
    */
-  public async createUserWithEmailPassword(email: string, password: string): Promise<UserCredential> {
+  public async createUserWithEmailPassword(
+    email: string,
+    password: string
+  ): Promise<UserCredential> {
     return this.executeWithInitGuard(async () => {
       if (!this.auth) throw new Error('Auth not initialized');
-      
+
       try {
         return await firebaseCreateUser(this.auth, email, password);
       } catch (error) {
@@ -331,7 +344,7 @@ class FirebaseService {
   public async signOut(): Promise<void> {
     return this.executeWithInitGuard(async () => {
       if (!this.auth) throw new Error('Auth not initialized');
-      
+
       try {
         return await firebaseSignOut(this.auth);
       } catch (error) {
@@ -350,11 +363,11 @@ class FirebaseService {
   public async getDocument<T>(collectionName: string, docId: string): Promise<T | null> {
     return this.executeWithInitGuard(async () => {
       if (!this.db) throw new Error('Firestore not initialized');
-      
+
       try {
         const docRef = doc(this.db, collectionName, docId);
         const docSnap = await getDoc(docRef);
-        
+
         if (docSnap.exists()) {
           return { id: docSnap.id, ...docSnap.data() } as T;
         } else {
@@ -374,10 +387,14 @@ class FirebaseService {
    * @param data Document data
    * @returns Promise that resolves when operation is complete
    */
-  public async setDocument<T extends Record<string, any>>(collectionName: string, docId: string, data: T): Promise<void> {
+  public async setDocument<T extends Record<string, any>>(
+    collectionName: string,
+    docId: string,
+    data: T
+  ): Promise<void> {
     return this.executeWithInitGuard(async () => {
       if (!this.db) throw new Error('Firestore not initialized');
-      
+
       try {
         const docRef = doc(this.db, collectionName, docId);
         await setDoc(docRef, data as any);
@@ -396,14 +413,14 @@ class FirebaseService {
   public async getCollection<T>(collectionName: string): Promise<T[]> {
     return this.executeWithInitGuard(async () => {
       if (!this.db) throw new Error('Firestore not initialized');
-      
+
       try {
         const collectionRef = collection(this.db, collectionName);
         const querySnapshot = await getDocs(collectionRef);
-        
+
         return querySnapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         })) as T[];
       } catch (error) {
         const processed = handleFirebaseError(error, `getCollection:${collectionName}`);
@@ -422,15 +439,15 @@ class FirebaseService {
   public async queryByField<T>(collectionName: string, field: string, value: any): Promise<T[]> {
     return this.executeWithInitGuard(async () => {
       if (!this.db) throw new Error('Firestore not initialized');
-      
+
       try {
         const collectionRef = collection(this.db, collectionName);
         const q = query(collectionRef, where(field, '==', value));
         const querySnapshot = await getDocs(q);
-        
+
         return querySnapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         })) as T[];
       } catch (error) {
         const processed = handleFirebaseError(error, `queryByField:${collectionName}`);

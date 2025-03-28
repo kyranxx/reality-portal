@@ -2,10 +2,10 @@
 
 /**
  * Pre-deployment validation script
- * 
+ *
  * This script verifies that all required configuration is in place before deployment.
  * It checks for environment variables, Firebase configuration, and verifies app health.
- * 
+ *
  * Run this script before deployment with: node scripts/validate-deployment.js
  */
 
@@ -44,11 +44,11 @@ const REQUIRED_FILES = [
 
 // Helper functions
 const log = {
-  info: (msg) => console.log(chalk.blue('ℹ ') + msg),
-  success: (msg) => console.log(chalk.green('✅ ') + msg),
-  warning: (msg) => console.log(chalk.yellow('⚠️ ') + msg),
-  error: (msg) => console.log(chalk.red('❌ ') + msg),
-  title: (msg) => console.log('\n' + chalk.bold.underline(msg)),
+  info: msg => console.log(chalk.blue('ℹ ') + msg),
+  success: msg => console.log(chalk.green('✅ ') + msg),
+  warning: msg => console.log(chalk.yellow('⚠️ ') + msg),
+  error: msg => console.log(chalk.red('❌ ') + msg),
+  title: msg => console.log('\n' + chalk.bold.underline(msg)),
 };
 
 // Main validation function
@@ -69,9 +69,9 @@ async function validateDeployment() {
     if (!value) {
       missingEnvVars.push(envVar);
     } else if (
-      value.includes('placeholder') || 
-      value.includes('YOUR_') || 
-      value === 'xxx' || 
+      value.includes('placeholder') ||
+      value.includes('YOUR_') ||
+      value === 'xxx' ||
       value === 'undefined'
     ) {
       placeholderEnvVars.push(envVar);
@@ -111,7 +111,7 @@ async function validateDeployment() {
 
   // Check Firebase configuration
   log.title('3. Firebase Configuration');
-  
+
   const firebaseFile = path.resolve('src/utils/firebase.ts');
   if (fs.existsSync(firebaseFile)) {
     const firebaseContent = fs.readFileSync(firebaseFile, 'utf8');
@@ -125,11 +125,11 @@ async function validateDeployment() {
 
   // Verify Next.js configuration
   log.title('4. Next.js Configuration');
-  
+
   const nextConfigFile = path.resolve('next.config.js');
   if (fs.existsSync(nextConfigFile)) {
     const nextConfig = fs.readFileSync(nextConfigFile, 'utf8');
-    
+
     if (nextConfig.includes('remotePatterns') || nextConfig.includes('domains')) {
       log.success('Image configuration is present');
     } else {
@@ -140,7 +140,7 @@ async function validateDeployment() {
 
   // Check for build-breaking issues
   log.title('5. Build Verification');
-  
+
   try {
     log.info('Running TypeScript check...');
     execSync('npx tsc --noEmit', { stdio: 'pipe' });

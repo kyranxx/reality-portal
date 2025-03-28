@@ -1,6 +1,6 @@
 /**
  * Debug Tools for Reality Portal
- * 
+ *
  * This script provides comprehensive debugging tools to identify problems
  * in the webapp. It can be run in the browser console or imported.
  */
@@ -15,10 +15,10 @@ export function runDiagnostics() {
   try {
     console.group('🔍 Reality Portal Diagnostics');
     console.log('Running comprehensive diagnostics...');
-    
+
     // Initialize monitoring system
     initializeMonitoring();
-    
+
     // Run all checks
     checkGlobalErrors();
     checkPerformanceIssues();
@@ -28,7 +28,7 @@ export function runDiagnostics() {
     checkNetworkRequests();
     checkAccessibility();
     checkBrowserCompatibility();
-    
+
     // Report findings
     console.log(`Found ${issues.length} potential issues:`);
     issues.forEach((issue, index) => {
@@ -36,16 +36,18 @@ export function runDiagnostics() {
       if (issue.details) console.log('   Details:', issue.details);
       if (issue.fix) console.log('   Fix:', issue.fix);
     });
-    
+
     console.groupEnd();
     return issues;
   } catch (error) {
     console.error('Error running diagnostics:', error);
-    return [{ 
-      severity: 'error', 
-      message: 'Diagnostic tool crashed', 
-      details: error.message
-    }];
+    return [
+      {
+        severity: 'error',
+        message: 'Diagnostic tool crashed',
+        details: error.message,
+      },
+    ];
   }
 }
 
@@ -62,32 +64,32 @@ function addIssue(severity, message, details, fix) {
  */
 function checkGlobalErrors() {
   console.log('Checking for global errors...');
-  
+
   // Check for 'self is not defined' errors
   if (typeof self === 'undefined') {
     addIssue(
       'error',
-      '\'self\' is not defined in this context',
+      "'self' is not defined in this context",
       'This might cause issues with certain libraries',
       'Add global.self = global in server-side code'
     );
   }
-  
+
   // Check console errors
   if (typeof window !== 'undefined') {
     const originalConsoleError = console.error;
     let errorsCaught = 0;
-    
-    console.error = function(...args) {
+
+    console.error = function (...args) {
       errorsCaught++;
       originalConsoleError.apply(console, args);
     };
-    
+
     // Force a repaint to trigger potential errors
     document.body.style.display = 'none';
     document.body.offsetHeight; // Force reflow
     document.body.style.display = '';
-    
+
     setTimeout(() => {
       console.error = originalConsoleError;
       if (errorsCaught > 0) {
@@ -106,9 +108,9 @@ function checkGlobalErrors() {
  */
 function checkPerformanceIssues() {
   console.log('Checking for performance issues...');
-  
+
   if (typeof window === 'undefined' || !('performance' in window)) return;
-  
+
   // Check page load time
   const navEntry = performance.getEntriesByType('navigation')[0];
   if (navEntry && navEntry.duration > 3000) {
@@ -119,19 +121,20 @@ function checkPerformanceIssues() {
       'Consider code splitting and optimizing critical rendering path'
     );
   }
-  
+
   // Check for long tasks
   const longTasks = performance.getEntriesByType('longtask') || [];
   if (longTasks.length > 0) {
     addIssue(
       'warning',
       `${longTasks.length} long tasks detected (>50ms)`,
-      `Longest task: ${Math.round(longTasks.reduce((max, task) => 
-        Math.max(max, task.duration), 0))}ms`,
+      `Longest task: ${Math.round(
+        longTasks.reduce((max, task) => Math.max(max, task.duration), 0)
+      )}ms`,
       'Break up long-running JavaScript'
     );
   }
-  
+
   // Check memory usage if available
   if (performance.memory) {
     const memoryUsage = performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit;
@@ -151,12 +154,12 @@ function checkPerformanceIssues() {
  */
 function checkResourceLoading() {
   console.log('Checking for resource loading issues...');
-  
+
   if (typeof window === 'undefined') return;
-  
+
   // Check for failed resource loads
   const resources = performance.getEntriesByType('resource') || [];
-  
+
   // Image loading errors
   const imgElements = document.querySelectorAll('img');
   imgElements.forEach(img => {
@@ -169,14 +172,14 @@ function checkResourceLoading() {
       );
     }
   });
-  
+
   // Check for CORS issues
   resources.forEach(resource => {
     // Analyze resource timing for CORS errors
-    if (resource.name && (
-        resource.duration === 0 ||
-        (resource.transferSize === 0 && !resource.decodedBodySize)
-      ) && !resource.name.includes('data:')
+    if (
+      resource.name &&
+      (resource.duration === 0 || (resource.transferSize === 0 && !resource.decodedBodySize)) &&
+      !resource.name.includes('data:')
     ) {
       addIssue(
         'warning',
@@ -186,7 +189,7 @@ function checkResourceLoading() {
       );
     }
   });
-  
+
   // Check for deprecated image configuration
   if (window.consoleOutput && window.consoleOutput.includes('images.domains')) {
     addIssue(
@@ -203,9 +206,9 @@ function checkResourceLoading() {
  */
 function checkReactErrors() {
   console.log('Checking for React errors...');
-  
+
   if (typeof window === 'undefined') return;
-  
+
   // Check for React error boundaries
   const errorBoundaryDiv = document.querySelector('[data-nextjs-error-boundary]');
   if (errorBoundaryDiv) {
@@ -216,19 +219,21 @@ function checkReactErrors() {
       'Check component causing the error'
     );
   }
-  
+
   // Check for hydration errors
-  if (window.consoleOutput && 
-      (window.consoleOutput.includes('Hydration failed') || 
-       window.consoleOutput.includes('did not match'))) {
+  if (
+    window.consoleOutput &&
+    (window.consoleOutput.includes('Hydration failed') ||
+      window.consoleOutput.includes('did not match'))
+  ) {
     addIssue(
       'error',
       'React hydration mismatch detected',
-      'Server-rendered HTML doesn\'t match client-side DOM',
+      "Server-rendered HTML doesn't match client-side DOM",
       'Ensure components render the same content on server and client'
     );
   }
-  
+
   // Check for invalid hooks usage
   if (window.consoleOutput && window.consoleOutput.includes('Invalid hook call')) {
     addIssue(
@@ -245,9 +250,9 @@ function checkReactErrors() {
  */
 function checkFirebaseConfig() {
   console.log('Checking Firebase configuration...');
-  
+
   if (typeof window === 'undefined') return;
-  
+
   // Check for firebase initialization errors
   if (window.consoleOutput && window.consoleOutput.includes('Firebase App named')) {
     addIssue(
@@ -257,7 +262,7 @@ function checkFirebaseConfig() {
       'Check for duplicate firebase.initializeApp() calls'
     );
   }
-  
+
   // Check for missing API keys
   if (window.firebaseConfig) {
     const config = window.firebaseConfig;
@@ -274,12 +279,15 @@ function checkFirebaseConfig() {
     const scripts = document.querySelectorAll('script');
     let firebaseConfigFound = false;
     scripts.forEach(script => {
-      if (script.textContent && script.textContent.includes('apiKey') && 
-          script.textContent.includes('authDomain')) {
+      if (
+        script.textContent &&
+        script.textContent.includes('apiKey') &&
+        script.textContent.includes('authDomain')
+      ) {
         firebaseConfigFound = true;
       }
     });
-    
+
     if (!firebaseConfigFound) {
       addIssue(
         'warning',
@@ -296,12 +304,12 @@ function checkFirebaseConfig() {
  */
 function checkNetworkRequests() {
   console.log('Checking network requests...');
-  
+
   if (typeof window === 'undefined') return;
-  
+
   // Analyze performance entries for network issues
   const resources = performance.getEntriesByType('resource') || [];
-  
+
   // Check for slow resources
   const slowResources = resources.filter(r => r.duration > 1000);
   if (slowResources.length > 0) {
@@ -312,12 +320,12 @@ function checkNetworkRequests() {
       'Consider optimizing or caching slow resources'
     );
   }
-  
+
   // Check for duplicate requests
   const urls = resources.map(r => r.name);
   const duplicates = urls.filter((url, index) => urls.indexOf(url) !== index);
   const uniqueDuplicates = [...new Set(duplicates)];
-  
+
   if (uniqueDuplicates.length > 0) {
     addIssue(
       'warning',
@@ -333,35 +341,37 @@ function checkNetworkRequests() {
  */
 function checkAccessibility() {
   console.log('Checking for accessibility issues...');
-  
+
   if (typeof window === 'undefined') return;
-  
+
   // Check for images without alt text
   const imagesWithoutAlt = document.querySelectorAll('img:not([alt])');
   if (imagesWithoutAlt.length > 0) {
     addIssue(
       'warning',
       `${imagesWithoutAlt.length} images missing alt text`,
-      'Screen readers won\'t be able to describe these images',
+      "Screen readers won't be able to describe these images",
       'Add alt attributes to all images'
     );
   }
-  
+
   // Check for poor contrast
   const elements = document.querySelectorAll('*');
   let lowContrastElements = 0;
-  
+
   elements.forEach(element => {
     const style = window.getComputedStyle(element);
-    
+
     // Simple check for potentially low contrast text
-    if (style.color === style.backgroundColor ||
-        (style.color === 'rgb(255, 255, 255)' && style.backgroundColor === 'rgb(255, 254, 255)') ||
-        (style.color === 'rgb(0, 0, 0)' && style.backgroundColor === 'rgb(1, 1, 1)')) {
+    if (
+      style.color === style.backgroundColor ||
+      (style.color === 'rgb(255, 255, 255)' && style.backgroundColor === 'rgb(255, 254, 255)') ||
+      (style.color === 'rgb(0, 0, 0)' && style.backgroundColor === 'rgb(1, 1, 1)')
+    ) {
       lowContrastElements++;
     }
   });
-  
+
   if (lowContrastElements > 0) {
     addIssue(
       'warning',
@@ -377,17 +387,17 @@ function checkAccessibility() {
  */
 function checkBrowserCompatibility() {
   console.log('Checking for browser compatibility issues...');
-  
+
   if (typeof window === 'undefined') return;
-  
+
   // Check for modern JS features without polyfills
   const compatibilityChecks = [
     { feature: 'Intl', check: () => typeof Intl === 'undefined' },
     { feature: 'Promise', check: () => typeof Promise === 'undefined' },
     { feature: 'fetch', check: () => typeof fetch === 'undefined' },
-    { feature: 'IntersectionObserver', check: () => typeof IntersectionObserver === 'undefined' }
+    { feature: 'IntersectionObserver', check: () => typeof IntersectionObserver === 'undefined' },
   ];
-  
+
   compatibilityChecks.forEach(({ feature, check }) => {
     if (check()) {
       addIssue(
@@ -398,10 +408,12 @@ function checkBrowserCompatibility() {
       );
     }
   });
-  
+
   // Check for ViewTransition API usage without fallbacks
-  if (document.querySelectorAll('[style*="view-transition"]').length > 0 && 
-      !('startViewTransition' in document)) {
+  if (
+    document.querySelectorAll('[style*="view-transition"]').length > 0 &&
+    !('startViewTransition' in document)
+  ) {
     addIssue(
       'warning',
       'Using View Transitions API without browser support',
@@ -412,11 +424,7 @@ function checkBrowserCompatibility() {
 }
 
 // Logs with enhanced context
-export function enhancedLog(
-  level,
-  message,
-  data
-) {
+export function enhancedLog(level, message, data) {
   // Only use in client
   if (typeof window === 'undefined') return;
 
@@ -425,7 +433,7 @@ export function enhancedLog(
     timestamp,
     url: window.location.href,
     userAgent: navigator.userAgent,
-    data
+    data,
   };
 
   switch (level) {
@@ -453,7 +461,7 @@ export function trackError(error, source = 'unknown') {
   enhancedLog('error', `Error from ${source}: ${error.message}`, {
     errorName: error.name,
     stack: error.stack,
-    source
+    source,
   });
 }
 
@@ -463,42 +471,38 @@ export function setupGlobalErrorHandlers() {
   if (typeof window === 'undefined') return;
 
   // Already setup check using a global flag
-  if ((window).__errorHandlersInitialized) return;
-  (window).__errorHandlersInitialized = true;
+  if (window.__errorHandlersInitialized) return;
+  window.__errorHandlersInitialized = true;
 
   // Handle unhandled promise rejections
-  window.addEventListener('unhandledrejection', (event) => {
-    const error = event.reason instanceof Error 
-      ? event.reason 
-      : new Error(String(event.reason));
-    
+  window.addEventListener('unhandledrejection', event => {
+    const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
+
     trackError(error, 'unhandledRejection');
   });
 
   // Handle uncaught errors
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', event => {
     // If this is an image loading error, handle it differently
-    if (event.target && (event.target).tagName === 'IMG') {
+    if (event.target && event.target.tagName === 'IMG') {
       const imgElement = event.target;
-      trackError(
-        new Error(`Image load failed: ${imgElement.src}`),
-        'imageLoadError'
-      );
+      trackError(new Error(`Image load failed: ${imgElement.src}`), 'imageLoadError');
       return;
     }
 
     trackError(
-      event.error || new Error(`${event.message} at ${event.filename}:${event.lineno}:${event.colno}`),
+      event.error ||
+        new Error(`${event.message} at ${event.filename}:${event.lineno}:${event.colno}`),
       'uncaughtError'
     );
   });
 
   // Capture network errors with fetch API
   const originalFetch = window.fetch;
-  window.fetch = async function(...args) {
+  window.fetch = async function (...args) {
     try {
       const response = await originalFetch.apply(this, args);
-      
+
       // Track API errors (4xx/5xx)
       if (!response.ok) {
         trackError(
@@ -506,14 +510,11 @@ export function setupGlobalErrorHandlers() {
           'apiError'
         );
       }
-      
+
       return response;
     } catch (error) {
       // Track network errors
-      trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        'fetchError'
-      );
+      trackError(error instanceof Error ? error : new Error(String(error)), 'fetchError');
       throw error;
     }
   };
@@ -524,18 +525,18 @@ export function setupGlobalErrorHandlers() {
 // Initialize all monitoring when called
 export function initializeMonitoring() {
   if (typeof window === 'undefined') return;
-  
+
   try {
     // Set up global error handlers
     setupGlobalErrorHandlers();
-    
+
     // Monitor performance
     if ('performance' in window) {
       // Check for slow page loads
       window.addEventListener('load', () => {
         setTimeout(() => {
           const timing = performance.getEntriesByType('navigation')[0];
-          
+
           if (timing && timing.domComplete > 3000) {
             enhancedLog('warn', 'Slow page load detected', {
               loadTime: timing.domComplete,
@@ -543,13 +544,13 @@ export function initializeMonitoring() {
               tcp: timing.connectEnd - timing.connectStart,
               ttfb: timing.responseStart - timing.requestStart,
               download: timing.responseEnd - timing.responseStart,
-              domProcessing: timing.domComplete - timing.responseEnd
+              domProcessing: timing.domComplete - timing.responseEnd,
             });
           }
         }, 0);
       });
     }
-    
+
     enhancedLog('info', 'Monitoring initialized');
   } catch (error) {
     console.error('Failed to initialize monitoring:', error);
@@ -559,24 +560,24 @@ export function initializeMonitoring() {
 // Make available globally if running in browser
 if (typeof window !== 'undefined') {
   window.runDiagnostics = runDiagnostics;
-  
+
   // Capture console output for analysis
   window.consoleOutput = '';
   const originalConsoleLog = console.log;
   const originalConsoleWarn = console.warn;
   const originalConsoleError = console.error;
-  
-  console.log = function(...args) {
+
+  console.log = function (...args) {
     window.consoleOutput += args.join(' ') + '\n';
     originalConsoleLog.apply(console, args);
   };
-  
-  console.warn = function(...args) {
+
+  console.warn = function (...args) {
     window.consoleOutput += args.join(' ') + '\n';
     originalConsoleWarn.apply(console, args);
   };
-  
-  console.error = function(...args) {
+
+  console.error = function (...args) {
     window.consoleOutput += args.join(' ') + '\n';
     originalConsoleError.apply(console, args);
   };

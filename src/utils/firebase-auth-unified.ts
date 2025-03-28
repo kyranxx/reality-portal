@@ -1,6 +1,6 @@
 /**
  * Unified Firebase Auth module
- * 
+ *
  * This file provides a centralized and robust authentication interface
  * that works consistently across client, server, and Vercel environments.
  */
@@ -21,14 +21,20 @@ const isBuild = process.env.NEXT_PUBLIC_IS_BUILD_TIME === 'true';
 const isVercel = process.env.VERCEL === '1';
 
 // Log which environment we're using (for debugging)
-const environment = isClient ? 'client' : (isVercel ? 'vercel' : 'server');
+const environment = isClient ? 'client' : isVercel ? 'vercel' : 'server';
 console.log(`Firebase Auth using: ${environment} implementation`);
 
 // Stub GoogleAuthProvider class implementation that's always available
 export class GoogleAuthProvider {
-  static credential() { return {}; }
-  addScope() { return this; }
-  setCustomParameters() { return this; }
+  static credential() {
+    return {};
+  }
+  addScope() {
+    return this;
+  }
+  setCustomParameters() {
+    return this;
+  }
 }
 
 // Enhanced error for auth operations
@@ -40,12 +46,18 @@ class AuthOperationError extends Error {
 }
 
 // Server stubs with proper error handling
-export const onAuthStateChanged = (auth: Auth, callback: (user: User | null) => void, errorCallback?: (error: AuthError) => void) => {
+export const onAuthStateChanged = (
+  auth: Auth,
+  callback: (user: User | null) => void,
+  errorCallback?: (error: AuthError) => void
+) => {
   console.log(`Server-side onAuthStateChanged called (no-op)`);
   // Always call error callback with proper error object on server
   if (errorCallback && typeof errorCallback === 'function') {
     setTimeout(() => {
-      errorCallback(new AuthOperationError('onAuthStateChanged', 'Cannot monitor auth state on server'));
+      errorCallback(
+        new AuthOperationError('onAuthStateChanged', 'Cannot monitor auth state on server')
+      );
     }, 0);
   }
   return () => {}; // Return empty unsubscribe function
@@ -84,10 +96,10 @@ export const getAuth = (app?: FirebaseApp) => {
       // Other basic properties to prevent errors
       settings: {},
       name: 'auth',
-      config: {}
+      config: {},
     };
   }
-  
+
   // We should never reach this on the server
   // This is a fallback that shouldn't be needed due to the isClient check above
   try {
@@ -101,7 +113,7 @@ export const getAuth = (app?: FirebaseApp) => {
       onAuthStateChanged: () => () => {},
       settings: {},
       name: 'auth-fallback',
-      config: {}
+      config: {},
     };
   }
 };
@@ -111,7 +123,7 @@ export const connectAuthEmulator = (auth: Auth, url: string) => {
     console.log(`Server-side connectAuthEmulator called (no-op)`);
     return;
   }
-  
+
   try {
     const firebaseAuth = require('firebase/auth');
     return firebaseAuth.connectAuthEmulator(auth, url);

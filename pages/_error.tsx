@@ -17,7 +17,7 @@ const ErrorPage: NextPage<ErrorProps> = ({ statusCode }) => {
             ? `A server-side error occurred (${statusCode})`
             : 'A client-side error occurred'}
         </p>
-        <a 
+        <a
           href="/"
           className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
         >

@@ -1,6 +1,6 @@
 /**
  * Application monitoring and error tracking utilities
- * 
+ *
  * This module provides centralized error tracking, performance monitoring,
  * and diagnostic tools to help detect and fix issues before they impact users.
  */
@@ -30,7 +30,7 @@ export function enhancedLog(
     timestamp,
     url: window.location.href,
     userAgent: navigator.userAgent,
-    data
+    data,
   };
 
   switch (level) {
@@ -68,38 +68,34 @@ export function setupGlobalErrorHandlers(): void {
   (window as any).__errorHandlersInitialized = true;
 
   // Handle unhandled promise rejections
-  window.addEventListener('unhandledrejection', (event) => {
-    const error = event.reason instanceof Error 
-      ? event.reason 
-      : new Error(String(event.reason));
-    
+  window.addEventListener('unhandledrejection', event => {
+    const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
+
     trackError(error, 'unhandledRejection');
   });
 
   // Handle uncaught errors
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', event => {
     // If this is an image loading error, handle it differently
     if (event.target && (event.target as HTMLElement).tagName === 'IMG') {
       const imgElement = event.target as HTMLImageElement;
-      trackError(
-        new Error(`Image load failed: ${imgElement.src}`),
-        'imageLoadError'
-      );
+      trackError(new Error(`Image load failed: ${imgElement.src}`), 'imageLoadError');
       return;
     }
 
     trackError(
-      event.error || new Error(`${event.message} at ${event.filename}:${event.lineno}:${event.colno}`),
+      event.error ||
+        new Error(`${event.message} at ${event.filename}:${event.lineno}:${event.colno}`),
       'uncaughtError'
     );
   });
 
   // Capture network errors with fetch API
   const originalFetch = window.fetch;
-  window.fetch = async function(...args) {
+  window.fetch = async function (...args) {
     try {
       const response = await originalFetch.apply(this, args);
-      
+
       // Track API errors (4xx/5xx)
       if (!response.ok) {
         trackError(
@@ -107,14 +103,11 @@ export function setupGlobalErrorHandlers(): void {
           'apiError'
         );
       }
-      
+
       return response;
     } catch (error) {
       // Track network errors
-      trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        'fetchError'
-      );
+      trackError(error instanceof Error ? error : new Error(String(error)), 'fetchError');
       throw error;
     }
   };
@@ -140,7 +133,7 @@ export function trackError(error: Error, source = 'unknown'): void {
   enhancedLog('error', `Error from ${source}: ${error.message}`, {
     errorName: error.name,
     stack: error.stack,
-    source
+    source,
   });
 
   // Here you would also send to your error tracking service
@@ -196,7 +189,7 @@ export function monitorPerformance(): void {
     window.addEventListener('load', () => {
       setTimeout(() => {
         const timing = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        
+
         if (timing && timing.domComplete > 3000) {
           enhancedLog('warn', 'Slow page load detected', {
             loadTime: timing.domComplete,
@@ -204,7 +197,7 @@ export function monitorPerformance(): void {
             tcp: timing.connectEnd - timing.connectStart,
             ttfb: timing.responseStart - timing.requestStart,
             download: timing.responseEnd - timing.responseStart,
-            domProcessing: timing.domComplete - timing.responseEnd
+            domProcessing: timing.domComplete - timing.responseEnd,
           });
         }
       }, 0);
@@ -213,18 +206,18 @@ export function monitorPerformance(): void {
     // Monitor for long tasks
     if ('PerformanceObserver' in window) {
       try {
-        const observer = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry) => {
+        const observer = new PerformanceObserver(list => {
+          list.getEntries().forEach(entry => {
             if (entry.duration > 100) {
               enhancedLog('warn', 'Long task detected', {
                 duration: entry.duration,
                 startTime: entry.startTime,
-                entryType: entry.entryType
+                entryType: entry.entryType,
               });
             }
           });
         });
-        
+
         observer.observe({ entryTypes: ['longtask'] });
       } catch (e) {
         // Some browsers might not support this API
@@ -241,19 +234,19 @@ export function monitorPerformance(): void {
 // Initialize all monitoring when called
 export function initializeMonitoring(auth?: any): void {
   if (typeof window === 'undefined') return;
-  
+
   try {
     // Set up global error handlers
     setupGlobalErrorHandlers();
-    
+
     // Monitor performance
     monitorPerformance();
-    
+
     // Monitor Firebase auth if provided
     if (auth) {
       monitorFirebaseAuth(auth);
     }
-    
+
     enhancedLog('info', 'Monitoring initialized');
   } catch (error) {
     console.error('Failed to initialize monitoring:', error);

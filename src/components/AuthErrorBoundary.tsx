@@ -18,11 +18,11 @@ interface ErrorBoundaryState {
 // Utility function to check if an error is Firebase auth related
 const isFirebaseAuthError = (error: Error): boolean => {
   return (
-    error.message.includes('Firebase') && 
-    (error.message.includes('auth') || 
-     error.message.includes('authentication') || 
-     error.message.includes('permission') ||
-     error.message.includes('unauthorized'))
+    error.message.includes('Firebase') &&
+    (error.message.includes('auth') ||
+      error.message.includes('authentication') ||
+      error.message.includes('permission') ||
+      error.message.includes('unauthorized'))
   );
 };
 
@@ -96,7 +96,7 @@ class ErrorBoundaryClass extends Component<ErrorBoundaryProps, ErrorBoundaryStat
                     {this.state.error.stack}
                   </pre>
                 )}
-                <button 
+                <button
                   className="mt-4 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                   onClick={() => {
                     this.setState({ hasError: false, error: null, errorInfo: null });
@@ -109,20 +109,22 @@ class ErrorBoundaryClass extends Component<ErrorBoundaryProps, ErrorBoundaryStat
           </div>
         );
       }
-      
+
       // Simple fallback for production
-      return this.props.fallback || (
-        <div className="p-4">
-          <p>Something went wrong with authentication. Please try again.</p>
-          <button 
-            className="mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-            onClick={() => {
-              this.setState({ hasError: false, error: null, errorInfo: null });
-            }}
-          >
-            Retry
-          </button>
-        </div>
+      return (
+        this.props.fallback || (
+          <div className="p-4">
+            <p>Something went wrong with authentication. Please try again.</p>
+            <button
+              className="mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={() => {
+                this.setState({ hasError: false, error: null, errorInfo: null });
+              }}
+            >
+              Retry
+            </button>
+          </div>
+        )
       );
     }
 
@@ -131,9 +133,13 @@ class ErrorBoundaryClass extends Component<ErrorBoundaryProps, ErrorBoundaryStat
 }
 
 // Wrapper function component that handles redirection if needed
-export default function AuthErrorBoundary({ children, fallback, redirectTo = '/auth/login' }: ErrorBoundaryProps): JSX.Element {
+export default function AuthErrorBoundary({
+  children,
+  fallback,
+  redirectTo = '/auth/login',
+}: ErrorBoundaryProps): JSX.Element {
   const router = useRouter();
-  
+
   React.useEffect(() => {
     // Listen for the redirect event from the error boundary
     const handleAuthError = () => {
@@ -143,7 +149,7 @@ export default function AuthErrorBoundary({ children, fallback, redirectTo = '/a
         router.push(redirectPath);
       }
     };
-    
+
     window.addEventListener('auth_error_detected', handleAuthError);
     return () => {
       window.removeEventListener('auth_error_detected', handleAuthError);
@@ -166,6 +172,6 @@ export function useAuthErrorHandler() {
         window.sessionStorage.setItem('auth_error_redirect', '/auth/login');
         window.dispatchEvent(new Event('auth_error_detected'));
       }
-    }
+    },
   };
 }

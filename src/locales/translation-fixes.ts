@@ -1,6 +1,6 @@
 /**
  * Translation Fixes
- * 
+ *
  * This utility ensures consistent translations between languages and
  * provides fallbacks for missing translations.
  */
@@ -35,7 +35,7 @@ const translationFixes: Record<Language, Record<string, string>> = {
   },
   en: {
     // English fixes if needed
-  }
+  },
 };
 
 /**
@@ -50,10 +50,10 @@ export function getTranslation(language: Language, key: string, fallback?: strin
   if (translationFixes[language] && translationFixes[language][key]) {
     return translationFixes[language][key];
   }
-  
+
   // Try to get from current language
   const translation = getNestedValue(translations[language], key);
-  
+
   // If not found in current language
   if (translation === key) {
     // Try English as fallback
@@ -66,7 +66,7 @@ export function getTranslation(language: Language, key: string, fallback?: strin
     // Return provided fallback or key itself
     return fallback || key;
   }
-  
+
   return translation;
 }
 
@@ -79,14 +79,14 @@ export function getTranslation(language: Language, key: string, fallback?: strin
 function getNestedValue(obj: any, path: string): string {
   const keys = path.split('.');
   let current = obj;
-  
+
   for (const key of keys) {
     if (current === undefined || current === null) {
       return path; // Return path if we can't traverse further
     }
     current = current[key];
   }
-  
+
   return current !== undefined && current !== null ? current : path;
 }
 
@@ -96,30 +96,30 @@ function getNestedValue(obj: any, path: string): string {
  */
 export function validateTranslations(): { valid: boolean; issues: string[] } {
   const issues: string[] = [];
-  
+
   // Get all unique keys from English translations (our source of truth)
   const englishKeys = getAllKeys(translations.en);
-  
+
   // Check each language against English
   for (const lang of ['sk', 'cs', 'hu'] as Language[]) {
     const langKeys = getAllKeys(translations[lang]);
-    
+
     // Find missing keys
     const missingKeys = englishKeys.filter(key => !langKeys.includes(key));
     if (missingKeys.length > 0) {
       issues.push(`Language ${lang} is missing keys: ${missingKeys.join(', ')}`);
     }
-    
+
     // Find extra keys not in English
     const extraKeys = langKeys.filter(key => !englishKeys.includes(key));
     if (extraKeys.length > 0) {
       issues.push(`Language ${lang} has extra keys not in English: ${extraKeys.join(', ')}`);
     }
   }
-  
+
   return {
     valid: issues.length === 0,
-    issues
+    issues,
   };
 }
 
@@ -131,7 +131,7 @@ export function validateTranslations(): { valid: boolean; issues: string[] } {
  */
 function getAllKeys(obj: any, prefix = ''): string[] {
   let keys: string[] = [];
-  
+
   for (const key in obj) {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
       keys = [...keys, ...getAllKeys(obj[key], prefix ? `${prefix}.${key}` : key)];
@@ -139,6 +139,6 @@ function getAllKeys(obj: any, prefix = ''): string[] {
       keys.push(prefix ? `${prefix}.${key}` : key);
     }
   }
-  
+
   return keys;
 }

@@ -37,39 +37,35 @@ export const revalidate = 3600; // Revalidate content every hour by default
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  userScalable: true
+  userScalable: true,
 };
 
 // For pages that need dynamic rendering, they'll specify 'force-dynamic' individually
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         {/* Preconnect to important domains to improve performance */}
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
-        
+
         {/* Preload critical fonts to prevent FOUT/FOIT */}
-        <link 
-          rel="preload" 
-          href={getPublicAssetUrl('/fonts/inter-regular.woff2')} 
-          as="font" 
-          type="font/woff2" 
-          crossOrigin="anonymous" 
+        <link
+          rel="preload"
+          href={getPublicAssetUrl('/fonts/inter-regular.woff2')}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
         />
-        <link 
-          rel="preload" 
-          href={getPublicAssetUrl('/fonts/inter-medium.woff2')} 
-          as="font" 
-          type="font/woff2" 
-          crossOrigin="anonymous" 
+        <link
+          rel="preload"
+          href={getPublicAssetUrl('/fonts/inter-medium.woff2')}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
         />
-        
+
         {/* Environment debugging script - only in development */}
         {process.env.NODE_ENV === 'development' && (
           <Script id="env-debug" strategy="afterInteractive">

@@ -50,13 +50,13 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
     const initAuth = async () => {
       try {
         await firebaseService.waitForAuth();
-        
+
         // Set initial user state
         setUser(firebaseService.getCurrentUser());
         setIsLoading(false);
-        
+
         // Subscribe to auth state changes
-        return firebaseService.onAuthStateChange((currentUser) => {
+        return firebaseService.onAuthStateChange(currentUser => {
           setUser(currentUser);
           setIsLoading(false);
         });
@@ -70,7 +70,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
     // Initialize auth and store unsubscribe function
     const unsubscribePromise = initAuth();
-    
+
     // Clean up function
     return () => {
       unsubscribePromise.then(unsubscribe => {
@@ -173,11 +173,11 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  
+
   if (!context) {
     console.warn('useAuth must be used within a FirebaseAuthProvider');
     return defaultContextValue;
   }
-  
+
   return context;
 }

@@ -2,7 +2,7 @@
 
 /**
  * Environment Variables Validation Script
- * 
+ *
  * Validates that all required environment variables are set before starting the app.
  * Add this to your package.json scripts:
  * "predev": "node scripts/validate-environment.js",
@@ -57,9 +57,9 @@ const missingVariables = [];
 const warningVariables = [];
 
 // Check each required variable
-REQUIRED_VARIABLES.forEach((variable) => {
+REQUIRED_VARIABLES.forEach(variable => {
   const value = process.env[variable.name];
-  
+
   if (!value || value.includes('your-') || value.includes('undefined')) {
     // In production, all critical variables must be set
     if (isProduction && variable.criticalForProduction) {
@@ -74,36 +74,42 @@ REQUIRED_VARIABLES.forEach((variable) => {
 // Check if .env.local exists
 if (!fs.existsSync(path.join(process.cwd(), '.env.local'))) {
   console.warn(`${YELLOW}Warning: .env.local file not found.${RESET}`);
-  console.warn(`${YELLOW}You should create a .env.local file based on .env.example with your Firebase configuration.${RESET}`);
+  console.warn(
+    `${YELLOW}You should create a .env.local file based on .env.example with your Firebase configuration.${RESET}`
+  );
 }
 
 // Display results
 if (missingVariables.length > 0 || warningVariables.length > 0) {
   if (missingVariables.length > 0) {
     console.error(`${RED}Missing required environment variables:${RESET}`);
-    missingVariables.forEach((variable) => {
+    missingVariables.forEach(variable => {
       console.error(`${RED}- ${variable.name}: ${variable.description}${RESET}`);
       console.error(`  Example: ${variable.example}`);
     });
   }
-  
+
   if (warningVariables.length > 0) {
-    console.warn(`${YELLOW}Warning: The following environment variables are not set or have placeholder values:${RESET}`);
-    warningVariables.forEach((variable) => {
+    console.warn(
+      `${YELLOW}Warning: The following environment variables are not set or have placeholder values:${RESET}`
+    );
+    warningVariables.forEach(variable => {
       console.warn(`${YELLOW}- ${variable.name}: ${variable.description}${RESET}`);
       console.warn(`  Example: ${variable.example}`);
     });
   }
-  
+
   // Show help message
   console.log('\nTo fix these issues:');
   console.log('1. Copy .env.example to .env.local');
   console.log('2. Edit .env.local and add your Firebase configuration values');
   console.log('3. Restart the application');
-  
+
   // In production, fail the build if critical variables are missing
   if (isProduction && missingVariables.length > 0 && !isCICD) {
-    console.error(`${RED}Error: Cannot start production build with missing environment variables.${RESET}`);
+    console.error(
+      `${RED}Error: Cannot start production build with missing environment variables.${RESET}`
+    );
     process.exit(1);
   }
 } else {
@@ -114,13 +120,17 @@ if (missingVariables.length > 0 || warningVariables.length > 0) {
 if (process.env.PUPPETEER_NAVIGATION_TIMEOUT) {
   console.log(`Navigation timeout is set to ${process.env.PUPPETEER_NAVIGATION_TIMEOUT}ms`);
 } else {
-  console.log(`${YELLOW}Note: You can set PUPPETEER_NAVIGATION_TIMEOUT to a higher value if you experience timeouts.${RESET}`);
+  console.log(
+    `${YELLOW}Note: You can set PUPPETEER_NAVIGATION_TIMEOUT to a higher value if you experience timeouts.${RESET}`
+  );
 }
 
 // Additional check for local development
 if (!isProduction && !isVercel) {
   // Recommend adding Firebase emulator configuration if not set
   if (!process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS) {
-    console.log(`${YELLOW}Tip: For local development, you can set NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true in .env.local to use Firebase emulators.${RESET}`);
+    console.log(
+      `${YELLOW}Tip: For local development, you can set NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true in .env.local to use Firebase emulators.${RESET}`
+    );
   }
 }

@@ -67,7 +67,9 @@ if (db) {
 // Helper function to check if Firestore is available
 const checkFirestore = () => {
   if (!isClient || !db) {
-    throw new Error('Firestore is not available. This operation can only be performed on the client side.');
+    throw new Error(
+      'Firestore is not available. This operation can only be performed on the client side.'
+    );
   }
 };
 
@@ -75,7 +77,7 @@ const checkFirestore = () => {
 export const getAllProperties = async (): Promise<Property[]> => {
   checkFirestore();
   if (!propertiesCollection) throw new Error('Firestore is not initialized');
-  
+
   const snapshot = await getDocs(propertiesCollection);
   return snapshot.docs.map(convertPropertyDoc);
 };
@@ -84,7 +86,7 @@ export const getAllProperties = async (): Promise<Property[]> => {
 export const getFeaturedProperties = async (limitCount = 6): Promise<Property[]> => {
   checkFirestore();
   if (!propertiesCollection) throw new Error('Firestore is not initialized');
-  
+
   const q = query(
     propertiesCollection,
     where('isFeatured', '==', true),
@@ -99,7 +101,7 @@ export const getFeaturedProperties = async (limitCount = 6): Promise<Property[]>
 export const getNewProperties = async (limitCount = 3): Promise<Property[]> => {
   checkFirestore();
   if (!propertiesCollection) throw new Error('Firestore is not initialized');
-  
+
   const q = query(
     propertiesCollection,
     where('isNew', '==', true),
@@ -114,10 +116,10 @@ export const getNewProperties = async (limitCount = 3): Promise<Property[]> => {
 export const getPropertyById = async (id: string): Promise<Property | null> => {
   checkFirestore();
   if (!db) throw new Error('Firestore is not initialized');
-  
+
   const docRef = doc(db, 'properties', id);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     return {
       id: docSnap.id,
@@ -125,7 +127,7 @@ export const getPropertyById = async (id: string): Promise<Property | null> => {
       createdAt: timestampToDate(docSnap.data().createdAt),
     } as Property;
   }
-  
+
   return null;
 };
 
@@ -133,7 +135,7 @@ export const getPropertyById = async (id: string): Promise<Property | null> => {
 export const getPropertiesByType = async (type: string): Promise<Property[]> => {
   checkFirestore();
   if (!propertiesCollection) throw new Error('Firestore is not initialized');
-  
+
   const q = query(
     propertiesCollection,
     where('propertyType', '==', type),
@@ -147,7 +149,7 @@ export const getPropertiesByType = async (type: string): Promise<Property[]> => 
 export const getPropertiesByUserId = async (userId: string): Promise<Property[]> => {
   checkFirestore();
   if (!propertiesCollection) throw new Error('Firestore is not initialized');
-  
+
   const q = query(
     propertiesCollection,
     where('userId', '==', userId),
@@ -158,10 +160,12 @@ export const getPropertiesByUserId = async (userId: string): Promise<Property[]>
 };
 
 // Add a new property
-export const addProperty = async (property: Omit<Property, 'id' | 'createdAt'>): Promise<string> => {
+export const addProperty = async (
+  property: Omit<Property, 'id' | 'createdAt'>
+): Promise<string> => {
   checkFirestore();
   if (!propertiesCollection) throw new Error('Firestore is not initialized');
-  
+
   const docRef = await addDoc(propertiesCollection, {
     ...property,
     createdAt: serverTimestamp(),
@@ -173,7 +177,7 @@ export const addProperty = async (property: Omit<Property, 'id' | 'createdAt'>):
 export const updateProperty = async (id: string, property: Partial<Property>): Promise<void> => {
   checkFirestore();
   if (!db) throw new Error('Firestore is not initialized');
-  
+
   const propertyRef = doc(db, 'properties', id);
   await updateDoc(propertyRef, {
     ...property,
@@ -185,7 +189,7 @@ export const updateProperty = async (id: string, property: Partial<Property>): P
 export const deleteProperty = async (id: string): Promise<void> => {
   checkFirestore();
   if (!db) throw new Error('Firestore is not initialized');
-  
+
   const propertyRef = doc(db, 'properties', id);
   await deleteDoc(propertyRef);
 };
@@ -194,10 +198,10 @@ export const deleteProperty = async (id: string): Promise<void> => {
 export const getUserById = async (id: string): Promise<User | null> => {
   checkFirestore();
   if (!db) throw new Error('Firestore is not initialized');
-  
+
   const docRef = doc(db, 'users', id);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     return {
       id: docSnap.id,
@@ -205,7 +209,7 @@ export const getUserById = async (id: string): Promise<User | null> => {
       createdAt: timestampToDate(docSnap.data().createdAt),
     } as User;
   }
-  
+
   return null;
 };
 
@@ -213,7 +217,7 @@ export const getUserById = async (id: string): Promise<User | null> => {
 export const addUser = async (user: Omit<User, 'id' | 'createdAt'>): Promise<string> => {
   checkFirestore();
   if (!usersCollection) throw new Error('Firestore is not initialized');
-  
+
   const docRef = await addDoc(usersCollection, {
     ...user,
     createdAt: serverTimestamp(),
@@ -225,7 +229,7 @@ export const addUser = async (user: Omit<User, 'id' | 'createdAt'>): Promise<str
 export const updateUser = async (id: string, user: Partial<User>): Promise<void> => {
   checkFirestore();
   if (!db) throw new Error('Firestore is not initialized');
-  
+
   const userRef = doc(db, 'users', id);
   await updateDoc(userRef, {
     ...user,
@@ -237,14 +241,14 @@ export const updateUser = async (id: string, user: Partial<User>): Promise<void>
 export const getMessagesByPropertyId = async (propertyId: string): Promise<Message[]> => {
   checkFirestore();
   if (!messagesCollection) throw new Error('Firestore is not initialized');
-  
+
   const q = query(
     messagesCollection,
     where('propertyId', '==', propertyId),
     orderBy('createdAt', 'desc')
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({
+  return snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data(),
     createdAt: timestampToDate(doc.data().createdAt),
@@ -255,34 +259,34 @@ export const getMessagesByPropertyId = async (propertyId: string): Promise<Messa
 export const getMessagesByUserId = async (userId: string): Promise<Message[]> => {
   checkFirestore();
   if (!messagesCollection) throw new Error('Firestore is not initialized');
-  
+
   const q = query(
     messagesCollection,
     where('senderId', '==', userId),
     orderBy('createdAt', 'desc')
   );
   const snapshot = await getDocs(q);
-  
+
   const q2 = query(
     messagesCollection,
     where('recipientId', '==', userId),
     orderBy('createdAt', 'desc')
   );
   const snapshot2 = await getDocs(q2);
-  
+
   const messages = [
-    ...snapshot.docs.map((doc) => ({
+    ...snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
       createdAt: timestampToDate(doc.data().createdAt),
     })),
-    ...snapshot2.docs.map((doc) => ({
+    ...snapshot2.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
       createdAt: timestampToDate(doc.data().createdAt),
     })),
   ] as Message[];
-  
+
   // Sort by createdAt in descending order
   return messages.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 };
@@ -291,7 +295,7 @@ export const getMessagesByUserId = async (userId: string): Promise<Message[]> =>
 export const addMessage = async (message: Omit<Message, 'id' | 'createdAt'>): Promise<string> => {
   checkFirestore();
   if (!messagesCollection) throw new Error('Firestore is not initialized');
-  
+
   const docRef = await addDoc(messagesCollection, {
     ...message,
     createdAt: serverTimestamp(),
@@ -304,7 +308,7 @@ export const addMessage = async (message: Omit<Message, 'id' | 'createdAt'>): Pr
 export const markMessageAsRead = async (id: string): Promise<void> => {
   checkFirestore();
   if (!db) throw new Error('Firestore is not initialized');
-  
+
   const messageRef = doc(db, 'messages', id);
   await updateDoc(messageRef, {
     read: true,
@@ -315,14 +319,10 @@ export const markMessageAsRead = async (id: string): Promise<void> => {
 export const getFavoritesByUserId = async (userId: string): Promise<Favorite[]> => {
   checkFirestore();
   if (!favoritesCollection) throw new Error('Firestore is not initialized');
-  
-  const q = query(
-    favoritesCollection,
-    where('userId', '==', userId),
-    orderBy('createdAt', 'desc')
-  );
+
+  const q = query(favoritesCollection, where('userId', '==', userId), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({
+  return snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data(),
     createdAt: timestampToDate(doc.data().createdAt),
@@ -330,10 +330,12 @@ export const getFavoritesByUserId = async (userId: string): Promise<Favorite[]> 
 };
 
 // Add a favorite
-export const addFavorite = async (favorite: Omit<Favorite, 'id' | 'createdAt'>): Promise<string> => {
+export const addFavorite = async (
+  favorite: Omit<Favorite, 'id' | 'createdAt'>
+): Promise<string> => {
   checkFirestore();
   if (!favoritesCollection) throw new Error('Firestore is not initialized');
-  
+
   const docRef = await addDoc(favoritesCollection, {
     ...favorite,
     createdAt: serverTimestamp(),
@@ -345,7 +347,7 @@ export const addFavorite = async (favorite: Omit<Favorite, 'id' | 'createdAt'>):
 export const removeFavorite = async (id: string): Promise<void> => {
   checkFirestore();
   if (!db) throw new Error('Firestore is not initialized');
-  
+
   const favoriteRef = doc(db, 'favorites', id);
   await deleteDoc(favoriteRef);
 };
@@ -354,7 +356,7 @@ export const removeFavorite = async (id: string): Promise<void> => {
 export const isPropertyFavorited = async (userId: string, propertyId: string): Promise<boolean> => {
   checkFirestore();
   if (!favoritesCollection) throw new Error('Firestore is not initialized');
-  
+
   const q = query(
     favoritesCollection,
     where('userId', '==', userId),

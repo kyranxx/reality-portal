@@ -22,12 +22,16 @@ const processEnvVars = () => {
     'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
     'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
     'NEXT_PUBLIC_FIREBASE_APP_ID',
-    'NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID'
+    'NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID',
   ];
 
   // Check each Firebase variable and set placeholder if needed
   firebaseVars.forEach(varName => {
-    if (!process.env[varName] || process.env[varName].includes('${') || process.env[varName] === varName) {
+    if (
+      !process.env[varName] ||
+      process.env[varName].includes('${') ||
+      process.env[varName] === varName
+    ) {
       const placeholderValue = `placeholder-${varName.replace('NEXT_PUBLIC_FIREBASE_', '').toLowerCase()}`;
       console.log(`Setting placeholder for ${varName}: ${placeholderValue}`);
       process.env[varName] = placeholderValue;
@@ -35,16 +39,20 @@ const processEnvVars = () => {
   });
 
   // Verify and normalize Supabase config variables
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || 
-      process.env.NEXT_PUBLIC_SUPABASE_URL.includes('${') || 
-      process.env.NEXT_PUBLIC_SUPABASE_URL === 'NEXT_PUBLIC_SUPABASE_URL') {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL.includes('${') ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'NEXT_PUBLIC_SUPABASE_URL'
+  ) {
     console.log('Setting placeholder Supabase URL');
     process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://placeholder-url.supabase.co';
   }
 
-  if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes('${') || 
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === 'NEXT_PUBLIC_SUPABASE_ANON_KEY') {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes('${') ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === 'NEXT_PUBLIC_SUPABASE_ANON_KEY'
+  ) {
     console.log('Setting placeholder Supabase anon key');
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'placeholder-key';
   }
@@ -57,7 +65,7 @@ processEnvVars();
 try {
   console.log('Creating .env.local file with normalized values...');
   let envContent = '';
-  
+
   // Add Firebase config with normalized values
   envContent += `NEXT_PUBLIC_FIREBASE_API_KEY=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}\n`;
   envContent += `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}\n`;
@@ -66,15 +74,15 @@ try {
   envContent += `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}\n`;
   envContent += `NEXT_PUBLIC_FIREBASE_APP_ID=${process.env.NEXT_PUBLIC_FIREBASE_APP_ID}\n`;
   envContent += `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID}\n`;
-  
+
   // Add Supabase config with normalized values
   envContent += `NEXT_PUBLIC_SUPABASE_URL=${process.env.NEXT_PUBLIC_SUPABASE_URL}\n`;
   envContent += `NEXT_PUBLIC_SUPABASE_ANON_KEY=${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}\n`;
-  
+
   // Add build-time flag and other useful environment variables
   envContent += `NEXT_PUBLIC_IS_BUILD_TIME=true\n`;
   envContent += `NEXT_PUBLIC_VERCEL_ENV=${process.env.VERCEL_ENV || 'development'}\n`;
-  
+
   fs.writeFileSync('.env.local', envContent);
   console.log('.env.local file created successfully.');
 } catch (error) {
@@ -84,14 +92,14 @@ try {
 // Create fallback modules for common import errors during build
 const createFallbackFiles = () => {
   console.log('Setting up fallback modules for build...');
-  
+
   try {
     // Ensure path exists for any component fallbacks we want to create
     const componentsDir = path.join(__dirname, 'src', 'components');
     if (!fs.existsSync(componentsDir)) {
       fs.mkdirSync(componentsDir, { recursive: true });
     }
-    
+
     // Create SectionTitle.js fallback if it doesn't exist
     const sectionTitlePath = path.join(componentsDir, 'SectionTitle.js');
     if (!fs.existsSync(sectionTitlePath)) {
@@ -108,7 +116,7 @@ export default function SectionTitle({ title, subtitle }) {
   );
 }
       `.trim();
-      
+
       fs.writeFileSync(sectionTitlePath, fallbackComponent);
       console.log('Created fallback SectionTitle component');
     }

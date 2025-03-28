@@ -30,19 +30,19 @@ pageFiles.forEach(filePath => {
   if (content.includes('UniversalComponentLoader')) {
     // Add dynamic mode exports if they don't exist
     let updatedContent = content;
-    
+
     // Add dynamic if needed
     if (!content.includes('export const dynamic')) {
       updatedContent = updatedContent.replace(
         /import.*from.*['"].*_client-loader['"];/,
-        '$&\n\n// Disable static rendering and force dynamic for Vercel production\nexport const dynamic = \'force-dynamic\';\nexport const revalidate = 0;\n\n// Ensure the page is never statically rendered during build\nexport const generateStaticParams = () => {\n  return [];\n};'
+        "$&\n\n// Disable static rendering and force dynamic for Vercel production\nexport const dynamic = 'force-dynamic';\nexport const revalidate = 0;\n\n// Ensure the page is never statically rendered during build\nexport const generateStaticParams = () => {\n  return [];\n};"
       );
-    } 
+    }
     // Already has dynamic export but may be missing the others
     else if (!content.includes('export const revalidate')) {
       updatedContent = updatedContent.replace(
         /export const dynamic.*?;/,
-        'export const dynamic = \'force-dynamic\';\nexport const revalidate = 0;\n\n// Ensure the page is never statically rendered during build\nexport const generateStaticParams = () => {\n  return [];\n};'
+        "export const dynamic = 'force-dynamic';\nexport const revalidate = 0;\n\n// Ensure the page is never statically rendered during build\nexport const generateStaticParams = () => {\n  return [];\n};"
       );
     }
 

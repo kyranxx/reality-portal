@@ -22,9 +22,10 @@ export const featuredProperties: Property[] = [
     size: 75,
     bedrooms: 3,
     bathrooms: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     isFeatured: true,
-    type: 'apartment'
+    type: 'apartment',
   },
   {
     id: 'prop-2',
@@ -35,9 +36,10 @@ export const featuredProperties: Property[] = [
     bedrooms: 4,
     bathrooms: 2,
     landSize: 450,
-    imageUrl: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     isFeatured: true,
-    type: 'house'
+    type: 'house',
   },
   {
     id: 'prop-3',
@@ -47,9 +49,10 @@ export const featuredProperties: Property[] = [
     size: 55,
     bedrooms: 2,
     bathrooms: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     isNew: true,
-    type: 'apartment'
+    type: 'apartment',
   },
   {
     id: 'prop-4',
@@ -58,8 +61,9 @@ export const featuredProperties: Property[] = [
     price: 89000,
     size: 800,
     landSize: 800,
-    imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80',
-    type: 'land'
+    imageUrl:
+      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80',
+    type: 'land',
   },
   {
     id: 'prop-5',
@@ -67,8 +71,9 @@ export const featuredProperties: Property[] = [
     location: 'Ružinov, Bratislava',
     price: 320000,
     size: 150,
-    imageUrl: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80',
-    type: 'commercial'
+    imageUrl:
+      'https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80',
+    type: 'commercial',
   },
   {
     id: 'prop-6',
@@ -79,10 +84,11 @@ export const featuredProperties: Property[] = [
     bedrooms: 5,
     bathrooms: 3,
     landSize: 1200,
-    imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     isFeatured: true,
-    type: 'house'
-  }
+    type: 'house',
+  },
 ];
 
 export const newProperties: Property[] = [
@@ -94,9 +100,10 @@ export const newProperties: Property[] = [
     size: 35,
     bedrooms: 1,
     bathrooms: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80',
     isNew: true,
-    type: 'apartment'
+    type: 'apartment',
   },
   {
     id: 'prop-8',
@@ -107,9 +114,10 @@ export const newProperties: Property[] = [
     bedrooms: 4,
     bathrooms: 2,
     landSize: 500,
-    imageUrl: 'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     isNew: true,
-    type: 'house'
+    type: 'house',
   },
   {
     id: 'prop-9',
@@ -117,8 +125,9 @@ export const newProperties: Property[] = [
     location: 'Centrum, Martin',
     price: 150000,
     size: 80,
-    imageUrl: 'https://images.unsplash.com/photo-1604014237800-1c9102c219da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1604014237800-1c9102c219da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     isNew: true,
-    type: 'commercial'
-  }
+    type: 'commercial',
+  },
 ];

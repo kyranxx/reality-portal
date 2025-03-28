@@ -13,15 +13,15 @@ interface BaseServerPageProps {
 
 /**
  * Base Server Page
- * 
+ *
  * This is a universal template for server-side rendered pages that handles proper
  * client/server rendering boundaries, SEO metadata, and error handling.
- * 
+ *
  * Usage:
  * ```
  * export default function PropertyPage({ params }: { params: { id: string } }) {
  *   return (
- *     <BaseServerPage 
+ *     <BaseServerPage
  *       clientComponent="PropertyClientComponent"
  *       title={`Property ${params.id}`}
  *       description="View detailed property information"
@@ -30,12 +30,12 @@ interface BaseServerPageProps {
  * }
  * ```
  */
-export default function BaseServerPage({ 
+export default function BaseServerPage({
   clientComponent,
   fallback,
   title,
   description,
-  imageUrl
+  imageUrl,
 }: BaseServerPageProps) {
   // Default fallback loading state if none provided
   const defaultFallback = (
@@ -51,7 +51,7 @@ export default function BaseServerPage({
     <div className="py-10">
       <div className="container">
         {/* Error boundary would go here in a more comprehensive implementation */}
-        <UniversalComponentLoader 
+        <UniversalComponentLoader
           componentKey={clientComponent}
           fallback={fallback || defaultFallback}
         />

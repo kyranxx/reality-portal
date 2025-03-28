@@ -17,8 +17,8 @@ const firebaseConfig = {
 };
 
 // Check if Firebase environment variables are properly set with real values (not placeholders)
-export const isFirebaseConfigured = 
-  process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== undefined && 
+export const isFirebaseConfigured =
+  process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== undefined &&
   process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN !== undefined &&
   process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== undefined &&
   process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'placeholder-api-key' &&
@@ -45,7 +45,7 @@ const initializeFirebase = (retryCount = 0) => {
     if (!isFirebaseConfigured && isClient) {
       console.warn(
         'Firebase environment variables are not set. Authentication and database features will not work properly. ' +
-        'Please ensure NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, and NEXT_PUBLIC_FIREBASE_PROJECT_ID are set in your environment.'
+          'Please ensure NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, and NEXT_PUBLIC_FIREBASE_PROJECT_ID are set in your environment.'
       );
     }
     return;
@@ -54,7 +54,7 @@ const initializeFirebase = (retryCount = 0) => {
   try {
     // Initialize Firebase app if not already initialized
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-    
+
     // Initialize auth with proper error handling
     try {
       auth = getAuth(app);
@@ -63,7 +63,7 @@ const initializeFirebase = (retryCount = 0) => {
       console.error('Firebase Auth initialization error:', authError);
       // We continue even if auth fails, to allow other services to work
     }
-    
+
     // Initialize Firestore with proper error handling
     try {
       db = getFirestore(app);
@@ -71,7 +71,7 @@ const initializeFirebase = (retryCount = 0) => {
     } catch (dbError) {
       console.error('Firebase Firestore initialization error:', dbError);
     }
-    
+
     // Initialize Storage with proper error handling
     try {
       storage = getStorage(app);
@@ -81,9 +81,11 @@ const initializeFirebase = (retryCount = 0) => {
     }
 
     // Connect to emulators in development environment only (never on Vercel)
-    if (process.env.NODE_ENV === 'development' && 
-        process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' && 
-        process.env.VERCEL !== '1') {
+    if (
+      process.env.NODE_ENV === 'development' &&
+      process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' &&
+      process.env.VERCEL !== '1'
+    ) {
       try {
         if (auth) connectAuthEmulator(auth, 'http://localhost:9099');
         if (db) connectFirestoreEmulator(db, 'localhost', 8080);
@@ -93,18 +95,18 @@ const initializeFirebase = (retryCount = 0) => {
         console.error('Error connecting to Firebase emulators:', emulatorError);
       }
     }
-    
+
     console.log('Firebase initialization completed');
   } catch (error) {
     console.error(`Firebase initialization attempt ${retryCount + 1} failed:`, error);
-    
+
     // Retry initialization with exponential backoff
     if (retryCount < MAX_INIT_RETRIES) {
       // Use shorter delays in development for faster startup
       const baseDelay = process.env.NODE_ENV === 'development' ? 100 : 500;
       const delay = Math.pow(2, retryCount) * baseDelay; // Development: 100ms, 200ms; Production: 500ms, 1s, 2s
       console.log(`Retrying Firebase initialization in ${delay}ms...`);
-      
+
       setTimeout(() => {
         initializeFirebase(retryCount + 1);
       }, delay);

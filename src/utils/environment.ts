@@ -1,6 +1,6 @@
 /**
  * Environment detection and URL handling utilities
- * 
+ *
  * This module provides utilities for detecting the current environment
  * and generating appropriate URLs for assets and API endpoints.
  */
@@ -19,11 +19,11 @@ export const getDeploymentUrl = (): string => {
   if (isClient) {
     return window.location.origin;
   }
-  
+
   if (isVercel && process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  
+
   // Default for development
   return 'http://localhost:3000';
 };
@@ -34,24 +34,24 @@ export const getAssetBaseUrl = (): string => {
   if (process.env.NEXT_PUBLIC_ASSET_PREFIX && process.env.NEXT_PUBLIC_ASSET_PREFIX !== '') {
     return process.env.NEXT_PUBLIC_ASSET_PREFIX;
   }
-  
+
   // For Vercel preview environments, we use relative paths to avoid CORS issues
   if (isVercel && isPreviewDeployment) {
     return '';
   }
-  
+
   // For production, we use the canonical URL
   if (isVercel && isProduction) {
     return 'https://reality-portal.vercel.app';
   }
-  
+
   // Default to relative paths for development
   return '';
 };
 
 /**
  * Get a URL for an asset with the appropriate base path
- * 
+ *
  * @param path The relative path to the asset
  * @param forceAbsolute Whether to force an absolute URL
  * @returns The complete URL for the asset
@@ -61,15 +61,15 @@ export const getAssetUrl = (path: string, forceAbsolute = false): string => {
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
-  
+
   // Ensure path starts with a slash
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  
+
   // For absolute URLs
   if (forceAbsolute) {
     return `${getDeploymentUrl()}${normalizedPath}`;
   }
-  
+
   // For relative URLs with possible asset prefix
   const baseUrl = getAssetBaseUrl();
   return baseUrl ? `${baseUrl}${normalizedPath}` : normalizedPath;
@@ -77,7 +77,7 @@ export const getAssetUrl = (path: string, forceAbsolute = false): string => {
 
 /**
  * Get the appropriate URL for a Next.js static asset
- * 
+ *
  * @param path The relative path to the static asset
  * @returns The complete URL for the static asset
  */
@@ -89,7 +89,7 @@ export const getStaticAssetUrl = (path: string): string => {
 
 /**
  * Get a public asset URL (from the /public directory)
- * 
+ *
  * @param path The relative path within the public directory
  * @returns The complete URL for the public asset
  */
@@ -101,7 +101,7 @@ export const getPublicAssetUrl = (path: string): string => {
 
 /**
  * Get a font asset URL
- * 
+ *
  * @param fontName The name of the font file
  * @returns The complete URL for the font asset
  */
@@ -111,7 +111,7 @@ export const getFontUrl = (fontName: string): string => {
 
 /**
  * Get an image asset URL
- * 
+ *
  * @param imageName The name of the image file
  * @returns The complete URL for the image asset
  */
@@ -125,7 +125,7 @@ export const getImageUrl = (imageName: string): string => {
  */
 export const getEnvironmentInfo = () => {
   return {
-    environment: isDevelopment ? 'development' : (isPreviewDeployment ? 'preview' : 'production'),
+    environment: isDevelopment ? 'development' : isPreviewDeployment ? 'preview' : 'production',
     isVercel,
     isPreviewDeployment,
     deploymentUrl: getDeploymentUrl(),

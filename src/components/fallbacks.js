@@ -1,6 +1,6 @@
 /**
  * Fallback components for Vercel deployment
- * 
+ *
  * This file provides simple fallback implementations for components
  * that might fail to import during the build process on Vercel.
  */

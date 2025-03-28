@@ -12,12 +12,12 @@ import HomeClient from '../app/HomeClient';
  */
 export const clientComponentRegistry = {
   // Dashboard components
-  'DashboardClient': DashboardClient,
-  'ProfileClient': ProfileClient,
+  DashboardClient: DashboardClient,
+  ProfileClient: ProfileClient,
   // Admin components
-  'AdminClient': AdminClient,
+  AdminClient: AdminClient,
   // Home page component
-  'HomeClient': HomeClient,
+  HomeClient: HomeClient,
 } as const;
 
 // Create a type from the registry keys for type safety

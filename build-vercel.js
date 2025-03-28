@@ -36,7 +36,7 @@ console.log('Applying comprehensive browser polyfills for server environment...'
 try {
   // Import dedicated polyfill module to ensure consistent environment
   const polyfillPath = './src/utils/browser-polyfills.js';
-  
+
   // Direct require for immediate execution in build context
   if (require('fs').existsSync(polyfillPath)) {
     console.log('Loading polyfills from:', polyfillPath);
@@ -49,29 +49,30 @@ try {
     global.document = { createElement: () => ({}), querySelector: () => null };
     global.navigator = { userAgent: 'Node.js' };
   }
-  
+
   // Set up error tracking for browser globals
   const originalPrepareStackTrace = Error.prepareStackTrace;
-  Error.prepareStackTrace = function(error, stack) {
+  Error.prepareStackTrace = function (error, stack) {
     // This will help identify browser API usage in server code
-    if (error.message && (
-      error.message.includes('self is not defined') ||
-      error.message.includes('window is not defined') ||
-      error.message.includes('document is not defined')
-    )) {
+    if (
+      error.message &&
+      (error.message.includes('self is not defined') ||
+        error.message.includes('window is not defined') ||
+        error.message.includes('document is not defined'))
+    ) {
       console.warn('[Build Warning] Browser API reference detected:', error.message);
       console.warn('  Location:', stack[0].getFileName(), 'line:', stack[0].getLineNumber());
       // Don't throw error, just warn
     }
     return originalPrepareStackTrace ? originalPrepareStackTrace(error, stack) : stack;
   };
-  
+
   console.log('Browser polyfills applied successfully');
 } catch (error) {
   console.warn('Warning: Failed to apply browser polyfills:', error.message);
   console.warn('This may cause issues with browser-specific code in server context');
   console.warn('Continuing build process with basic polyfills');
-  
+
   // Apply minimalist polyfills as absolute fallback
   global.self = global;
   global.window = global;
@@ -82,7 +83,7 @@ console.log('Setting up Firebase auth compatibility...');
 try {
   // Using static TypeScript modules instead of the older JavaScript approach
   console.log('Using static TypeScript modules for Firebase Auth');
-  
+
   // Create a simple .env.local file for Firebase config if it doesn't exist
   if (!fs.existsSync('.env.local')) {
     console.log('Creating .env.local file with normalized values...');
@@ -114,7 +115,10 @@ try {
     execSync('npm install --save glob', { stdio: 'inherit' });
   }
 } catch (depError) {
-  console.warn('Warning: Could not ensure glob dependency, but will continue build:', depError.message);
+  console.warn(
+    'Warning: Could not ensure glob dependency, but will continue build:',
+    depError.message
+  );
 }
 
 // Ensure universal client component architecture is properly set up
@@ -124,12 +128,12 @@ try {
   if (!fs.existsSync('./src/app/_components.tsx')) {
     throw new Error('Missing required file: src/app/_components.tsx');
   }
-  
+
   // Check if _client-loader.tsx exists
   if (!fs.existsSync('./src/app/_client-loader.tsx')) {
     throw new Error('Missing required file: src/app/_client-loader.tsx');
   }
-  
+
   // Run pre-build validation to ensure all components are properly registered
   console.log('Running pre-build validation...');
   execSync('node scripts/pre-build-validation.js', { stdio: 'inherit' });
@@ -145,21 +149,21 @@ const ensurePathAliases = () => {
     // Process each page file to fix relative imports
     console.log('Checking for path alias usage in page files...');
     const pages = glob.sync('./src/app/**/page.{js,jsx,ts,tsx}');
-    
+
     pages.forEach(pagePath => {
       if (fs.existsSync(pagePath)) {
         const content = fs.readFileSync(pagePath, 'utf8');
-        
+
         // Check if this page uses the old client component loader
         if (content.includes('@/client')) {
           // Fix imports that use @/client path aliases
           const fixedContent = content.replace(
-            /from ['"]@\/client(?:\/([^'"]+))?['"]/g, 
+            /from ['"]@\/client(?:\/([^'"]+))?['"]/g,
             (match, subPath) => {
               // Determine relative path depth based on file location
               const depth = pagePath.split('/').length - 3; // Adjust for src/app
               const relPath = '../'.repeat(depth);
-              
+
               if (subPath) {
                 return `from '${relPath}_client-loader'`;
               } else {
@@ -167,7 +171,7 @@ const ensurePathAliases = () => {
               }
             }
           );
-          
+
           if (fixedContent !== content) {
             console.log(`Fixed client imports in ${pagePath}`);
             fs.writeFileSync(pagePath, fixedContent);
@@ -175,39 +179,51 @@ const ensurePathAliases = () => {
         }
       }
     });
-    
+
     // Standard path alias fixes for specific files
     const knownFiles = [
-      { 
+      {
         path: './src/contexts/AppContext.tsx',
         replacements: [
-          { from: /from ['"]@\/utils\/firebase['"]/, to: 'from \'../utils/firebase\'' },
-          { from: /from ['"]@\/utils\/FirebaseAuthContext['"]/, to: 'from \'../utils/FirebaseAuthContext\'' }
-        ]
+          { from: /from ['"]@\/utils\/firebase['"]/, to: "from '../utils/firebase'" },
+          {
+            from: /from ['"]@\/utils\/FirebaseAuthContext['"]/,
+            to: "from '../utils/FirebaseAuthContext'",
+          },
+        ],
       },
-      { 
+      {
         path: './src/app/auth/reset-password/page.tsx',
         replacements: [
-          { from: /from ['"]@\/utils\/FirebaseAuthContext['"]/, to: 'from \'../../../utils/FirebaseAuthContext\'' },
-          { from: /from ['"]@\/utils\/firebase['"]/, to: 'from \'../../../utils/firebase\'' },
-          { from: /from ['"]@\/components\/SectionTitle['"]/, to: 'from \'../../../components/SectionTitle\'' }
-        ]
+          {
+            from: /from ['"]@\/utils\/FirebaseAuthContext['"]/,
+            to: "from '../../../utils/FirebaseAuthContext'",
+          },
+          { from: /from ['"]@\/utils\/firebase['"]/, to: "from '../../../utils/firebase'" },
+          {
+            from: /from ['"]@\/components\/SectionTitle['"]/,
+            to: "from '../../../components/SectionTitle'",
+          },
+        ],
       },
-      { 
+      {
         path: './pages/_app.js',
         replacements: [
-          { from: /from ['"]@\/utils\/FirebaseAuthContext['"]/, to: 'from \'../src/utils/FirebaseAuthContext\'' },
-          { from: /from ['"]@\/contexts\/AppContext['"]/, to: 'from \'../src/contexts/AppContext\'' }
-        ]
-      }
+          {
+            from: /from ['"]@\/utils\/FirebaseAuthContext['"]/,
+            to: "from '../src/utils/FirebaseAuthContext'",
+          },
+          { from: /from ['"]@\/contexts\/AppContext['"]/, to: "from '../src/contexts/AppContext'" },
+        ],
+      },
     ];
-    
+
     // Apply fixes for known files
     knownFiles.forEach(({ path: filePath, replacements }) => {
       if (fs.existsSync(filePath)) {
         let content = fs.readFileSync(filePath, 'utf8');
         let fixed = false;
-        
+
         replacements.forEach(({ from, to }) => {
           const updatedContent = content.replace(from, to);
           if (updatedContent !== content) {
@@ -215,14 +231,14 @@ const ensurePathAliases = () => {
             fixed = true;
           }
         });
-        
+
         if (fixed) {
           console.log(`Fixed path aliases in ${filePath}`);
           fs.writeFileSync(filePath, content);
         }
       }
     });
-    
+
     return true;
   } catch (error) {
     console.error('Error setting up path alias workarounds:', error);
@@ -247,20 +263,19 @@ const outputDir = '.next-dynamic';
 // Create a .env.production file with the correct output directory
 try {
   console.log(`Setting output directory to: ${outputDir}`);
-  
+
   // Add NEXT_DIST_DIR if it doesn't exist in the environment
   if (!process.env.NEXT_DIST_DIR) {
     process.env.NEXT_DIST_DIR = outputDir;
-    
+
     // Also write to .env.production for Next.js to pick it up
     let envContent = '';
     if (fs.existsSync('.env.production')) {
       envContent = fs.readFileSync('.env.production', 'utf8');
     }
-    
+
     if (!envContent.includes('NEXT_DIST_DIR')) {
-      fs.writeFileSync('.env.production', 
-        `${envContent}\nNEXT_DIST_DIR=${outputDir}\n`);
+      fs.writeFileSync('.env.production', `${envContent}\nNEXT_DIST_DIR=${outputDir}\n`);
       console.log('Added NEXT_DIST_DIR to .env.production');
     }
   }
@@ -273,7 +288,7 @@ console.log('Running Next.js build with custom output directory...');
 try {
   // Fix path aliases before building
   ensurePathAliases();
-  
+
   // Run build (output directory is configured in next.config.js)
   // Skip linting during Vercel builds to avoid ESLint issues
   execSync(`next build --no-lint`, { stdio: 'inherit' });
@@ -283,21 +298,21 @@ try {
   if (error.message && (error.message.includes('firebase') || error.message.includes('auth'))) {
     console.warn('Authentication-related error detected during build:', error.message);
     console.warn('This may be expected for protected pages that will be rendered client-side.');
-    
+
     // Create a success file to indicate the build should be considered successful
     fs.writeFileSync('.vercel-build-success', 'Build completed with expected auth errors');
     process.exit(0); // Exit with success code
   } else if (error.message && error.message.includes('Module not found')) {
     console.warn('Module resolution error detected:', error.message);
     console.warn('Attempting recovery build with reduced features...');
-    
+
     // Try to build again with stricter options
     try {
-  // Run with more permissive error handling (no-lint is a valid option)
-  // Make sure TypeScript is installed first in case it wasn't included as a dependency
-  console.log('Ensuring TypeScript is installed for the build...');
-  execSync('npm install --no-save typescript@5.3.0', { stdio: 'inherit' });
-  execSync(`next build --no-lint`, { stdio: 'inherit' });
+      // Run with more permissive error handling (no-lint is a valid option)
+      // Make sure TypeScript is installed first in case it wasn't included as a dependency
+      console.log('Ensuring TypeScript is installed for the build...');
+      execSync('npm install --no-save typescript@5.3.0', { stdio: 'inherit' });
+      execSync(`next build --no-lint`, { stdio: 'inherit' });
       console.log('Recovery build completed successfully!');
       fs.writeFileSync('.vercel-build-success', 'Recovery build completed');
       process.exit(0); // Exit with success code

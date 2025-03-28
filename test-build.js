@@ -20,20 +20,17 @@ process.env.NODE_ENV = 'production';
 // Validate the architecture first
 try {
   console.log('Validating client component architecture...');
-  
+
   // Check that _components.tsx and _client-loader.tsx exist
-  const requiredFiles = [
-    './src/app/_components.tsx',
-    './src/app/_client-loader.tsx',
-  ];
-  
+  const requiredFiles = ['./src/app/_components.tsx', './src/app/_client-loader.tsx'];
+
   requiredFiles.forEach(file => {
     if (!fs.existsSync(file)) {
       throw new Error(`Required file not found: ${file}`);
     }
     console.log(`✓ Found ${file}`);
   });
-  
+
   // Run the pre-build validation
   console.log('\nRunning pre-build validation...');
   execSync('node scripts/pre-build-validation.js', { stdio: 'inherit' });
@@ -51,22 +48,26 @@ try {
     console.log('Creating temporary .env.local file...');
     fs.writeFileSync('.env.local', '# Temporary .env.local for testing\n');
   }
-  
+
   // Run a partial Next.js build
   console.log('\nRunning partial Next.js build to test component resolution...');
   execSync('next build --no-lint', { stdio: 'inherit' });
-  
-  console.log('\n✅ Test build successful! The universal client component architecture is working correctly.');
+
+  console.log(
+    '\n✅ Test build successful! The universal client component architecture is working correctly.'
+  );
 } catch (error) {
   console.error('\n❌ Test build failed:', error.message);
-  
+
   if (error.message.includes('Element type is invalid')) {
-    console.error('\nThis error indicates a component resolution problem in the build environment.');
+    console.error(
+      '\nThis error indicates a component resolution problem in the build environment.'
+    );
     console.error('Common causes:');
     console.error('1. Path aliases not being resolved correctly');
     console.error('2. Client components not properly registered');
     console.error('3. Dynamic imports with string templates');
   }
-  
+
   process.exit(1);
 }

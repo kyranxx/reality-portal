@@ -6,9 +6,5 @@
 module.exports = {
   // Pages that should be skipped during static export
   // These pages use authentication and should only be rendered on the client
-  skipPages: [
-    '/dashboard',
-    '/dashboard/profile',
-    '/admin'
-  ]
+  skipPages: ['/dashboard', '/dashboard/profile', '/admin'],
 };

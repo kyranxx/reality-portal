@@ -161,31 +161,31 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         // First check localStorage for all users
         let storedLanguage: Language | null = null;
         let storedTheme: ThemeType | null = null;
-        
+
         if (typeof window !== 'undefined') {
           const localLang = localStorage.getItem('language') as Language;
           const localTheme = localStorage.getItem('theme') as ThemeType;
-          
+
           if (localLang && ['en', 'cs', 'hu', 'sk'].includes(localLang)) {
             storedLanguage = localLang;
             setLanguageState(localLang);
           }
-          
+
           if (localTheme && themes[localTheme]) {
             storedTheme = localTheme;
             setThemeState(themes[localTheme]);
           }
         }
-        
+
         // For authenticated users, try to get from Firestore
         if (user && db) {
           try {
             const userSettingsRef = doc(db, 'userSettings', user.uid);
             const userSettingsSnap = await getDoc(userSettingsRef);
-            
+
             if (userSettingsSnap.exists()) {
               const data = userSettingsSnap.data();
-              
+
               // Handle language preference
               if (data.language && ['en', 'cs', 'hu', 'sk'].includes(data.language)) {
                 setLanguageState(data.language);
@@ -196,7 +196,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
                 // If no valid Firestore language but localStorage exists, save to Firestore
                 await setDoc(userSettingsRef, { language: storedLanguage }, { merge: true });
               }
-              
+
               // Handle theme preference
               if (data.theme && typeof data.theme === 'string' && themes[data.theme as ThemeType]) {
                 setThemeState(themes[data.theme as ThemeType]);
@@ -233,11 +233,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const setLanguage = async (lang: Language) => {
     try {
       setLanguageState(lang);
-      
+
       if (typeof window !== 'undefined') {
         localStorage.setItem('language', lang);
       }
-      
+
       // For authenticated users, save to Firestore
       if (user && db) {
         try {
@@ -248,7 +248,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           // Continue even if Firestore save fails
         }
       }
-      
+
       // Refresh the page to apply language changes
       // This is a simple approach; for a more sophisticated solution without page reload,
       // you would need to update all components that depend on translations
@@ -262,11 +262,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const setTheme = async (themeType: ThemeType) => {
     try {
       setThemeState(themes[themeType]);
-      
+
       if (typeof window !== 'undefined') {
         localStorage.setItem('theme', themeType);
       }
-      
+
       // For authenticated users, save to Firestore
       if (user && db) {
         try {

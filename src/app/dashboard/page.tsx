@@ -12,7 +12,7 @@ export const generateStaticParams = () => {
 
 export default function DashboardPage() {
   return (
-    <UniversalComponentLoader 
+    <UniversalComponentLoader
       componentKey="DashboardClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">

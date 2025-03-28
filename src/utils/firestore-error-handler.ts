@@ -1,6 +1,6 @@
 /**
  * Firestore Error Handler
- * 
+ *
  * This utility provides robust error handling patterns for Firestore operations.
  * It implements fallback strategies, error logging, and retry mechanisms.
  */
@@ -27,22 +27,22 @@ export function handleFirebaseError(error: any, operation: string): ProcessedErr
     code: 'unknown-error',
     message: 'An unknown error occurred',
     operation,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
-  
+
   // Extract error code and message if available
   if (error) {
     if (error.code) {
       processed.code = error.code;
     }
-    
+
     if (error.message) {
       processed.message = error.message;
     } else if (typeof error === 'string') {
       processed.message = error;
     }
   }
-  
+
   // Map Firebase error codes to user-friendly messages
   switch (processed.code) {
     case 'auth/user-not-found':
@@ -71,16 +71,16 @@ export function handleFirebaseError(error: any, operation: string): ProcessedErr
       processed.message = 'The requested data could not be found';
       break;
   }
-  
+
   // Log error for debugging
   console.error(`Firebase error in ${operation}: [${processed.code}] ${processed.message}`);
-  
+
   return processed;
 }
 
 /**
  * Wraps a Firestore operation with error handling
- * 
+ *
  * @param operation The async Firestore operation to perform
  * @param fallback Optional fallback data to return if the operation fails
  * @param operationName Name of the operation for logging purposes
@@ -94,19 +94,19 @@ export async function withFirestoreErrorHandling<T>(
   try {
     // Wait for Firebase to be ready
     await ensureFirebaseReady();
-    
+
     // Perform the operation
     const result = await operation();
     return result;
   } catch (error: any) {
     // Log the error with operation context
     console.error(`Firestore error in ${operationName}:`, error);
-    
+
     // Handle specific Firestore error types
     if (error.code) {
       handleFirestoreErrorByCode(error.code, operationName);
     }
-    
+
     // Return fallback data if provided
     return fallback;
   }
@@ -121,7 +121,7 @@ async function ensureFirebaseReady(): Promise<void> {
     const firebaseService = (await import('./firebase-service')).default;
     if (!firebaseService.isInitialized()) {
       console.info('Waiting for Firebase to initialize...');
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         // Check every 100ms if Firebase is initialized
         const checkInterval = setInterval(() => {
           if (firebaseService.isInitialized()) {
@@ -129,7 +129,7 @@ async function ensureFirebaseReady(): Promise<void> {
             resolve();
           }
         }, 100);
-        
+
         // Timeout after 5 seconds
         setTimeout(() => {
           clearInterval(checkInterval);
@@ -153,7 +153,9 @@ function handleFirestoreErrorByCode(code: string, operationName: string): void {
       console.warn(`Document not found in ${operationName}.`);
       break;
     case 'unavailable':
-      console.error(`Firestore is unavailable for ${operationName}. Network issue or service outage.`);
+      console.error(
+        `Firestore is unavailable for ${operationName}. Network issue or service outage.`
+      );
       break;
     case 'unauthenticated':
       console.warn(`User not authenticated for ${operationName}. Requires sign in.`);
@@ -170,15 +172,16 @@ function handleFirestoreErrorByCode(code: string, operationName: string): void {
  */
 export function getFallbackProperties(count: number = 3): Property[] {
   const fallbackProperties: Property[] = [];
-  
+
   for (let i = 0; i < count; i++) {
     fallbackProperties.push({
       id: `fallback-${i}`,
       title: `Fallback Property ${i + 1}`,
-      description: 'This is a fallback property shown when data cannot be loaded from the database.',
-      price: 250000 + (i * 50000),
+      description:
+        'This is a fallback property shown when data cannot be loaded from the database.',
+      price: 250000 + i * 50000,
       location: 'Bratislava',
-      area: 85 + (i * 10),
+      area: 85 + i * 10,
       propertyType: 'apartment',
       images: ['/images/placeholder.jpg'],
       isFeatured: false,
@@ -187,7 +190,7 @@ export function getFallbackProperties(count: number = 3): Property[] {
       userId: 'fallback-user',
     });
   }
-  
+
   return fallbackProperties;
 }
 

@@ -23,26 +23,26 @@ const getBaseUrl = () => {
 const nextConfig = {
   output: isVercel ? 'standalone' : undefined,
   reactStrictMode: true,
-  
+
   // Enable ESLint during build
   eslint: {
     ignoreDuringBuilds: false,
   },
-  
+
   // Remove explicit Turbopack configuration to avoid conflicts
   // Turbopack can be used via --turbo flag with the dev:turbo script
   experimental: {},
-  
+
   // Configure asset prefixing based on environment
   assetPrefix: getBaseUrl(),
-  
+
   // Configure public runtime variables
   publicRuntimeConfig: {
     baseUrl: getBaseUrl(),
     vercelEnvironment: process.env.VERCEL_ENV || 'development',
     isVercel: isVercel || false,
   },
-  
+
   // Configure image component
   images: {
     remotePatterns: [
@@ -75,14 +75,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'placehold.co',
         pathname: '/**',
-      }
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  
+
   // Add headers for specific paths
   async headers() {
     return [
@@ -114,7 +114,7 @@ const nextConfig = {
       },
     ];
   },
-  
+
   // Configure webpack
   webpack: (config, { isServer }) => {
     // Handle specific module issues in the build
@@ -126,13 +126,13 @@ const nextConfig = {
         tls: false,
       };
     }
-    
+
     // Ensure web-friendly builds
     config.externals.push({
       'utf-8-validate': 'commonjs utf-8-validate',
-      'bufferutil': 'commonjs bufferutil',
+      bufferutil: 'commonjs bufferutil',
     });
-    
+
     // Optimize chunks for better loading performance
     config.optimization.splitChunks = {
       chunks: 'all',
@@ -150,7 +150,7 @@ const nextConfig = {
         },
       },
     };
-    
+
     // Add server-specific externals for browser-only modules
     if (isServer) {
       // Exclude browser-only modules from server builds
@@ -160,10 +160,10 @@ const nextConfig = {
         'browser-env': 'commonjs browser-env',
       });
     }
-    
+
     return config;
   },
-  
+
   // Environment variables
   env: {
     PUBLIC_URL: process.env.PUBLIC_URL || '',

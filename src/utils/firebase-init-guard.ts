@@ -1,6 +1,6 @@
 /**
  * Firebase Auth Initialization Guard
- * 
+ *
  * This utility ensures that Firebase Auth is fully initialized before it's used,
  * preventing "Component auth has not been registered yet" errors.
  */
@@ -11,7 +11,7 @@ import { auth } from './firebase';
 let authInitialized = false;
 
 // Promise that resolves when auth is ready
-const authInitPromise = new Promise<void>((resolve) => {
+const authInitPromise = new Promise<void>(resolve => {
   // Listen for the first auth state change, which happens when auth is ready
   const unsubscribe = auth.onAuthStateChanged(() => {
     // Mark as initialized and remove the listener
@@ -30,7 +30,7 @@ export const waitForAuth = async (): Promise<void> => {
   if (authInitialized) {
     return Promise.resolve();
   }
-  
+
   // Otherwise wait for initialization to complete
   return authInitPromise;
 };

@@ -10,7 +10,7 @@ declare module '@firebase/auth' {
   export type User = any;
   export type UserCredential = { user: User };
   export type AuthProvider = any;
-  
+
   // Explicitly declare the functions using simplified types
   export function createUserWithEmailAndPassword(
     auth: Auth,
@@ -24,33 +24,21 @@ declare module '@firebase/auth' {
     password: string
   ): Promise<UserCredential>;
 
-  export function signOut(
-    auth: Auth
-  ): Promise<void>;
+  export function signOut(auth: Auth): Promise<void>;
 
   export class GoogleAuthProvider {
     static PROVIDER_ID: string;
     providerId: string;
     addScope(scope: string): GoogleAuthProvider;
-    setCustomParameters(
-      customOAuthParameters: Object
-    ): GoogleAuthProvider;
+    setCustomParameters(customOAuthParameters: Object): GoogleAuthProvider;
     static credential(idToken?: string, accessToken?: string): any;
   }
 
-  export function signInWithPopup(
-    auth: Auth,
-    provider: AuthProvider
-  ): Promise<UserCredential>;
+  export function signInWithPopup(auth: Auth, provider: AuthProvider): Promise<UserCredential>;
 
-  export function sendPasswordResetEmail(
-    auth: Auth,
-    email: string
-  ): Promise<void>;
+  export function sendPasswordResetEmail(auth: Auth, email: string): Promise<void>;
 
-  export function getAuth(
-    app?: any
-  ): Auth;
+  export function getAuth(app?: any): Auth;
 
   export function connectAuthEmulator(
     auth: Auth,

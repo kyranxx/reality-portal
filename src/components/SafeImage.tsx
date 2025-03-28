@@ -24,12 +24,5 @@ export default function SafeImage({
     }
   };
 
-  return (
-    <Image
-      {...props}
-      src={imgSrc}
-      alt={alt || 'Image'}
-      onError={handleError}
-    />
-  );
+  return <Image {...props} src={imgSrc} alt={alt || 'Image'} onError={handleError} />;
 }

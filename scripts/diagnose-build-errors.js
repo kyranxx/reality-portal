@@ -2,7 +2,7 @@
 
 /**
  * Build Error Diagnostic Tool
- * 
+ *
  * This script helps identify the source of "self is not defined" and other
  * browser-specific reference errors during server-side rendering.
  */
@@ -28,10 +28,10 @@ const ENABLE_MODULE_TRACKING = false;
 
 if (ENABLE_MODULE_TRACKING) {
   // Override require to track modules that access self
-  module.require = function(id) {
+  module.require = function (id) {
     const result = originalRequire.apply(this, arguments);
     const callerFile = new Error().stack.split('\n')[2].match(/\(([^:]+):/)?.[1];
-    
+
     // Use a Proxy to detect 'self' access
     if (result && typeof result === 'object') {
       return new Proxy(result, {
@@ -41,10 +41,10 @@ if (ENABLE_MODULE_TRACKING) {
             console.log(`Module accessing 'self': ${callerFile}`);
           }
           return target[prop];
-        }
+        },
       });
     }
-    
+
     return result;
   };
 }
@@ -58,69 +58,70 @@ if (!fs.existsSync(diagnosticDir)) {
 // Function to analyze vendor chunks
 function analyzeVendorChunks() {
   console.log('Analyzing vendor chunks for browser-specific code...');
-  
+
   // Look for the compiled vendor chunk files
   const nextDir = path.join(process.cwd(), '.next');
   if (!fs.existsSync(nextDir)) {
     console.log('No .next directory found. Run a build first.');
     return;
   }
-  
+
   const serverDir = path.join(nextDir, 'server');
   if (!fs.existsSync(serverDir)) {
     console.log('No server directory found in .next.');
     return;
   }
-  
+
   // Look for vendor chunks
-  const vendorFiles = fs.readdirSync(serverDir)
+  const vendorFiles = fs
+    .readdirSync(serverDir)
     .filter(file => file.includes('vendor') && file.endsWith('.js'));
-  
+
   if (vendorFiles.length === 0) {
     console.log('No vendor chunks found.');
     return;
   }
-  
+
   // Check each vendor file for browser-specific globals
   vendorFiles.forEach(file => {
     const filePath = path.join(serverDir, file);
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Check for browser globals
     const browserGlobals = [
       { name: 'self', regex: /\bself\b(?!\s*=)/g },
       { name: 'window', regex: /\bwindow\b(?!\s*=)/g },
       { name: 'document', regex: /\bdocument\b(?!\s*=)/g },
       { name: 'navigator', regex: /\bnavigator\b(?!\s*=)/g },
-      { name: 'localStorage', regex: /\blocalStorage\b(?!\s*=)/g }
+      { name: 'localStorage', regex: /\blocalStorage\b(?!\s*=)/g },
     ];
-    
+
     console.log(`\nAnalyzing ${file}:`);
     let suspiciousCode = false;
-    
+
     browserGlobals.forEach(global => {
       const matches = content.match(global.regex);
       if (matches && matches.length > 0) {
         console.log(`  - Found ${matches.length} references to '${global.name}'`);
         suspiciousCode = true;
-        
+
         // Find some context for the first few occurrences
         let count = 0;
         let lastIndex = 0;
-        
+
         while ((lastIndex = content.indexOf(global.name, lastIndex)) !== -1 && count < 3) {
           const start = Math.max(0, lastIndex - 40);
           const end = Math.min(content.length, lastIndex + 40);
           const snippet = content.substring(start, end);
-          
+
           console.log(`    Context: ...${snippet}...`);
-          
+
           lastIndex += global.name.length;
           count++;
         }
       }
     });
-    
+
     if (!suspiciousCode) {
       console.log('  - No browser-specific globals found');
     }
@@ -130,11 +131,13 @@ function analyzeVendorChunks() {
 // Function to run a diagnostic build
 function runDiagnosticBuild() {
   console.log('Running diagnostic build with enhanced error handling...');
-  
+
   try {
     // Add a diagnostic script to catch runtime errors
     const interceptorPath = path.join(diagnosticDir, 'self-interceptor.js');
-    fs.writeFileSync(interceptorPath, `
+    fs.writeFileSync(
+      interceptorPath,
+      `
       // Install global.self before any other code runs
       if (typeof global.self === 'undefined') {
         console.log('[Diagnostic] Installing global.self polyfill');
@@ -160,8 +163,9 @@ function runDiagnosticBuild() {
         }
         throw error;
       });
-    `);
-    
+    `
+    );
+
     // Run build with the interceptor
     const cmd = `node -r ${interceptorPath} node_modules/.bin/next build --no-lint`;
     execSync(cmd, { stdio: 'inherit' });

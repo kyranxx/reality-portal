@@ -2,7 +2,7 @@
 
 /**
  * Test build script to verify Vercel deployment fixes
- * 
+ *
  * This script runs a build with the fixes applied for the "self is not defined" error
  */
 
@@ -41,15 +41,14 @@ try {
       console.warn('Continuing with build anyway...');
     }
   }
-  
+
   // Run the build with our fixes using the same command as Vercel
   console.log('Starting test build using the Vercel build command...');
   execSync('npm run build:vercel', { stdio: 'inherit' });
-  
+
   console.log('\n✅ TEST BUILD SUCCEEDED!');
   console.log('The fixes for "self is not defined" error appear to be working.');
   console.log('You should now be able to deploy to Vercel without errors.');
-  
 } catch (error) {
   console.error('\n❌ TEST BUILD FAILED!');
   console.error('Error:', error.message);

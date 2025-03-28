@@ -12,7 +12,7 @@ export const generateStaticParams = () => {
 
 export default function AdminPage() {
   return (
-    <UniversalComponentLoader 
+    <UniversalComponentLoader
       componentKey="AdminClient"
       fallback={
         <div className="flex justify-center items-center min-h-screen">

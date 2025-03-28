@@ -13,15 +13,15 @@ const FeaturedPropertiesSection = ({ properties }: FeaturedPropertiesSectionProp
   return (
     <section className="py-16">
       <div className="container">
-        <SectionTitle 
-          title="Odporúčané nehnuteľnosti" 
+        <SectionTitle
+          title="Odporúčané nehnuteľnosti"
           subtitle="Pozrite si naše najlepšie ponuky"
         />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {properties.map((property) => (
-            <PropertyCard 
-              key={property.id} 
+          {properties.map(property => (
+            <PropertyCard
+              key={property.id}
               id={property.id}
               title={property.title}
               location={property.location}
@@ -37,7 +37,7 @@ const FeaturedPropertiesSection = ({ properties }: FeaturedPropertiesSectionProp
             />
           ))}
         </div>
-        
+
         <div className="mt-12 text-center">
           <Link href="/nehnutelnosti" className="btn btn-primary shadow-md hover:shadow-lg">
             Zobraziť všetky nehnuteľnosti

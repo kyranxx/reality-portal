@@ -30,7 +30,7 @@ let updated = 0;
 let skipped = 0;
 
 // Helper function to determine if a file should be skipped
-const shouldSkip = (filePath) => {
+const shouldSkip = filePath => {
   return excludeList.some(pattern => filePath.includes(pattern));
 };
 
@@ -55,10 +55,10 @@ pageFiles.forEach(filePath => {
   const pageDir = path.dirname(filePath);
   const appDir = path.resolve('src/app');
   const relativePathToApp = path.relative(pageDir, appDir);
-  
+
   // Ensure the path has forward slashes for imports
   const importPath = relativePathToApp.split(path.sep).join('/');
-  
+
   // Generate the new page content
   const newContent = `// Server component that uses the Universal Component Loader
 import { UniversalComponentLoader } from '${importPath}/_client-loader';
