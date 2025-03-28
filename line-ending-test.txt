@@ -1,0 +1,2 @@
+This is a test file for line ending normalization.
+Line endings should be converted to LF when committing.
