@@ -1,4 +1,4 @@
-'use client'; // Required for components that use client-side features like useEffect
+'use client'; // This component needs to be a client component due to useEffect usage
 
 import { useEffect } from 'react';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
