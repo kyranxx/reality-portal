@@ -46,6 +46,20 @@ export const waitForFirebaseInit = async (timeout = MAX_INIT_WAIT_TIME): Promise
     return true;
   }
 
+  // If firebase.js hasn't exported the services yet, wait for them
+  if (!app || !auth) {
+    // Import dynamically to ensure the modules are loaded
+    try {
+      const firebase = await import('./firebase');
+      // Re-check after import
+      if (isFirebaseReady()) {
+        return true;
+      }
+    } catch (err) {
+      console.error('Error dynamically importing Firebase:', err);
+    }
+  }
+
   // Wait for initialization with timeout
   return new Promise((resolve, reject) => {
     const checkInterval = 100; // Check every 100ms

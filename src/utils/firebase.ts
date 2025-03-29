@@ -38,8 +38,8 @@ let storage: ReturnType<typeof getStorage> | undefined;
 // Use fewer retries in development for faster startup
 const MAX_INIT_RETRIES = process.env.NODE_ENV === 'development' ? 1 : 3;
 
-// Initialize Firebase with retry mechanism
-const initializeFirebase = (retryCount = 0) => {
+// Initialize Firebase with retry mechanism and dependency chain
+const initializeFirebase = async (retryCount = 0) => {
   // Skip initialization if not on client or not configured
   if (!isClient || !isFirebaseConfigured) {
     if (!isFirebaseConfigured && isClient) {
@@ -55,6 +55,11 @@ const initializeFirebase = (retryCount = 0) => {
     // Initialize Firebase app if not already initialized
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
+    // Ensure auth module is loaded before trying to initialize auth
+    // This should resolve the "Component auth has not been registered yet" error
+    const { waitForAuthModule } = await import('./firebase-auth-unified');
+    await waitForAuthModule();
+
     // Initialize auth with proper error handling
     try {
       auth = getAuth(app);
@@ -64,18 +69,28 @@ const initializeFirebase = (retryCount = 0) => {
       // We continue even if auth fails, to allow other services to work
     }
 
-    // Initialize Firestore with proper error handling
+    // Initialize Firestore with proper error handling - but only after auth is ready
     try {
-      db = getFirestore(app);
-      console.log('Firebase Firestore initialized successfully');
+      if (auth) {
+        db = getFirestore(app);
+        console.log('Firebase Firestore initialized successfully');
+      } else {
+        console.warn('Delaying Firestore initialization until Auth is ready');
+        // We'll initialize Firestore later when auth is ready
+      }
     } catch (dbError) {
       console.error('Firebase Firestore initialization error:', dbError);
     }
 
-    // Initialize Storage with proper error handling
+    // Initialize Storage with proper error handling - but only after auth is ready
     try {
-      storage = getStorage(app);
-      console.log('Firebase Storage initialized successfully');
+      if (auth) {
+        storage = getStorage(app);
+        console.log('Firebase Storage initialized successfully');
+      } else {
+        console.warn('Delaying Storage initialization until Auth is ready');
+        // We'll initialize Storage later when auth is ready
+      }
     } catch (storageError) {
       console.error('Firebase Storage initialization error:', storageError);
     }

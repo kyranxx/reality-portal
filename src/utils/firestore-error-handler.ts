@@ -84,32 +84,59 @@ export function handleFirebaseError(error: any, operation: string): ProcessedErr
  * @param operation The async Firestore operation to perform
  * @param fallback Optional fallback data to return if the operation fails
  * @param operationName Name of the operation for logging purposes
+ * @param retryOptions Optional retry configuration
  * @returns The result of the operation or the fallback data
  */
 export async function withFirestoreErrorHandling<T>(
   operation: () => Promise<T>,
   fallback: T | null = null,
-  operationName: string = 'firestoreOperation'
+  operationName: string = 'firestoreOperation',
+  retryOptions?: { maxRetries?: number; initialDelay?: number }
 ): Promise<T | null> {
-  try {
-    // Wait for Firebase to be ready
-    await ensureFirebaseReady();
+  // Default retry options
+  const { maxRetries = 2, initialDelay = 300 } = retryOptions || {};
+  let attempts = 0;
+  let lastError: any = null;
 
-    // Perform the operation
-    const result = await operation();
-    return result;
-  } catch (error: any) {
-    // Log the error with operation context
-    console.error(`Firestore error in ${operationName}:`, error);
+  while (attempts <= maxRetries) {
+    try {
+      // Wait for Firebase to be ready
+      await ensureFirebaseReady();
 
-    // Handle specific Firestore error types
-    if (error.code) {
-      handleFirestoreErrorByCode(error.code, operationName);
+      // Perform the operation
+      const result = await operation();
+      
+      // If we retry and succeed, log the recovery
+      if (attempts > 0) {
+        console.info(`Firestore operation ${operationName} succeeded after ${attempts} retries`);
+      }
+      
+      return result;
+    } catch (error: any) {
+      lastError = error;
+      attempts++;
+
+      // Log the error with operation context
+      console.error(`Firestore error in ${operationName} (attempt ${attempts}/${maxRetries + 1}):`, error);
+
+      // Handle specific Firestore error types
+      if (error.code) {
+        handleFirestoreErrorByCode(error.code, operationName);
+      }
+
+      // If we have attempts remaining, wait and retry
+      if (attempts <= maxRetries) {
+        // Exponential backoff
+        const delay = initialDelay * Math.pow(2, attempts - 1);
+        console.info(`Retrying ${operationName} in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
     }
-
-    // Return fallback data if provided
-    return fallback;
   }
+
+  // If we exhausted all retries, return fallback
+  console.warn(`Exhausted all ${maxRetries} retries for ${operationName}, using fallback data`);
+  return fallback;
 }
 
 /**
@@ -118,51 +145,126 @@ export async function withFirestoreErrorHandling<T>(
 async function ensureFirebaseReady(): Promise<void> {
   // Wait for Firebase to complete initialization
   if (typeof window !== 'undefined') {
-    const firebaseService = (await import('./firebase-service')).default;
-    if (!firebaseService.isInitialized()) {
-      console.info('Waiting for Firebase to initialize...');
-      await new Promise<void>(resolve => {
-        // Check every 100ms if Firebase is initialized
-        const checkInterval = setInterval(() => {
-          if (firebaseService.isInitialized()) {
-            clearInterval(checkInterval);
-            resolve();
-          }
-        }, 100);
+    try {
+      // Try to use the firebase init guard first
+      const { waitForFirebaseInit } = await import('./firebase-init-guard');
+      try {
+        await waitForFirebaseInit();
+        return;
+      } catch (error) {
+        console.warn('Firebase init guard failed, falling back to service check:', error);
+      }
+    } catch (error) {
+      console.warn('Could not use firebase-init-guard, falling back to service check');
+    }
+    
+    // Fallback to firebase service
+    try {
+      const firebaseService = (await import('./firebase-service')).default;
+      if (!firebaseService.isInitialized()) {
+        console.info('Waiting for Firebase to initialize via service...');
+        await new Promise<void>((resolve, reject) => {
+          // Check every 100ms if Firebase is initialized
+          const checkInterval = setInterval(() => {
+            if (firebaseService.isInitialized()) {
+              clearInterval(checkInterval);
+              clearTimeout(timeoutId);
+              resolve();
+            }
+          }, 100);
 
-        // Timeout after 5 seconds
-        setTimeout(() => {
-          clearInterval(checkInterval);
-          console.warn('Firebase initialization timed out, continuing anyway');
-          resolve();
-        }, 5000);
-      });
+          // Timeout after 5 seconds
+          const timeoutId = setTimeout(() => {
+            clearInterval(checkInterval);
+            console.warn('Firebase initialization timed out, continuing anyway');
+            resolve();
+          }, 5000);
+        });
+      }
+    } catch (error) {
+      console.error('Failed to initialize Firebase:', error);
+      // Continue anyway - we'll try to use fallback data
     }
   }
 }
 
 /**
  * Handle specific Firestore error codes
+ * @returns True if the error is potentially recoverable with a retry
  */
-function handleFirestoreErrorByCode(code: string, operationName: string): void {
+function handleFirestoreErrorByCode(code: string, operationName: string): boolean {
+  let recoverable = false;
+  
   switch (code) {
     case 'permission-denied':
       console.error(`Permission denied in ${operationName}. Check your Firestore rules.`);
+      // Not recoverable without changing rules or auth state
+      recoverable = false;
+      
+      // Send to monitoring for immediate attention if in production
+      if (process.env.NODE_ENV === 'production') {
+        try {
+          // This would ideally integrate with your monitoring system
+          // For now we just log with a special tag for log aggregation to pick up
+          console.error(`[CRITICAL_PERMISSION_ERROR] Operation ${operationName} failed with permission denied`);
+        } catch (e) {
+          // Don't let monitoring failure affect the flow
+        }
+      }
       break;
+      
     case 'not-found':
       console.warn(`Document not found in ${operationName}.`);
+      // Not a real error, just missing data
+      recoverable = false;
       break;
+      
     case 'unavailable':
       console.error(
         `Firestore is unavailable for ${operationName}. Network issue or service outage.`
       );
+      // Network errors may resolve on retry
+      recoverable = true;
       break;
+      
+    case 'resource-exhausted':
+      console.error(`Quota exceeded for ${operationName}. Throttling requests.`);
+      // May succeed with backoff
+      recoverable = true;
+      break;
+      
+    case 'deadline-exceeded':
+      console.error(`Operation timeout for ${operationName}. Network might be slow.`);
+      // May succeed with retry
+      recoverable = true;
+      break;
+      
     case 'unauthenticated':
       console.warn(`User not authenticated for ${operationName}. Requires sign in.`);
+      
+      // Attempt to refresh auth state
+      try {
+        const { auth } = require('./firebase');
+        if (auth && auth.currentUser) {
+          auth.currentUser.getIdToken(true)
+            .then(() => console.log('Token refreshed successfully'))
+            .catch((err: any) => console.error('Failed to refresh token:', err));
+        }
+      } catch (e) {
+        // Ignore errors in the refresh attempt
+      }
+      
+      // Auth errors may recover if token refreshes
+      recoverable = true;
       break;
+      
     default:
       console.error(`Firestore error code ${code} in ${operationName}.`);
+      // Unknown errors - attempt retry for safety
+      recoverable = true;
   }
+  
+  return recoverable;
 }
 
 /**

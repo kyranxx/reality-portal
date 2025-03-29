@@ -2,6 +2,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import firebaseService from './firebase-service';
+import { 
+  storeAuthToken, 
+  clearAuthTokens, 
+  configureAuthForFirstPartyCookies 
+} from './auth-cookie-handler';
 
 // Define types for Firebase Auth
 type User = any;
@@ -45,6 +50,9 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
       setIsLoading(false);
       return () => {};
     }
+    
+    // Configure first-party cookies before initializing Firebase
+    configureAuthForFirstPartyCookies();
 
     // Wait for Firebase Auth to be initialized, then set up auth state listener
     const initAuth = async () => {
@@ -59,6 +67,22 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
         return firebaseService.onAuthStateChange(currentUser => {
           setUser(currentUser);
           setIsLoading(false);
+          
+          // When user state changes, update token storage
+          if (currentUser) {
+            // Get tokens and store in cookies when user is authenticated
+            currentUser.getIdToken(true).then((token: string) => {
+              // Store the token in cookies and localStorage
+              // Use the refresh token directly from the user object if available
+              const refreshToken = currentUser.refreshToken || '';
+              storeAuthToken(token, refreshToken);
+            }).catch((error: any) => {
+              console.error('Error getting ID token:', error);
+            });
+          } else {
+            // Clear tokens when user signs out
+            clearAuthTokens();
+          }
         });
       } catch (err) {
         console.error('Failed to initialize auth:', err);
@@ -132,6 +156,8 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
     try {
       setIsLoading(true);
       setError(null);
+      // Clear tokens before signing out
+      clearAuthTokens();
       await firebaseService.signOut();
     } catch (error: any) {
       setError(error.message);

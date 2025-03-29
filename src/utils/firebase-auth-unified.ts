@@ -132,15 +132,32 @@ export const connectAuthEmulator = (auth: Auth, url: string) => {
   }
 };
 
-// Only attempt to load Firebase Auth in the browser and not during build
+// Promise to track Firebase Auth module loading
+let authModulePromise: Promise<any> | null = null;
+
+// Load Firebase Auth module with proper tracking
 if (isClient && !isBuild) {
-  // We preload the auth module to ensure it's available when needed
-  // but we don't replace exports to avoid module conflicts
-  import('firebase/auth')
-    .then(() => {
+  // We preload the auth module and keep track of the promise
+  authModulePromise = import('firebase/auth')
+    .then((module) => {
       console.log('Successfully preloaded Firebase Auth in client environment');
+      return module;
     })
     .catch(error => {
       console.error('Failed to preload Firebase Auth:', error);
+      throw error;
     });
 }
+
+// Function to wait for auth module to be loaded
+export const waitForAuthModule = async (): Promise<boolean> => {
+  if (!isClient || !authModulePromise) return false;
+  
+  try {
+    await authModulePromise;
+    return true;
+  } catch (error) {
+    console.error('Error waiting for auth module:', error);
+    return false;
+  }
+};
