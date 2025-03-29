@@ -37,31 +37,42 @@ const SAMPLE_IMAGES = {
  * @returns Local image URL
  */
 export const getSampleImage = (type: 'apartment' | 'house' | 'land' | 'commercial' = 'house'): string => {
-  let category: keyof typeof SAMPLE_IMAGES;
-  
-  switch(type) {
-    case 'apartment':
-      category = 'apartments';
-      break;
-    case 'house':
-      category = 'houses';
-      break;
-    case 'land':
-      category = 'lands'; 
-      break;
-    case 'commercial':
-      category = 'commercial';
-      break;
-    default:
-      category = 'houses';
+  try {
+    let category: keyof typeof SAMPLE_IMAGES;
+    
+    switch(type) {
+      case 'apartment':
+        category = 'apartments';
+        break;
+      case 'house':
+        category = 'houses';
+        break;
+      case 'land':
+        category = 'lands'; 
+        break;
+      case 'commercial':
+        category = 'commercial';
+        break;
+      default:
+        category = 'houses';
+    }
+    
+    // Get sample images for this category
+    const images = SAMPLE_IMAGES[category];
+    
+    // If no images in the category, return a fallback
+    if (!images || images.length === 0) {
+      console.warn(`No sample images found for ${category}, using default fallback`);
+      return FALLBACK_PATH;
+    }
+    
+    // Choose a random image
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
+  } catch (error) {
+    console.warn('Error getting sample image, using fallback', error);
+    return FALLBACK_PATH;
   }
-  
-  // Get sample images for this category
-  const images = SAMPLE_IMAGES[category];
-  
-  // Choose a random image
-  const randomIndex = Math.floor(Math.random() * images.length);
-  return images[randomIndex];
 };
 
 import { StaticImageData } from 'next/image';
