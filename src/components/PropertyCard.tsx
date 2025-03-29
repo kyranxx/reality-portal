@@ -111,7 +111,7 @@ export default function PropertyCard({
 
   return (
     <Link href={`/nehnutelnosti/${id}`} className="block h-full">
-      <div className="card card-hover-effect group h-full flex flex-col">
+      <div className="border border-gray-100 rounded-lg h-full flex flex-col hover:border-gray-300 transition-colors duration-200">
         <div className="relative">
           <div className="property-image bg-gray-50 relative overflow-hidden">
             {imageUrl ? (
@@ -121,7 +121,7 @@ export default function PropertyCard({
                 propertyType={type}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                className="object-cover transition-transform duration-500 ease-out"
               />
             ) : (
               <div className="h-full w-full flex items-center justify-center bg-gray-100">
@@ -141,15 +141,12 @@ export default function PropertyCard({
                 </svg>
               </div>
             )}
-
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </div>
 
           {/* Type badge */}
           <div className="absolute top-3 right-3 z-10">
-            <div className="bg-white/90 backdrop-blur-sm text-xs font-medium py-1 px-2.5 rounded-full shadow-sm flex items-center">
-              <span className="text-primary mr-1">{typeIcons[type]}</span>
+            <div className="bg-white text-xs font-medium py-1 px-2.5 rounded-full border border-gray-100 flex items-center">
+              <span className="text-black mr-1">{typeIcons[type]}</span>
               <span>{typeLabels[type]}</span>
             </div>
           </div>
@@ -157,25 +154,18 @@ export default function PropertyCard({
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
             {isFeatured && (
-              <span className="badge badge-primary shadow-sm text-xs px-2.5 py-1">Odporúčané</span>
+              <span className="badge badge-primary text-xs px-2.5 py-1">Odporúčané</span>
             )}
             {isNew && (
-              <span className="badge badge-accent shadow-sm text-xs px-2.5 py-1">Nové</span>
+              <span className="badge badge-accent text-xs px-2.5 py-1">Nové</span>
             )}
-          </div>
-
-          {/* Quick view button (appears on hover) */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 z-10">
-            <span className="bg-white/90 backdrop-blur-sm text-primary font-medium py-2 px-4 text-sm rounded-full shadow-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-              Zobraziť detail
-            </span>
           </div>
         </div>
 
         <div className="p-5 flex-grow flex flex-col">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-base font-semibold text-gray-800 group-hover:text-primary transition-colors duration-300">
+              <h2 className="text-base font-medium text-black">
                 {title}
               </h2>
               <div className="flex items-center text-gray-500 text-sm mt-1">
@@ -201,7 +191,7 @@ export default function PropertyCard({
                 <p>{location}</p>
               </div>
             </div>
-            <div className="bg-primary/10 text-primary font-bold text-sm px-3 py-1 rounded-full">
+            <div className="bg-gray-100 text-black font-bold text-sm px-3 py-1 rounded-full">
               {formattedPrice} €
             </div>
           </div>
@@ -215,7 +205,7 @@ export default function PropertyCard({
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-primary"
+                  className="w-4 h-4 mr-1.5 text-black"
                 >
                   <path
                     strokeLinecap="round"
@@ -235,7 +225,7 @@ export default function PropertyCard({
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-primary"
+                  className="w-4 h-4 mr-1.5 text-black"
                 >
                   <path
                     strokeLinecap="round"
@@ -257,7 +247,7 @@ export default function PropertyCard({
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-primary"
+                  className="w-4 h-4 mr-1.5 text-black"
                 >
                   <path
                     strokeLinecap="round"
@@ -279,7 +269,7 @@ export default function PropertyCard({
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-primary"
+                  className="w-4 h-4 mr-1.5 text-black"
                 >
                   <path
                     strokeLinecap="round"

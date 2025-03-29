@@ -1,38 +1,22 @@
 /**
  * Image Utilities for handling various image URL formats
- * and providing fallbacks when Firebase Storage is unavailable
+ * and providing fallbacks when resources are unavailable
  */
 
 // Load fallback path from env
 const DEFAULT_FALLBACK = '/images/placeholder.jpg';
 const FALLBACK_PATH = process.env.NEXT_PUBLIC_IMAGE_FALLBACK_PATH || DEFAULT_FALLBACK;
 
-// Sample images for development use when Firebase is not available
+// Sample images for development use
 const SAMPLE_IMAGES = {
-  apartments: [
-    '/images/samples/apartment-1.jpg',
-    '/images/samples/apartment-2.jpg',
-    '/images/samples/apartment-3.jpg',
-  ],
-  houses: [
-    '/images/samples/house-1.jpg',
-    '/images/samples/house-2.jpg',
-    '/images/samples/house-3.jpg',
-  ],
-  lands: [
-    '/images/samples/land-1.jpg',
-    '/images/samples/land-2.jpg',
-    '/images/samples/land-3.jpg',
-  ],
-  commercial: [
-    '/images/samples/commercial-1.jpg',
-    '/images/samples/commercial-2.jpg',
-    '/images/samples/commercial-3.jpg',
-  ],
+  apartments: ['/images/samples/apartments/apartment-1.svg'],
+  houses: ['/images/samples/houses/house-1.svg'],
+  lands: ['/images/samples/land/land-1.svg'],
+  commercial: ['/images/samples/commercial/commercial-1.svg'],
 };
 
 /**
- * Get a random sample image based on property type
+ * Get a sample image based on property type
  * @param type Property type
  * @returns Local image URL
  */
@@ -63,15 +47,14 @@ export const getSampleImage = (type: 'apartment' | 'house' | 'land' | 'commercia
     // If no images in the category, return a fallback
     if (!images || images.length === 0) {
       console.warn(`No sample images found for ${category}, using default fallback`);
-      return FALLBACK_PATH;
+      return '/images/samples/apartment-1.svg';
     }
     
-    // Choose a random image
-    const randomIndex = Math.floor(Math.random() * images.length);
-    return images[randomIndex];
+    // Return the first image in the array
+    return images[0];
   } catch (error) {
     console.warn('Error getting sample image, using fallback', error);
-    return FALLBACK_PATH;
+    return '/images/samples/apartment-1.svg';
   }
 };
 
@@ -101,7 +84,7 @@ export const imageSourceToString = (src: string | StaticImageData | null | undef
  */
 export const processFirebaseStorageUrl = (url: string | undefined | null): string => {
   // Handle undefined/null URL
-  if (!url) return FALLBACK_PATH;
+  if (!url) return '/images/samples/apartment-1.svg';
   
   // Check if it's a Firebase Storage URL
   if (url.includes('firebasestorage.googleapis.com')) {
@@ -127,14 +110,14 @@ export const processFirebaseStorageUrl = (url: string | undefined | null): strin
 export const getImageUrl = (
   url: string | StaticImageData | undefined | null, 
   type?: 'apartment' | 'house' | 'land' | 'commercial',
-  useLocalFallbacks: boolean = process.env.NEXT_PUBLIC_USE_LOCAL_FALLBACKS === 'true'
+  useLocalFallbacks: boolean = true
 ): string => {
   // Convert to string URL
   const urlString = imageSourceToString(url);
   
   // Use local fallbacks in development when configured
-  if ((!urlString || (urlString && urlString.includes('firebasestorage.googleapis.com'))) && useLocalFallbacks) {
-    return type ? getSampleImage(type) : FALLBACK_PATH;
+  if (!urlString || (urlString && urlString.includes('firebasestorage.googleapis.com'))) {
+    return type ? getSampleImage(type) : '/images/samples/apartment-1.svg';
   }
   
   // For Firebase Storage URLs, process them for public access
@@ -143,7 +126,7 @@ export const getImageUrl = (
   }
   
   // Return the URL as is if it's not a Firebase Storage URL and not empty
-  return urlString || FALLBACK_PATH;
+  return urlString || '/images/samples/apartment-1.svg';
 };
 
 export default {
