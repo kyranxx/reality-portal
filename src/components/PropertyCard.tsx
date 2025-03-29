@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from './SafeImage';
 
 interface PropertyCardProps {
   id: string;
@@ -115,9 +115,10 @@ export default function PropertyCard({
         <div className="relative">
           <div className="property-image bg-gray-50 relative overflow-hidden">
             {imageUrl ? (
-              <Image
+              <SafeImage
                 src={imageUrl}
                 alt={title}
+                propertyType={type}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
