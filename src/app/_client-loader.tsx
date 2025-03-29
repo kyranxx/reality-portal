@@ -9,6 +9,12 @@ import DashboardClientComponent from './dashboard/DashboardClient';
 import ProfileClientComponent from './dashboard/profile/ProfileClient';
 import AdminClientComponent from './admin/AdminClient';
 import PropertyDetailClientComponent from './nehnutelnosti/[id]/PropertyDetailClient';
+import ONasClientComponent from './o-nas/ONasClient';
+import KontaktClientComponent from './kontakt/KontaktClient';
+import NehnutelnostiClientComponent from './nehnutelnosti/NehnutelnostiClient';
+import OchranaOsobnychUdajovClientComponent from './ochrana-osobnych-udajov/OchranaOsobnychUdajovClient';
+import PodmienkyPouzitiaClientComponent from './podmienky-pouzitia/PodmienkyPouzitiaClient';
+import CookiesClientComponent from './cookies/CookiesClient';
 
 // Fallback components map for static build environments
 const STATIC_COMPONENTS = {
@@ -17,6 +23,12 @@ const STATIC_COMPONENTS = {
   ProfileClient: ProfileClientComponent,
   AdminClient: AdminClientComponent,
   PropertyDetailClient: PropertyDetailClientComponent,
+  ONasClient: ONasClientComponent,
+  KontaktClient: KontaktClientComponent,
+  NehnutelnostiClient: NehnutelnostiClientComponent,
+  OchranaOsobnychUdajovClient: OchranaOsobnychUdajovClientComponent,
+  PodmienkyPouzitiaClient: PodmienkyPouzitiaClientComponent,
+  CookiesClient: CookiesClientComponent,
 };
 
 interface UniversalComponentLoaderProps {

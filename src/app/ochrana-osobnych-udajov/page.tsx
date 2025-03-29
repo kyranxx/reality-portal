@@ -12,10 +12,16 @@ export const generateStaticParams = () => {
 
 export default function Page() {
   return (
-    <div className="container mx-auto py-8">
-      {/* Simple server-rendered content instead of client components for now */}
-      <h1 className="text-2xl font-bold mb-4">Page Content</h1>
-      <p>This page has been converted to use server-side rendering to fix build issues.</p>
-    </div>
+    <UniversalComponentLoader
+      componentKey="OchranaOsobnychUdajovClient"
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
+            <div className="text-gray-400">Načítava sa...</div>
+          </div>
+        </div>
+      }
+    />
   );
 }
