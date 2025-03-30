@@ -173,8 +173,8 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
     try {
       setIsLoading(true);
       setError(null);
-      // TODO: Add resetPassword method to firebase-service
-      setError('Password reset functionality not implemented yet');
+      // Call the firebase service method for password reset
+      await firebaseService.sendPasswordResetEmail(email);
     } catch (error: any) {
       setError(error.message);
       console.error('Error resetting password:', error.message);

@@ -16,6 +16,7 @@ import {
   createUserWithEmailAndPassword as firebaseCreateUser,
   signInWithEmailAndPassword as firebaseSignIn,
   signInWithPopup as firebaseSignInWithPopup,
+  sendPasswordResetEmail as firebaseSendPasswordResetEmail,
   GoogleAuthProvider,
 } from 'firebase/auth';
 import {
@@ -349,6 +350,24 @@ class FirebaseService {
         return await firebaseSignOut(this.auth);
       } catch (error) {
         const processed = handleFirebaseError(error, 'signOut');
+        throw new Error(processed.message);
+      }
+    });
+  }
+
+  /**
+   * Send password reset email to the specified email address
+   * @param email User email
+   * @returns Promise that resolves when the email has been sent
+   */
+  public async sendPasswordResetEmail(email: string): Promise<void> {
+    return this.executeWithInitGuard(async () => {
+      if (!this.auth) throw new Error('Auth not initialized');
+
+      try {
+        return await firebaseSendPasswordResetEmail(this.auth, email);
+      } catch (error) {
+        const processed = handleFirebaseError(error, 'sendPasswordResetEmail');
         throw new Error(processed.message);
       }
     });
