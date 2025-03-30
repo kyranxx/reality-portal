@@ -17,6 +17,11 @@ import NehnutelnostiClientComponent from './nehnutelnosti/NehnutelnostiClient';
 import OchranaOsobnychUdajovClientComponent from './ochrana-osobnych-udajov/OchranaOsobnychUdajovClient';
 import PodmienkyPouzitiaClientComponent from './podmienky-pouzitia/PodmienkyPouzitiaClient';
 import CookiesClientComponent from './cookies/CookiesClient';
+import LoginClientComponent from './auth/login/LoginClient';
+import RegisterClientComponent from './auth/register/RegisterClient';
+import ResetPasswordClientComponent from './auth/reset-password/ResetPasswordClient';
+import UnifiedAuthClientComponent from './auth/unified/UnifiedAuthClient';
+
 
 // Re-export them directly
 export const HomeClient = HomeClientComponent;
@@ -30,6 +35,11 @@ export const NehnutelnostiClient = NehnutelnostiClientComponent;
 export const OchranaOsobnychUdajovClient = OchranaOsobnychUdajovClientComponent;
 export const PodmienkyPouzitiaClient = PodmienkyPouzitiaClientComponent;
 export const CookiesClient = CookiesClientComponent;
+export const LoginClient = LoginClientComponent;
+export const RegisterClient = RegisterClientComponent;
+export const ResetPasswordClient = ResetPasswordClientComponent;
+export const UnifiedAuthClient = UnifiedAuthClientComponent;
+
 
 // Map of all available client components for static resolution
 export const CLIENT_COMPONENTS = {
@@ -44,6 +54,11 @@ export const CLIENT_COMPONENTS = {
   OchranaOsobnychUdajovClient: OchranaOsobnychUdajovClientComponent,
   PodmienkyPouzitiaClient: PodmienkyPouzitiaClientComponent,
   CookiesClient: CookiesClientComponent,
+  LoginClient: LoginClientComponent,
+  RegisterClient: RegisterClientComponent,
+  ResetPasswordClient: ResetPasswordClientComponent,
+  UnifiedAuthClient: UnifiedAuthClientComponent,
+  
 };
 
 // Type for client component keys

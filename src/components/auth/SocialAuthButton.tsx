@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { SocialAuthButtonClient } from '@/components/auth/client/SocialAuthButtonClient';
+import { SocialAuthButtonClient } from './client/SocialAuthButtonClient';
 
 export interface SocialAuthButtonProps {
   provider: 'google' | 'facebook' | 'twitter';

@@ -15,6 +15,11 @@ import NehnutelnostiClientComponent from './nehnutelnosti/NehnutelnostiClient';
 import OchranaOsobnychUdajovClientComponent from './ochrana-osobnych-udajov/OchranaOsobnychUdajovClient';
 import PodmienkyPouzitiaClientComponent from './podmienky-pouzitia/PodmienkyPouzitiaClient';
 import CookiesClientComponent from './cookies/CookiesClient';
+import LoginClientComponent from './auth/login/LoginClient';
+import RegisterClientComponent from './auth/register/RegisterClient';
+import ResetPasswordClientComponent from './auth/reset-password/ResetPasswordClient';
+import UnifiedAuthClientComponent from './auth/unified/UnifiedAuthClient';
+
 
 // Fallback components map for static build environments
 const STATIC_COMPONENTS = {
@@ -29,6 +34,12 @@ const STATIC_COMPONENTS = {
   OchranaOsobnychUdajovClient: OchranaOsobnychUdajovClientComponent,
   PodmienkyPouzitiaClient: PodmienkyPouzitiaClientComponent,
   CookiesClient: CookiesClientComponent,
+  
+  // New auth pages
+  LoginClient: LoginClientComponent,
+  RegisterClient: RegisterClientComponent,
+  ResetPasswordClient: ResetPasswordClientComponent,
+  UnifiedAuthClient: UnifiedAuthClientComponent,
 };
 
 interface UniversalComponentLoaderProps {

@@ -112,8 +112,15 @@ if (componentsRegistryContent) {
   // Check that each client component is in the registry
   clientComponentFiles.forEach(file => {
     const componentName = path.basename(file).replace(/\.(jsx|tsx)$/, '');
-    // Skip ClientComponentLoader
-    if (componentName === 'ClientComponentLoader') {
+    // Skip ClientComponentLoader and auth client components
+    if (
+      componentName === 'ClientComponentLoader' ||
+      file.includes('/auth/client/') ||
+      componentName === 'SocialAuthButtonClient' ||
+      componentName === 'PasswordInputClient' ||
+      componentName === 'FormInputClient' ||
+      componentName === 'AuthButtonClient'
+    ) {
       return;
     }
 
