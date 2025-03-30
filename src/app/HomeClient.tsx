@@ -46,11 +46,8 @@ export default function HomeClient() {
 
   return (
     <>
-      {/* Hero Section */}
-      <HeroSection />
-
       {/* Search Bar */}
-      <div className="container">
+      <div className="container mt-10">
         <SearchBar />
       </div>
 

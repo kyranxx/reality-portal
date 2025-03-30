@@ -6,7 +6,7 @@ export default function SearchBar() {
   const [propertyType, setPropertyType] = useState('all');
   const [location, setLocation] = useState('');
   const [priceRange, setPriceRange] = useState([0, 500000]);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  // Advanced filtering is always visible now
   const [minSize, setMinSize] = useState('');
   const [bedrooms, setBedrooms] = useState('');
 
@@ -161,7 +161,7 @@ export default function SearchBar() {
           </div>
         </div>
 
-        <div className="mt-4 flex justify-between items-center">
+        <div className="mt-4 flex">
           <div className="flex flex-wrap gap-2">
             <span className="text-xs text-gray-500 mr-1">Populárne:</span>
             <a
@@ -183,29 +183,10 @@ export default function SearchBar() {
               Žilina
             </a>
           </div>
-
-          <button
-            type="button"
-            className="text-xs text-primary font-medium flex items-center hover:underline"
-            onClick={() => setShowAdvanced(!showAdvanced)}
-          >
-            {showAdvanced ? 'Skryť' : 'Rozšírené'} vyhľadávanie
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className={`w-3 h-3 ml-1 transition-transform duration-300 ${showAdvanced ? 'rotate-180' : ''}`}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-            </svg>
-          </button>
         </div>
 
-        {/* Advanced search options */}
-        {showAdvanced && (
-          <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
+        {/* Advanced search options - always visible */}
+        <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Cenové rozpätie
@@ -274,7 +255,6 @@ export default function SearchBar() {
               </select>
             </div>
           </div>
-        )}
       </form>
     </div>
   );
