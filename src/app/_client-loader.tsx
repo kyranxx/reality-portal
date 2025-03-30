@@ -20,6 +20,7 @@ import RegisterClientComponent from './auth/register/RegisterClient';
 import ResetPasswordClientComponent from './auth/reset-password/ResetPasswordClient';
 import UnifiedAuthClientComponent from './auth/unified/UnifiedAuthClient';
 import AdminLoginClientComponent from './auth/admin-login/AdminLoginClientComponent';
+import DesignShowcaseClientComponent from './design-showcase/DesignShowcaseClient';
 
 
 // Fallback components map for static build environments
@@ -42,6 +43,7 @@ const STATIC_COMPONENTS = {
   ResetPasswordClient: ResetPasswordClientComponent,
   UnifiedAuthClient: UnifiedAuthClientComponent,
   AdminLoginClient: AdminLoginClientComponent,
+  DesignShowcaseClient: DesignShowcaseClientComponent,
 };
 
 interface UniversalComponentLoaderProps {

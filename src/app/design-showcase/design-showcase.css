@@ -1,0 +1,47 @@
+/* Design Showcase specific styles */
+.showcase-input:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.showcase-button {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.showcase-card {
+  border-radius: 12px;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+}
+
+.showcase-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Dark mode adjustments */
+.dark .showcase-card {
+  background-color: #1d1e20;
+  border: 1px solid #2d2e32;
+}
+
+.dark .showcase-input {
+  background-color: #1d1e20;
+  border-color: #2d2e32;
+  color: #f8f7f5;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .showcase-features {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .showcase-features > span:nth-child(even) {
+    display: none;
+  }
+}

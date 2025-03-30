@@ -103,10 +103,10 @@ export default function Header() {
             </li>
             <li>
               <Link
-                href="/grok"
+                href="/design-showcase"
                 className="text-gray-800 hover:text-black font-medium"
               >
-                Grok
+                Design Showcase
               </Link>
             </li>
           </ul>
@@ -218,11 +218,11 @@ export default function Header() {
                 </li>
                 <li>
                   <Link
-                    href="/grok"
+                    href="/design-showcase"
                     className="block text-gray-800 hover:text-black font-medium py-2"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Grok
+                    Design Showcase
                   </Link>
                 </li>
               </ul>
