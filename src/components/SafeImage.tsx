@@ -38,7 +38,8 @@ export default function SafeImage({
     // Process the source URL with our utility
     try {
       // Cast the src to the correct type that getImageUrl expects
-      const processedSrc = getImageUrl(src as (string | StaticImageData | undefined | null), propertyType, true);
+      // Use local fallbacks from .env.local configuration
+      const processedSrc = getImageUrl(src as (string | StaticImageData | undefined | null), propertyType);
       setImgSrc(processedSrc);
     } catch (err) {
       console.error('Error processing image URL:', err);
