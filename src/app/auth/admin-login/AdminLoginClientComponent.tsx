@@ -17,7 +17,7 @@ let loginAttempts = 0;
 const MAX_LOGIN_ATTEMPTS = 5;
 const ATTEMPT_RESET_TIME = 30 * 60 * 1000; // 30 minutes
 
-export default function AdminLoginClient() {
+export default function AdminLoginClientComponent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [verificationCode, setVerificationCode] = useState('');

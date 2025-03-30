@@ -19,7 +19,7 @@ import LoginClientComponent from './auth/login/LoginClient';
 import RegisterClientComponent from './auth/register/RegisterClient';
 import ResetPasswordClientComponent from './auth/reset-password/ResetPasswordClient';
 import UnifiedAuthClientComponent from './auth/unified/UnifiedAuthClient';
-import AdminLoginClientComponent from './auth/admin-login/AdminLoginClient';
+import AdminLoginClientComponent from './auth/admin-login/AdminLoginClientComponent';
 
 
 // Fallback components map for static build environments
