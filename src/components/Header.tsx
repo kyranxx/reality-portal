@@ -101,6 +101,14 @@ export default function Header() {
                 {t('nav.contact')}
               </Link>
             </li>
+            <li>
+              <Link
+                href="/grok"
+                className="text-gray-800 hover:text-black font-medium"
+              >
+                Grok
+              </Link>
+            </li>
           </ul>
         </nav>
 
@@ -206,6 +214,15 @@ export default function Header() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {t('nav.contact')}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/grok"
+                    className="block text-gray-800 hover:text-black font-medium py-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Grok
                   </Link>
                 </li>
               </ul>
