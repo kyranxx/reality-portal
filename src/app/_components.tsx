@@ -21,6 +21,7 @@ import LoginClientComponent from './auth/login/LoginClient';
 import RegisterClientComponent from './auth/register/RegisterClient';
 import ResetPasswordClientComponent from './auth/reset-password/ResetPasswordClient';
 import UnifiedAuthClientComponent from './auth/unified/UnifiedAuthClient';
+import AdminLoginClientComponent from './auth/admin-login/AdminLoginClient';
 
 
 // Re-export them directly
@@ -39,6 +40,7 @@ export const LoginClient = LoginClientComponent;
 export const RegisterClient = RegisterClientComponent;
 export const ResetPasswordClient = ResetPasswordClientComponent;
 export const UnifiedAuthClient = UnifiedAuthClientComponent;
+export const AdminLoginClient = AdminLoginClientComponent;
 
 
 // Map of all available client components for static resolution
@@ -58,7 +60,7 @@ export const CLIENT_COMPONENTS = {
   RegisterClient: RegisterClientComponent,
   ResetPasswordClient: ResetPasswordClientComponent,
   UnifiedAuthClient: UnifiedAuthClientComponent,
-  
+  AdminLoginClient: AdminLoginClientComponent,
 };
 
 // Type for client component keys

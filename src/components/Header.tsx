@@ -5,12 +5,16 @@ import { useAuth } from '@/utils/FirebaseAuthContext';
 import { useApp } from '@/contexts/AppContext';
 import { useState, useEffect } from 'react';
 
+// List of allowed admin emails
+const ADMIN_EMAILS = ['admin@example.com', 'admin@realityportal.com'];
+
 export default function Header() {
   const { user, signOut } = useAuth();
   const { language, setLanguage, t } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
 
   // Handle scroll effect
   useEffect(() => {
@@ -107,9 +111,18 @@ export default function Header() {
           </Link>
 
           {user ? (
-            <Link href="/dashboard" className="btn btn-primary">
-              {t('nav.myAccount')}
-            </Link>
+            <div className="relative">
+              <div className="flex space-x-2">
+                <Link href="/dashboard" className="btn btn-primary">
+                  {t('nav.myAccount')}
+                </Link>
+                {isAdmin && (
+                  <Link href="/admin" className="btn btn-outline bg-gray-100">
+                    Admin
+                  </Link>
+                )}
+              </div>
+            </div>
           ) : (
             <Link href="/auth/unified" className="btn btn-primary">
               {t('nav.signIn')}
@@ -215,6 +228,17 @@ export default function Header() {
                   >
                     {t('nav.myAccount')}
                   </Link>
+                  
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="btn btn-outline w-full justify-center bg-gray-100 text-gray-800 border-gray-300"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Admin Portal
+                    </Link>
+                  )}
+                  
                   <button
                     onClick={handleSignOut}
                     className="btn btn-outline w-full justify-center text-black border-gray-200"

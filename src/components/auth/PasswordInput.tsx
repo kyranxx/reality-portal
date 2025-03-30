@@ -19,6 +19,7 @@ export interface PasswordInputProps {
   autoComplete?: string;
   showStrengthMeter?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string; // For custom styling
 }
 
 export function PasswordInput(props: PasswordInputProps) {

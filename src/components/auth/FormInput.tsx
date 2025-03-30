@@ -19,6 +19,8 @@ export interface FormInputProps {
   error?: string;
   autoComplete?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string; // For custom styling
+  maxLength?: number; // For input length limitation
 }
 
 export function FormInput(props: FormInputProps) {
