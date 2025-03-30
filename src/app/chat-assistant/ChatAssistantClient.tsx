@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import './grok.css';
+import './chat-assistant.css';
 
-export default function GrokClient() {
+export default function ChatAssistantClient() {
   const [prompt, setPrompt] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -16,7 +16,7 @@ export default function GrokClient() {
   return (
     <div className="min-h-screen flex flex-col w-full max-w-5xl mx-auto px-4 py-8">
       <header className="flex justify-between items-center mb-8">
-        <div className="text-2xl font-bold">Grok</div>
+        <div className="text-2xl font-bold">AI Assistant</div>
         <div className="flex items-center space-x-4">
           <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,9 +34,9 @@ export default function GrokClient() {
       <main className="flex-grow flex flex-col">
         <div className="flex-grow flex flex-col items-center justify-center mb-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">Grok</h1>
+            <h1 className="text-4xl font-bold mb-4">AI Assistant</h1>
             <p className="text-xl text-gray-600 dark:text-gray-400">
-              Free AI assistant designed to maximize truth
+              Interactive AI assistant for your questions
             </p>
           </div>
           
@@ -47,11 +47,11 @@ export default function GrokClient() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Ask anything..."
-                className="grok-input w-full p-4 pr-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="chat-assistant-input w-full p-4 pr-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button 
                 type="submit"
-                className="grok-button absolute right-3 top-1/2 -translate-y-1/2 p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                className="chat-assistant-button absolute right-3 top-1/2 -translate-y-1/2 p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -62,7 +62,7 @@ export default function GrokClient() {
           </div>
         </div>
 
-        <div className="grok-features flex justify-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+        <div className="chat-assistant-features flex justify-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
           <span>Real-time search</span>
           <span>•</span>
           <span>Image generation</span>
@@ -72,7 +72,7 @@ export default function GrokClient() {
       </main>
 
       <footer className="mt-8 text-center text-sm text-gray-500">
-        <p>© 2025 xAI. All rights reserved.</p>
+        <p>© 2025 Reality Portal. All rights reserved.</p>
       </footer>
     </div>
   );

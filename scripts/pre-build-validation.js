@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
+const { execSync } = require('child_process');
 
 // Colors for terminal output
 const RED = '\x1b[31m';
@@ -165,6 +166,15 @@ if (oldStyleImports.length > 0) {
     `${RED}ERROR: Found ${oldStyleImports.length} files with problematic dynamic imports:${RESET}`
   );
   oldStyleImports.forEach(file => console.error(`  - ${file}`));
+  errors++;
+}
+
+// Run the client component registration validator
+try {
+  console.log(`\n${CYAN}Running client component registration validator...${RESET}`);
+  execSync('node scripts/validate-client-components.js', { stdio: 'inherit' });
+} catch (error) {
+  console.error(`${RED}Client component validation failed${RESET}`);
   errors++;
 }
 

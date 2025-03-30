@@ -1,20 +1,20 @@
-/* Grok specific styles */
-.grok-input:focus {
+/* Chat Assistant specific styles */
+.chat-assistant-input:focus {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
-.grok-button {
+.chat-assistant-button {
   transition: background-color 0.2s ease-in-out;
 }
 
-.grok-card {
+.chat-assistant-card {
   border-radius: 12px;
   transition:
     transform 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
 }
 
-.grok-card:hover {
+.chat-assistant-card:hover {
   transform: translateY(-2px);
   box-shadow:
     0 10px 25px -5px rgba(0, 0, 0, 0.1),
@@ -22,12 +22,12 @@
 }
 
 /* Dark mode adjustments */
-.dark .grok-card {
+.dark .chat-assistant-card {
   background-color: #1d1e20;
   border: 1px solid #2d2e32;
 }
 
-.dark .grok-input {
+.dark .chat-assistant-input {
   background-color: #1d1e20;
   border-color: #2d2e32;
   color: #f8f7f5;
@@ -35,13 +35,13 @@
 
 /* Mobile responsiveness */
 @media (max-width: 640px) {
-  .grok-features {
+  .chat-assistant-features {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .grok-features > span:nth-child(even) {
+  .chat-assistant-features > span:nth-child(even) {
     display: none;
   }
 }

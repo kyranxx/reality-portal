@@ -11,6 +11,7 @@ import DashboardClientComponent from './dashboard/DashboardClient';
 import ProfileClientComponent from './dashboard/profile/ProfileClient';
 import AdminClientComponent from './admin/AdminClient';
 import DesignShowcaseClientComponent from './design-showcase/DesignShowcaseClient';
+import ChatAssistantClientComponent from './chat-assistant/ChatAssistantClient';
 import PropertyDetailClientComponent from './nehnutelnosti/[id]/PropertyDetailClient';
 import ONasClientComponent from './o-nas/ONasClient';
 import KontaktClientComponent from './kontakt/KontaktClient';
@@ -43,6 +44,7 @@ export const RegisterClient = RegisterClientComponent;
 export const ResetPasswordClient = ResetPasswordClientComponent;
 export const UnifiedAuthClient = UnifiedAuthClientComponent;
 export const AdminLoginClient = AdminLoginClientComponent;
+export const ChatAssistantClient = ChatAssistantClientComponent;
 
 
 // Map of all available client components for static resolution
@@ -64,6 +66,7 @@ export const CLIENT_COMPONENTS = {
   ResetPasswordClient: ResetPasswordClientComponent,
   UnifiedAuthClient: UnifiedAuthClientComponent,
   AdminLoginClient: AdminLoginClientComponent,
+  ChatAssistantClient: ChatAssistantClientComponent,
 };
 
 // Type for client component keys

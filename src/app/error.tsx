@@ -1,4 +1,4 @@
-'use client'; // This directive is required for error boundaries
+'use client'; // Error Components must be Client Components in Next.js
 
 import { useEffect } from 'react';
 import Link from 'next/link';
