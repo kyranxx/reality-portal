@@ -10,6 +10,7 @@ import HomeClientComponent from './HomeClient';
 import DashboardClientComponent from './dashboard/DashboardClient';
 import ProfileClientComponent from './dashboard/profile/ProfileClient';
 import AdminClientComponent from './admin/AdminClient';
+import GrokClientComponent from './grok/GrokClient';
 import PropertyDetailClientComponent from './nehnutelnosti/[id]/PropertyDetailClient';
 import ONasClientComponent from './o-nas/ONasClient';
 import KontaktClientComponent from './kontakt/KontaktClient';
@@ -29,6 +30,7 @@ export const HomeClient = HomeClientComponent;
 export const DashboardClient = DashboardClientComponent;
 export const ProfileClient = ProfileClientComponent;
 export const AdminClient = AdminClientComponent;
+export const GrokClient = GrokClientComponent;
 export const PropertyDetailClient = PropertyDetailClientComponent;
 export const ONasClient = ONasClientComponent;
 export const KontaktClient = KontaktClientComponent;
@@ -49,6 +51,7 @@ export const CLIENT_COMPONENTS = {
   DashboardClient: DashboardClientComponent,
   ProfileClient: ProfileClientComponent,
   AdminClient: AdminClientComponent,
+  GrokClient: GrokClientComponent,
   PropertyDetailClient: PropertyDetailClientComponent,
   ONasClient: ONasClientComponent,
   KontaktClient: KontaktClientComponent,
