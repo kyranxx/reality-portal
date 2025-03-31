@@ -84,6 +84,9 @@ const initializeFirebase = async (retryCount = 0): Promise<void> => {
       try {
         db = getFirestore(app);
         console.log('Firebase Firestore initialized successfully');
+        
+        // Mark Firestore as initialized
+        firestoreInitialized = true;
       } catch (dbError) {
         console.error('Firebase Firestore initialization error:', dbError);
       }
@@ -203,5 +206,36 @@ export interface Favorite {
   propertyId: string;
 }
 
+// Track Firestore initialization state
+let firestoreInitialized = false;
+
+// Safe accessor for Firestore that ensures initialization
+export function getFirestoreDb() {
+  if (!isClient) return null;
+  
+  if (!firestoreInitialized && db) {
+    // Mark as initialized if db exists but wasn't marked
+    firestoreInitialized = true;
+    return db;
+  }
+  
+  if (!firestoreInitialized) {
+    console.warn("Accessing Firestore before initialization complete");
+    
+    // Return a promise that resolves when Firestore is initialized
+    return waitForFirebaseInit().then(() => {
+      if (db) {
+        firestoreInitialized = true;
+        return db;
+      }
+      throw new Error("Firestore initialization failed");
+    });
+  }
+  
+  return db;
+}
+
 // Export a safe way to access Firebase modules
-export { app, auth, db, storage };
+export { app, auth, storage };
+// Export db as a getter function, not direct reference
+export { getFirestoreDb as db };
