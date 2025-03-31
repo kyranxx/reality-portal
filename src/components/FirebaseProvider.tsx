@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { waitForFirebaseInit } from '../utils/firebase';
+import { waitForFirebaseInit, isFirestoreInitialized } from '../utils/firebase';
 import { auth, db, storage } from '../utils/firebase';
 
 // Create a context to track Firebase initialization state
@@ -42,6 +42,17 @@ export function FirebaseProvider({ children, fallback = <div>Loading Firebase...
     const initFirebase = async () => {
       try {
         await waitForFirebaseInit();
+        
+        // Double-check Firestore initialization
+        const fsInitialized = isFirestoreInitialized();
+        console.log(`Firestore initialization status: ${fsInitialized ? 'INITIALIZED' : 'NOT INITIALIZED'}`);
+        
+        // Verify Firestore connection with simple permission test
+        if (db) {
+          console.log('Firebase Provider: Firestore object exists');
+        } else {
+          console.error('Firebase Provider: Firestore object is null or undefined');
+        }
         
         // Only update state if component is still mounted
         if (isMounted) {

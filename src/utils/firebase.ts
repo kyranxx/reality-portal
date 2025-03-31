@@ -221,5 +221,10 @@ function getFirestoreDb() {
   return db;
 }
 
+// Export a function to check Firestore initialization state
+export function isFirestoreInitialized(): boolean {
+  return firestoreInitialized;
+}
+
 // Export Firebase modules
 export { app, auth, db, storage };

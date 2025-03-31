@@ -107,22 +107,38 @@ export async function getProperties(shouldUseSampleData = false): Promise<Unifie
       return [...featuredProperties, ...newProperties].map(convertSampleProperty);
     }
 
-    // Get properties from Firestore
-    const propertiesSnapshot = await getDocs(collection(db, 'properties'));
-    
-    // If no properties found in Firestore, use sample data
-    if (propertiesSnapshot.empty) {
-      console.log('No properties found in Firestore, using sample data');
+    try {
+      // Get properties from Firestore
+      console.log('Attempting to fetch properties from Firestore');
+      const propertiesSnapshot = await getDocs(collection(db, 'properties'));
+      
+      // If no properties found in Firestore, use sample data
+      if (propertiesSnapshot.empty) {
+        console.log('No properties found in Firestore, using sample data');
+        return [...featuredProperties, ...newProperties].map(convertSampleProperty);
+      }
+      
+      console.log(`Successfully retrieved ${propertiesSnapshot.docs.length} properties from Firestore`);
+      
+      // Convert Firestore properties to unified format
+      return propertiesSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return convertFirestoreProperty({ id: doc.id, ...data });
+      });
+    } catch (firestoreError: any) {
+      // Log specific Firestore error details
+      if (firestoreError.code === 'permission-denied') {
+        console.error('Firebase permission denied error. Check your security rules and auth state.');
+        console.error('Error details:', firestoreError);
+      } else {
+        console.error(`Firestore error (${firestoreError.code}):`, firestoreError);
+      }
+      
+      // Fallback to sample data
       return [...featuredProperties, ...newProperties].map(convertSampleProperty);
     }
-    
-    // Convert Firestore properties to unified format
-    return propertiesSnapshot.docs.map(doc => {
-      const data = doc.data();
-      return convertFirestoreProperty({ id: doc.id, ...data });
-    });
   } catch (error) {
-    console.error('Error fetching properties:', error);
+    console.error('Error in Firebase initialization:', error);
     // Fallback to sample data on error
     return [...featuredProperties, ...newProperties].map(convertSampleProperty);
   }
@@ -205,20 +221,37 @@ export async function getPropertyById(propertyId: string): Promise<UnifiedProper
     await waitForFirebaseInit();
     
     if (!db) {
+      console.warn('Firestore not initialized, using sample data for property', propertyId);
       return sampleProperty ? convertSampleProperty(sampleProperty) : null;
     }
     
-    const docRef = doc(db, 'properties', propertyId);
-    const docSnap = await getDoc(docRef);
-    
-    if (docSnap.exists()) {
-      return convertFirestoreProperty({ id: docSnap.id, ...docSnap.data() });
+    try {
+      console.log(`Attempting to fetch property ${propertyId} from Firestore`);
+      const docRef = doc(db, 'properties', propertyId);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        console.log(`Successfully retrieved property ${propertyId} from Firestore`);
+        return convertFirestoreProperty({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        console.log(`Property ${propertyId} not found in Firestore, falling back to sample data`);
+      }
+      
+      // Fallback to sample data if not found in Firestore
+      return sampleProperty ? convertSampleProperty(sampleProperty) : null;
+    } catch (firestoreError: any) {
+      // Log specific Firestore error details
+      if (firestoreError.code === 'permission-denied') {
+        console.error(`Firebase permission denied error fetching property ${propertyId}. Check your security rules and auth state.`);
+      } else {
+        console.error(`Firestore error (${firestoreError.code}) fetching property ${propertyId}:`, firestoreError);
+      }
+      
+      // Fallback to sample data
+      return sampleProperty ? convertSampleProperty(sampleProperty) : null;
     }
-    
-    // Fallback to sample data if not found in Firestore
-    return sampleProperty ? convertSampleProperty(sampleProperty) : null;
   } catch (error) {
-    console.error(`Error fetching property ${propertyId}:`, error);
+    console.error(`Error in Firebase initialization for property ${propertyId}:`, error);
     // Fallback to sample data on error
     return sampleProperty ? convertSampleProperty(sampleProperty) : null;
   }
