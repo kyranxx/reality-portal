@@ -152,9 +152,9 @@ async function ensureFirebaseReady(): Promise<void> {
   if (typeof window !== 'undefined') {
     try {
       // Try to use the firebase init guard first
-      const { waitForFirebaseInit } = await import('./firebase-init-guard');
+      const { waitForFirebase } = await import('./firebase-init-guard');
       try {
-        await waitForFirebaseInit();
+        await waitForFirebase();
         return;
       } catch (error) {
         console.warn('Firebase init guard failed, falling back to service check:', error);
