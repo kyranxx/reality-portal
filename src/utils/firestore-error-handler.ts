@@ -121,6 +121,11 @@ export async function withFirestoreErrorHandling<T>(
 
       // Handle specific Firestore error types
       if (error.code) {
+        // If permission-denied, immediately use fallback data without retrying
+        if (error.code === 'permission-denied') {
+          console.warn(`Permission denied for ${operationName}, using fallback data immediately`);
+          return fallback;
+        }
         handleFirestoreErrorByCode(error.code, operationName);
       }
 

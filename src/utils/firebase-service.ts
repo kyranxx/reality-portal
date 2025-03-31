@@ -265,9 +265,34 @@ class FirebaseService {
       listener(this.currentUser);
     }
 
-    // Return unsubscribe function
+    // Return unsubscribe function that properly handles cleanup
     return () => {
+      // Remove the listener from our internal array
       this.authStateListeners = this.authStateListeners.filter(l => l !== listener);
+      
+      // Log cleanup for debugging purposes
+      console.debug('Firebase listener cleanup executed');
+    };
+  }
+
+  /**
+   * Creates a properly wrapped Firestore listener that ensures cleanup
+   * @param setup Function that sets up the listener and returns its unsubscribe function
+   * @returns A cleanup function that should be called when the component unmounts
+   */
+  public createSafeListener(setup: () => () => void): () => void {
+    // Execute the setup function to create the listener
+    const unsubscribe = setup();
+    
+    // Return a wrapper that ensures proper cleanup
+    return () => {
+      try {
+        // Call the original unsubscribe function
+        unsubscribe();
+        console.debug('Firebase listener safely unsubscribed');
+      } catch (error) {
+        console.warn('Error during Firebase listener cleanup:', error);
+      }
     };
   }
 
