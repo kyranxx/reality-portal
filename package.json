@@ -11,7 +11,7 @@
     "dev:fast": "next dev -p 3002",
     "dev:quick": "node scripts/quick-start.js",
     "dev:emulators": "node scripts/start-dev-with-emulators.js",
-    "validate": "node scripts/pre-build-validation.js",
+    "validate": "node scripts/pre-build-validation.js && node scripts/pre-build-component-check.js",
     "validate:deploy": "node scripts/validate-deployment.js",
     "validate:cors": "node scripts/validate-cors.js",
     "validate:env": "node scripts/validate-environment.js",
@@ -22,6 +22,8 @@
     "lint": "eslint .",
     "clean": "rimraf .next out",
     "type-check": "tsc --noEmit",
+    "sync-components": "node scripts/sync-component-registrations.js",
+    "analyze:directives": "node scripts/analyze-client-directives.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "analyze": "ANALYZE=true next build"
   },
