@@ -1,176 +1,92 @@
 /**
  * Firebase Initialization Guard
  * 
- * This module provides a robust way to ensure Firebase is properly initialized
- * before components attempt to use Firebase services.
+ * This module ensures Firebase services are fully initialized before use.
+ * It provides a safe way to access Firebase services and prevents race conditions.
  */
 
-import { auth, db, storage, app } from './firebase';
+import { app, auth, db, storage } from './firebase';
+import firebaseService from './firebase-service';
 
-// Initialization state tracking
-interface InitState {
-  isFirebaseInitialized: boolean;
-  isAuthInitialized: boolean;
-  isFirestoreInitialized: boolean;
-  isStorageInitialized: boolean;
-  initError: Error | null;
-  authError: Error | null;
-}
+// Initialize state tracking
+let isFirebaseInitialized = false;
+let initializationPromise: Promise<void> | null = null;
 
-// Global state for tracking initialization
-const initState: InitState = {
-  isFirebaseInitialized: false,
-  isAuthInitialized: false,
-  isFirestoreInitialized: false,
-  isStorageInitialized: false,
-  initError: null,
-  authError: null,
+/**
+ * Initializes Firebase and returns a promise that resolves when initialization is complete
+ */
+export const initializeFirebase = (): Promise<void> => {
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  // Create the initialization promise
+  initializationPromise = new Promise((resolve) => {
+    // First check if firebase-service is already initialized
+    if (firebaseService.isInitialized()) {
+      isFirebaseInitialized = true;
+      resolve();
+      return;
+    }
+
+    // Set up an interval to check for Firebase initialization
+    const checkInterval = setInterval(() => {
+      // Check both the firebase-service and the individual modules
+      if (
+        firebaseService.isInitialized() ||
+        (app && auth && db && storage)
+      ) {
+        isFirebaseInitialized = true;
+        clearInterval(checkInterval);
+        resolve();
+      }
+    }, 100);
+
+    // Set a timeout to avoid hanging indefinitely
+    setTimeout(() => {
+      if (!isFirebaseInitialized) {
+        console.warn('Firebase initialization timed out after 10 seconds');
+        clearInterval(checkInterval);
+        resolve(); // Resolve anyway to prevent hanging
+      }
+    }, 10000);
+  });
+
+  return initializationPromise;
 };
 
-// Maximum wait time for initialization in milliseconds
-const MAX_INIT_WAIT_TIME = 10000;
+/**
+ * Checks if Firebase is initialized
+ */
+export const isFirebaseReady = (): boolean => {
+  return isFirebaseInitialized;
+};
 
 /**
  * Waits for Firebase to be initialized
- * @returns A promise that resolves when Firebase is initialized or rejects after timeout
  */
-export const waitForFirebaseInit = async (timeout = MAX_INIT_WAIT_TIME): Promise<boolean> => {
-  // Skip waiting if not on client
-  if (typeof window === 'undefined') {
-    console.log('waitForFirebaseInit called on server side, skipping');
-    return false;
+export const waitForFirebase = async (): Promise<void> => {
+  if (isFirebaseInitialized) {
+    return Promise.resolve();
   }
-
-  // Check if already initialized
-  if (isFirebaseReady()) {
-    return true;
-  }
-
-  // If firebase.js hasn't exported the services yet, wait for them
-  if (!app || !auth) {
-    // Import dynamically to ensure the modules are loaded
-    try {
-      const firebase = await import('./firebase');
-      // Re-check after import
-      if (isFirebaseReady()) {
-        return true;
-      }
-    } catch (err) {
-      console.error('Error dynamically importing Firebase:', err);
-    }
-  }
-
-  // Wait for initialization with timeout
-  return new Promise((resolve, reject) => {
-    const checkInterval = 100; // Check every 100ms
-    let elapsedTime = 0;
-    
-    // Set up polling interval
-    const interval = setInterval(() => {
-      elapsedTime += checkInterval;
-      
-      // Check if initialized
-      if (isFirebaseReady()) {
-        clearInterval(interval);
-        clearTimeout(timeoutId);
-        resolve(true);
-        return;
-      }
-      
-      // Check if there was an initialization error
-      if (initState.initError) {
-        clearInterval(interval);
-        clearTimeout(timeoutId);
-        reject(initState.initError);
-        return;
-      }
-      
-      // Check if we've exceeded our timeout
-      if (elapsedTime >= timeout) {
-        clearInterval(interval);
-        reject(new Error(`Firebase initialization timed out after ${timeout}ms`));
-      }
-    }, checkInterval);
-    
-    // Set timeout as a fallback
-    const timeoutId = setTimeout(() => {
-      clearInterval(interval);
-      reject(new Error(`Firebase initialization timed out after ${timeout}ms`));
-    }, timeout);
-  });
+  return initializeFirebase();
 };
 
 /**
- * Checks if Firebase is ready to use
- * @returns true if Firebase is initialized
+ * Wraps a function to ensure Firebase is initialized before execution
+ * @param fn Function to wrap
+ * @returns Wrapped function that ensures Firebase is initialized
  */
-export const isFirebaseReady = (): boolean => {
-  // Skip check if not on client
-  if (typeof window === 'undefined') {
-    return false;
-  }
-
-  // Check current state
-  const firebaseInitialized = Boolean(app);
-  const authInitialized = Boolean(auth);
-  const firestoreInitialized = Boolean(db);
-  const storageInitialized = Boolean(storage);
-  
-  // Update state
-  initState.isFirebaseInitialized = firebaseInitialized;
-  initState.isAuthInitialized = authInitialized;
-  initState.isFirestoreInitialized = firestoreInitialized;
-  initState.isStorageInitialized = storageInitialized;
-  
-  return firebaseInitialized && authInitialized;
-};
-
-/**
- * Use this at component level to ensure Firebase is ready
- * @param specificService Optional service to check ('auth', 'firestore', or 'storage')
- * @returns An object with the initialization state and any errors
- */
-export const useFirebaseGuard = (specificService?: 'auth' | 'firestore' | 'storage') => {
-  // Check current state
-  const ready = isFirebaseReady();
-  
-  // Determine which specific service needs to be checked
-  let specificReady = true;
-  if (specificService) {
-    switch (specificService) {
-      case 'auth':
-        specificReady = initState.isAuthInitialized;
-        break;
-      case 'firestore':
-        specificReady = initState.isFirestoreInitialized;
-        break;
-      case 'storage':
-        specificReady = initState.isStorageInitialized;
-        break;
-    }
-  }
-  
-  return {
-    ready: ready && specificReady,
-    error: initState.initError || initState.authError,
-    authReady: initState.isAuthInitialized,
-    firestoreReady: initState.isFirestoreInitialized,
-    storageReady: initState.isStorageInitialized,
+export function withFirebase<T extends (...args: any[]) => any>(
+  fn: T
+): (...args: Parameters<T>) => Promise<ReturnType<T>> {
+  return async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    await waitForFirebase();
+    return fn(...args);
   };
-};
-
-// Attempt initialization check on load
-if (typeof window !== 'undefined') {
-  isFirebaseReady();
-  
-  // Set up automatic retries if needed
-  if (!initState.isFirebaseInitialized) {
-    console.log('Firebase not immediately available, will check again');
-    // Check again in 500ms (Firebase might still be initializing)
-    setTimeout(() => {
-      isFirebaseReady();
-    }, 500);
-  }
 }
 
-export default waitForFirebaseInit;
+// Initialize Firebase automatically when this module is imported
+if (typeof window !== 'undefined') {
+  initializeFirebase();
+}

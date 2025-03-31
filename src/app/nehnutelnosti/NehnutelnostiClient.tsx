@@ -1,146 +1,102 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import SectionTitle from '@/components/SectionTitle';
-import SearchBar from '@/components/SearchBar';
-import PropertyCard from '@/components/PropertyCard';
-import { Property } from '@/utils/firebase';
-import { getAllProperties } from '@/utils/firestore';
-import { featuredProperties as sampleProperties } from '@/data/sampleProperties';
+import React from 'react';
+import { UnifiedProperty } from '@/services/propertyService';
+import ServerPropertyProvider from '@/components/ServerPropertyProvider';
+import { SkeletonPropertyCard } from '@/components/skeletons/SkeletonPropertyCard';
+import { useProperties } from '@/hooks/useProperties';
 
 export default function NehnutelnostiClient() {
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState({
-    type: 'all',
-    priceMin: 0,
-    priceMax: 1000000,
-  });
+  const { properties, isLoading, isError } = useProperties();
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const allProperties = await getAllProperties();
-        setProperties(allProperties);
-      } catch (error) {
-        console.error('Error fetching properties:', error);
-        // Fallback to sample data if Firebase is not configured
-        setProperties(sampleProperties as unknown as Property[]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProperties();
-  }, []);
-
-  const handleFilterChange = (newFilter: any) => {
-    setFilter({ ...filter, ...newFilter });
-  };
-
-  const filteredProperties = properties.filter((property) => {
-    if (filter.type !== 'all' && property.propertyType !== filter.type) {
-      return false;
-    }
-    
-    if (property.price < filter.priceMin || property.price > filter.priceMax) {
-      return false;
-    }
-    
-    return true;
-  });
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
-          <div className="text-gray-400">Načítava sa...</div>
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <SkeletonPropertyCard key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <p>Failed to load properties</p>
+          <p>Using fallback data...</p>
+        </div>
+        <ServerPropertyProvider>
+          {({ allProperties }) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              {allProperties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          )}
+        </ServerPropertyProvider>
+      </div>
+    );
+  }
+
+  if (properties.length === 0) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+          <p>No properties found.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <SectionTitle 
-        title="Nehnuteľnosti" 
-        subtitle="Prehliadajte dostupné nehnuteľnosti v našej ponuke" 
-      />
-      
-      <div className="mb-8">
-        <SearchBar />
+    <div className="container mx-auto p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {properties.map((property) => (
+          <PropertyCard key={property.id} property={property} />
+        ))}
       </div>
-      
-      <div className="flex flex-wrap mb-8">
-        <button 
-          onClick={() => handleFilterChange({ type: 'all' })}
-          className={`px-4 py-2 mr-2 mb-2 rounded ${
-            filter.type === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Všetky
-        </button>
-        <button 
-          onClick={() => handleFilterChange({ type: 'apartment' })}
-          className={`px-4 py-2 mr-2 mb-2 rounded ${
-            filter.type === 'apartment' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Byty
-        </button>
-        <button 
-          onClick={() => handleFilterChange({ type: 'house' })}
-          className={`px-4 py-2 mr-2 mb-2 rounded ${
-            filter.type === 'house' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Domy
-        </button>
-        <button 
-          onClick={() => handleFilterChange({ type: 'commercial' })}
-          className={`px-4 py-2 mr-2 mb-2 rounded ${
-            filter.type === 'commercial' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Komerčné
-        </button>
-        <button 
-          onClick={() => handleFilterChange({ type: 'land' })}
-          className={`px-4 py-2 mr-2 mb-2 rounded ${
-            filter.type === 'land' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Pozemky
-        </button>
+    </div>
+  );
+}
+
+interface PropertyCardProps {
+  property: UnifiedProperty;
+}
+
+function PropertyCard({ property }: PropertyCardProps) {
+  return (
+    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="h-48 bg-gray-200 relative">
+        {property.imageUrl ? (
+          <img 
+            src={property.imageUrl} 
+            alt={property.title} 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <span className="text-gray-400">No image</span>
+          </div>
+        )}
       </div>
-      
-      {filteredProperties.length === 0 ? (
-        <div className="text-center py-16 bg-gray-50 rounded-lg">
-          <h3 className="text-xl font-medium text-gray-600">Žiadne nehnuteľnosti na zobrazenie</h3>
-          <p className="text-gray-500 mt-2">Skúste zmeniť filtre alebo sa vráťte neskôr</p>
+      <div className="p-4">
+        <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
+        <p className="text-gray-600 mb-1">{property.location}</p>
+        <p className="text-gray-800 font-bold">€{property.price.toLocaleString()}</p>
+        <div className="flex justify-between mt-2 text-sm text-gray-600">
+          <span>{property.size} m²</span>
+          {property.bedrooms && <span>{property.bedrooms} izby</span>}
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProperties.map((property) => (
-            <PropertyCard 
-              key={property.id}
-              id={property.id}
-              title={property.title}
-              location={property.location}
-              price={property.price}
-              size={property.area}
-              bedrooms={property.rooms}
-              bathrooms={property.bathrooms}
-              landSize={property.landSize}
-              imageUrl={property.images?.[0] || ''}
-              isFeatured={property.isFeatured}
-              isNew={property.isNew}
-              type={property.propertyType}
-            />
-          ))}
-        </div>
-      )}
+        <a 
+          href={`/nehnutelnosti/${property.id}`}
+          className="mt-3 block text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+        >
+          Detail
+        </a>
+      </div>
     </div>
   );
 }

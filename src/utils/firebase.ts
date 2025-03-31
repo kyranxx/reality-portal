@@ -38,8 +38,13 @@ let storage: ReturnType<typeof getStorage> | undefined;
 // Use fewer retries in development for faster startup
 const MAX_INIT_RETRIES = process.env.NODE_ENV === 'development' ? 1 : 3;
 
-// Initialize Firebase with retry mechanism and dependency chain
-const initializeFirebase = async (retryCount = 0) => {
+// Initialize Firebase with atomicity and completed promise
+let initializationPromise: Promise<void> | null = null;
+
+/**
+ * Initializes Firebase and returns a promise that resolves when complete
+ */
+const initializeFirebase = async (retryCount = 0): Promise<void> => {
   // Skip initialization if not on client or not configured
   if (!isClient || !isFirebaseConfigured) {
     if (!isFirebaseConfigured && isClient) {
@@ -48,92 +53,104 @@ const initializeFirebase = async (retryCount = 0) => {
           'Please ensure NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN, and NEXT_PUBLIC_FIREBASE_PROJECT_ID are set in your environment.'
       );
     }
-    return;
+    return Promise.resolve();
   }
 
-  try {
-    // Initialize Firebase app if not already initialized
-    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  // Return existing promise if initialization is already in progress
+  if (initializationPromise) {
+    return initializationPromise;
+  }
 
-    // Ensure auth module is loaded before trying to initialize auth
-    // This should resolve the "Component auth has not been registered yet" error
-    const { waitForAuthModule } = await import('./firebase-auth-unified');
-    await waitForAuthModule();
-
-    // Initialize auth with proper error handling
+  // Create a new initialization promise
+  initializationPromise = (async () => {
     try {
-      auth = getAuth(app);
-      console.log('Firebase Auth initialized successfully');
-    } catch (authError) {
-      console.error('Firebase Auth initialization error:', authError);
-      // We continue even if auth fails, to allow other services to work
-    }
+      // Initialize Firebase app if not already initialized
+      app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
-    // Initialize Firestore with proper error handling - but only after auth is ready
-    try {
-      if (auth) {
+      // Ensure auth module is loaded before trying to initialize auth
+      const { waitForAuthModule } = await import('./firebase-auth-unified');
+      await waitForAuthModule();
+
+      // Initialize auth with proper error handling
+      try {
+        auth = getAuth(app);
+        console.log('Firebase Auth using: client implementation');
+        console.log('Firebase Auth initialized successfully');
+      } catch (authError) {
+        console.error('Firebase Auth initialization error:', authError);
+      }
+
+      // Always initialize Firestore and Storage regardless of auth state
+      try {
         db = getFirestore(app);
         console.log('Firebase Firestore initialized successfully');
-      } else {
-        console.warn('Delaying Firestore initialization until Auth is ready');
-        // We'll initialize Firestore later when auth is ready
+      } catch (dbError) {
+        console.error('Firebase Firestore initialization error:', dbError);
       }
-    } catch (dbError) {
-      console.error('Firebase Firestore initialization error:', dbError);
-    }
 
-    // Initialize Storage with proper error handling - but only after auth is ready
-    try {
-      if (auth) {
+      try {
         storage = getStorage(app);
         console.log('Firebase Storage initialized successfully');
+      } catch (storageError) {
+        console.error('Firebase Storage initialization error:', storageError);
+      }
+
+      // Connect to emulators in development environment
+      if (
+        process.env.NODE_ENV === 'development' &&
+        process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' &&
+        process.env.VERCEL !== '1'
+      ) {
+        try {
+          if (auth) connectAuthEmulator(auth, 'http://localhost:9099');
+          if (db) connectFirestoreEmulator(db, 'localhost', 8080);
+          if (storage) connectStorageEmulator(storage, 'localhost', 9199);
+          console.log('Connected to Firebase emulators successfully');
+        } catch (emulatorError) {
+          console.error('Error connecting to Firebase emulators:', emulatorError);
+        }
+      }
+
+      console.log('Firebase initialization completed');
+    } catch (error) {
+      console.error(`Firebase initialization attempt ${retryCount + 1} failed:`, error);
+
+      // Retry initialization with exponential backoff
+      if (retryCount < MAX_INIT_RETRIES) {
+        // Use shorter delays in development for faster startup
+        const baseDelay = process.env.NODE_ENV === 'development' ? 100 : 500;
+        const delay = Math.pow(2, retryCount) * baseDelay;
+        console.log(`Retrying Firebase initialization in ${delay}ms...`);
+
+        await new Promise(resolve => setTimeout(resolve, delay));
+        await initializeFirebase(retryCount + 1);
       } else {
-        console.warn('Delaying Storage initialization until Auth is ready');
-        // We'll initialize Storage later when auth is ready
-      }
-    } catch (storageError) {
-      console.error('Firebase Storage initialization error:', storageError);
-    }
-
-    // Connect to emulators in development environment only (never on Vercel)
-    if (
-      process.env.NODE_ENV === 'development' &&
-      process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' &&
-      process.env.VERCEL !== '1'
-    ) {
-      try {
-        if (auth) connectAuthEmulator(auth, 'http://localhost:9099');
-        if (db) connectFirestoreEmulator(db, 'localhost', 8080);
-        if (storage) connectStorageEmulator(storage, 'localhost', 9199);
-        console.log('Connected to Firebase emulators successfully');
-      } catch (emulatorError) {
-        console.error('Error connecting to Firebase emulators:', emulatorError);
+        console.error(`Failed to initialize Firebase after ${MAX_INIT_RETRIES} attempts`);
       }
     }
+  })();
 
-    console.log('Firebase initialization completed');
-  } catch (error) {
-    console.error(`Firebase initialization attempt ${retryCount + 1} failed:`, error);
+  return initializationPromise;
+};
 
-    // Retry initialization with exponential backoff
-    if (retryCount < MAX_INIT_RETRIES) {
-      // Use shorter delays in development for faster startup
-      const baseDelay = process.env.NODE_ENV === 'development' ? 100 : 500;
-      const delay = Math.pow(2, retryCount) * baseDelay; // Development: 100ms, 200ms; Production: 500ms, 1s, 2s
-      console.log(`Retrying Firebase initialization in ${delay}ms...`);
-
-      setTimeout(() => {
-        initializeFirebase(retryCount + 1);
-      }, delay);
-    } else {
-      console.error(`Failed to initialize Firebase after ${MAX_INIT_RETRIES} attempts`);
-    }
+/**
+ * Returns a promise that resolves when Firebase is initialized
+ */
+export const waitForFirebaseInit = (): Promise<void> => {
+  if (!isClient) return Promise.resolve();
+  
+  if (!initializationPromise) {
+    return initializeFirebase();
   }
+  
+  return initializationPromise;
 };
 
 // Run initialization
 if (isClient) {
-  initializeFirebase();
+  initializeFirebase().catch(err => {
+    console.error('Firebase initialization uncaught error:', err);
+  });
 }
 
 // Types for our database collections
@@ -186,4 +203,5 @@ export interface Favorite {
   propertyId: string;
 }
 
+// Export a safe way to access Firebase modules
 export { app, auth, db, storage };

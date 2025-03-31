@@ -8,6 +8,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { AppProvider } from '@/contexts/AppContext';
 import { FirebaseAuthProvider } from '@/utils/FirebaseAuthContext';
+import { FirebaseProvider } from '@/components/FirebaseProvider';
+import { SWRProvider } from '@/components/SWRProvider';
 import ClientWrapper from './ClientWrapper';
 import { getEnvironmentInfo, getPublicAssetUrl } from '@/utils/environment';
 
@@ -74,15 +76,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
       </head>
       <body className="flex flex-col min-h-screen font-sans">
-        <FirebaseAuthProvider>
-          <AppProvider>
-            <ClientWrapper>
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </ClientWrapper>
-          </AppProvider>
-        </FirebaseAuthProvider>
+        <FirebaseProvider fallback={<div className="p-4">Initializing Firebase...</div>}>
+          <SWRProvider>
+            <FirebaseAuthProvider>
+              <AppProvider>
+                <ClientWrapper>
+                  <Header />
+                  <main className="flex-grow">{children}</main>
+                  <Footer />
+                </ClientWrapper>
+              </AppProvider>
+            </FirebaseAuthProvider>
+          </SWRProvider>
+        </FirebaseProvider>
       </body>
     </html>
   );
