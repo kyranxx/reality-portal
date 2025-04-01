@@ -15,6 +15,15 @@ export default function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+  // Check if we're in an admin route
+  const [isAdminRoute, setIsAdminRoute] = useState(false);
+  
+  // Check the current route on client side to determine if we're in admin route
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsAdminRoute(window.location.pathname.startsWith('/admin'));
+    }
+  }, []);
 
   // Handle scroll effect
   useEffect(() => {
@@ -46,7 +55,7 @@ export default function Header() {
         scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-white'
       }`}
     >
-      <div className="container py-5 flex justify-between items-center">
+      <div className="container-content py-4 flex justify-between items-center">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-3">
             <div className="w-9 h-9 bg-black rounded-full flex items-center justify-center">
@@ -101,38 +110,42 @@ export default function Header() {
                 {t('nav.contact')}
               </Link>
             </li>
-            <li>
-              <Link
-                href="/design-showcase"
-                className="text-gray-600 hover:text-black transition-colors"
-              >
-                Design
-              </Link>
-            </li>
+            {/* Only show Design link in development environment */}
+            {process.env.NODE_ENV === 'development' && (
+              <li>
+                <Link
+                  href="/design-showcase"
+                  className="text-gray-600 hover:text-black transition-colors"
+                >
+                  Design
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex space-x-4">
-          <Link href="/pridat-nehnutelnost" className="btn btn-outline">
+          <Link href="/pridat-nehnutelnost" className="btn btn-outline text-sm py-2.5">
             {t('nav.addProperty')}
           </Link>
 
           {user ? (
             <div className="relative">
               <div className="flex space-x-3">
-                <Link href="/dashboard" className="btn btn-primary">
+                <Link href="/dashboard" className="btn btn-primary text-sm py-2.5">
                   {t('nav.myAccount')}
                 </Link>
-                {isAdmin && (
-                  <Link href="/admin" className="btn btn-outline">
+                {/* Only show Admin button if user is admin AND we're in admin route */}
+                {isAdmin && isAdminRoute && (
+                  <Link href="/admin" className="btn btn-outline text-sm py-2.5">
                     Admin
                   </Link>
                 )}
               </div>
             </div>
           ) : (
-            <Link href="/auth/unified" className="btn btn-primary">
+            <Link href="/auth/unified" className="btn btn-primary text-sm py-2.5">
               {t('nav.signIn')}
             </Link>
           )}
@@ -246,7 +259,8 @@ export default function Header() {
                     {t('nav.myAccount')}
                   </Link>
                   
-                  {isAdmin && (
+                  {/* Only show Admin button if user is admin AND we're in admin route */}
+                  {isAdmin && isAdminRoute && (
                     <Link
                       href="/admin"
                       className="btn btn-outline w-full justify-center"

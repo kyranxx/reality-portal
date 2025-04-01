@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  /* Grok-inspired color system - monochromatic */
+  /* Monochromatic color system - no blues */
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
   --color-primary: #000000;
@@ -16,8 +16,18 @@
   --color-foreground: #000000;
   --color-card: #ffffff;
   --color-border: #f0f0f0; /* Very light border */
+  --color-error: #e53935; /* Error color */
+  --color-success: #4caf50; /* Success color */
   --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); /* Ultra subtle shadow */
   --hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle hover shadow */
+
+  /* Spacing system */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-md: 1rem; /* 16px */
+  --space-lg: 1.5rem; /* 24px */
+  --space-xl: 2rem; /* 32px */
+  --space-2xl: 3rem; /* 48px */
 
   /* Form and UI element styling */
   --input-border-radius: 12px;
@@ -62,6 +72,24 @@ body {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
+/* Scale animation for hover effects */
+@keyframes scaleUp {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.02);
+  }
+}
+
+.scale-hover {
+  transition: transform 0.3s ease-out;
+}
+
+.scale-hover:hover {
+  transform: scale(1.02);
+}
+
 @layer base {
   h1,
   h2,
@@ -94,9 +122,19 @@ body {
 }
 
 @layer components {
-  /* Increase container width and padding for more breathing room */
+  /* Full-width container for larger screens */
   .container {
-    @apply mx-auto px-5 md:px-8 max-w-[1100px];
+    @apply mx-auto px-5 md:px-8 w-full max-w-screen-xl;
+  }
+
+  /* Full-bleed container for sections that go edge to edge */
+  .container-full {
+    @apply w-full;
+  }
+
+  /* Content container for contained sections */
+  .container-content {
+    @apply mx-auto px-5 md:px-8 w-full max-w-[1400px];
   }
 
   /* Updated button styles - more minimal */
@@ -116,13 +154,22 @@ body {
     @apply border border-gray-100 hover:bg-gray-50;
   }
 
-  /* Simplified card with less borders */
+  /* Simplified card with less borders and better hover effects */
   .card {
-    @apply bg-white rounded-[var(--card-border-radius)] overflow-hidden shadow-[var(--card-shadow)] transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)];
+    @apply bg-white rounded-[var(--card-border-radius)] overflow-hidden shadow-[var(--card-shadow)] transition-all duration-300 ease-[var(--transition-timing)];
+  }
+
+  .card-hover {
+    @apply hover:shadow-[var(--hover-shadow)] hover:translate-y-[-2px];
   }
 
   .property-image {
     @apply h-64 w-full object-cover; /* Larger images */
+  }
+
+  /* Image placeholder style */
+  .image-placeholder {
+    @apply bg-gray-100 flex items-center justify-center text-gray-300;
   }
 
   /* Updated badges - more subtle */
@@ -142,11 +189,6 @@ body {
     @apply bg-gray-50 text-gray-800;
   }
 
-  /* Simplified hover effect */
-  .card-hover-effect {
-    @apply transition-all duration-300 hover:shadow-[var(--hover-shadow)];
-  }
-
   /* Form elements */
   .form-input {
     @apply rounded-[var(--input-border-radius)] border-gray-100 focus:border-black focus:ring-0 transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] py-3 px-4;
@@ -156,18 +198,33 @@ body {
     @apply rounded-[var(--input-border-radius)] border-gray-100 focus:border-black focus:ring-0 transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] py-3;
   }
 
-  /* Search container - Grok style */
+  /* Search bar */
+  .search-bar {
+    @apply w-full max-w-screen-xl mx-auto -mt-16 relative z-20 px-4;
+  }
+
   .search-container {
-    @apply max-w-[900px] mx-auto px-6 w-full;
+    @apply bg-white rounded-xl shadow-md p-6 border border-gray-50;
   }
 
-  /* Greeting text */
-  .greeting-text {
-    @apply text-5xl font-medium text-center mb-3;
+  /* User-friendly error message */
+  .error-message {
+    @apply bg-red-50 border border-red-100 text-red-800 rounded-lg p-4 mb-4;
   }
 
-  .greeting-subtext {
-    @apply text-xl text-gray-500 text-center mb-12;
+  /* User-friendly success message */
+  .success-message {
+    @apply bg-green-50 border border-green-100 text-green-800 rounded-lg p-4 mb-4;
+  }
+
+  /* Glassmorphism effect */
+  .glass-effect {
+    @apply bg-white/90 backdrop-blur-md;
+  }
+
+  /* Auth form styles */
+  .auth-form {
+    @apply max-w-md mx-auto bg-white rounded-xl shadow-md p-8;
   }
 
   /* Section spacing */

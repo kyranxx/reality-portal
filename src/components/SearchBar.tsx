@@ -1,18 +1,37 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SearchBar() {
+  const router = useRouter();
   const [searchType, setSearchType] = useState('buy');
   const [propertyType, setPropertyType] = useState('all');
   const [location, setLocation] = useState('');
   const [priceRange, setPriceRange] = useState([0, 500000]);
-  // Advanced filtering is always visible now
   const [minSize, setMinSize] = useState('');
   const [bedrooms, setBedrooms] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would redirect to search results
+    setIsSubmitting(true);
+    
+    // Build query parameters
+    const params = new URLSearchParams();
+    params.append('type', searchType);
+    params.append('propertyType', propertyType);
+    
+    if (location) params.append('location', location);
+    params.append('minPrice', priceRange[0].toString());
+    params.append('maxPrice', priceRange[1].toString());
+    
+    if (minSize) params.append('minSize', minSize);
+    if (bedrooms) params.append('bedrooms', bedrooms);
+    
+    // Navigate to search results page with query params
+    router.push(`/nehnutelnosti?${params.toString()}`);
+    
+    // Log for debugging
     console.log('Search:', {
       searchType,
       propertyType,
@@ -24,7 +43,7 @@ export default function SearchBar() {
   };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    const value = parseInt(e.target.value || '0');
     if (e.target.name === 'minPrice') {
       setPriceRange([value, priceRange[1]]);
     } else {
@@ -33,18 +52,19 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="glass-effect rounded-xl shadow-md p-6 -mt-16 relative z-10 border border-white/30">
+    <div className="search-container rounded-xl shadow-lg p-6 -mt-20 relative z-10 border border-gray-100">
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Typ vyhľadávania</label>
-            <div className="flex rounded-full overflow-hidden border border-gray-200 p-0.5 bg-gray-50">
+        {/* Main search row - prominently displayed */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+          {/* Type toggle (Buy/Rent) - 2 columns */}
+          <div className="md:col-span-2">
+            <div className="flex rounded-full overflow-hidden border border-gray-200 p-0.5 bg-white shadow-sm h-full">
               <button
                 type="button"
-                className={`flex-1 py-2 px-4 text-sm font-medium rounded-full transition-all duration-300 ${
+                className={`flex-1 py-2.5 px-3 text-sm font-medium rounded-full transition-all duration-300 ${
                   searchType === 'buy'
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-100'
+                    ? 'bg-black text-white'
+                    : 'bg-transparent text-gray-700 hover:bg-gray-50'
                 }`}
                 onClick={() => setSearchType('buy')}
               >
@@ -52,10 +72,10 @@ export default function SearchBar() {
               </button>
               <button
                 type="button"
-                className={`flex-1 py-2 px-4 text-sm font-medium rounded-full transition-all duration-300 ${
+                className={`flex-1 py-2.5 px-3 text-sm font-medium rounded-full transition-all duration-300 ${
                   searchType === 'rent'
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-100'
+                    ? 'bg-black text-white'
+                    : 'bg-transparent text-gray-700 hover:bg-gray-50'
                 }`}
                 onClick={() => setSearchType('rent')}
               >
@@ -63,17 +83,15 @@ export default function SearchBar() {
               </button>
             </div>
           </div>
-
-          <div>
-            <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700 mb-2">
-              Typ nehnuteľnosti
-            </label>
-            <div className="relative">
+          
+          {/* Property Type - 3 columns */}
+          <div className="md:col-span-3">
+            <div className="relative h-full">
               <select
                 id="propertyType"
                 value={propertyType}
                 onChange={e => setPropertyType(e.target.value)}
-                className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-4 pr-10 text-sm bg-white appearance-none"
+                className="form-select block w-full h-full rounded-lg border-gray-200 py-2.5 px-4 pr-10 text-sm bg-white shadow-sm"
               >
                 <option value="all">Všetky typy</option>
                 <option value="apartment">Byty</option>
@@ -99,19 +117,17 @@ export default function SearchBar() {
               </div>
             </div>
           </div>
-
-          <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-              Lokalita
-            </label>
-            <div className="relative">
+          
+          {/* Location - 5 columns */}
+          <div className="md:col-span-5">
+            <div className="relative h-full">
               <input
                 type="text"
                 id="location"
                 value={location}
                 onChange={e => setLocation(e.target.value)}
                 placeholder="Mesto, okres alebo PSČ"
-                className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-4 pl-10 text-sm"
+                className="form-input block w-full h-full rounded-lg border-gray-200 py-2.5 px-4 pl-10 text-sm shadow-sm"
               />
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
                 <svg
@@ -136,125 +152,138 @@ export default function SearchBar() {
               </div>
             </div>
           </div>
-
-          <div className="flex items-end">
+          
+          {/* Search Button - 2 columns */}
+          <div className="md:col-span-2">
             <button
               type="submit"
-              className="w-full btn btn-primary py-2.5 px-4 text-sm flex items-center justify-center"
+              disabled={isSubmitting}
+              className="w-full h-full btn btn-primary py-2.5 px-4 text-sm flex items-center justify-center shadow-sm"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-4 h-4 mr-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
+              {isSubmitting ? (
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-4 h-4 mr-2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              )}
               Vyhľadať
             </button>
           </div>
         </div>
 
+        {/* Popular locations */}
         <div className="mt-4 flex">
           <div className="flex flex-wrap gap-2">
             <span className="text-xs text-gray-500 mr-1">Populárne:</span>
-            <a
-              href="#"
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            <button
+              type="button"
+              onClick={() => setLocation('Bratislava')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
             >
               Bratislava
-            </a>
-            <a
-              href="#"
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            </button>
+            <button
+              type="button"
+              onClick={() => setLocation('Košice')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
             >
               Košice
-            </a>
-            <a
-              href="#"
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            </button>
+            <button
+              type="button"
+              onClick={() => setLocation('Žilina')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
             >
               Žilina
-            </a>
+            </button>
           </div>
         </div>
 
-        {/* Advanced search options - always visible */}
-        <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cenové rozpätie
-              </label>
-              <div className="flex items-center space-x-3">
-                <div className="relative flex-1">
-                  <input
-                    type="number"
-                    name="minPrice"
-                    value={priceRange[0]}
-                    onChange={handlePriceChange}
-                    placeholder="Od"
-                    className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-                  />
-                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400 text-sm">
-                    €
-                  </div>
+        {/* Advanced filters - clearly visible and structured */}
+        <div className="mt-5 pt-5 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Cenové rozpätie
+            </label>
+            <div className="flex items-center space-x-3">
+              <div className="relative flex-1">
+                <input
+                  type="number"
+                  name="minPrice"
+                  value={priceRange[0]}
+                  onChange={handlePriceChange}
+                  placeholder="Od"
+                  className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-4 pr-6 text-sm shadow-sm"
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400 text-sm">
+                  €
                 </div>
-                <span className="text-gray-400 text-sm">-</span>
-                <div className="relative flex-1">
-                  <input
-                    type="number"
-                    name="maxPrice"
-                    value={priceRange[1]}
-                    onChange={handlePriceChange}
-                    placeholder="Do"
-                    className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-                  />
-                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400 text-sm">
-                    €
-                  </div>
+              </div>
+              <span className="text-gray-400 text-sm">-</span>
+              <div className="relative flex-1">
+                <input
+                  type="number"
+                  name="maxPrice"
+                  value={priceRange[1]}
+                  onChange={handlePriceChange}
+                  placeholder="Do"
+                  className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-4 pr-6 text-sm shadow-sm"
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400 text-sm">
+                  €
                 </div>
               </div>
             </div>
-
-            <div>
-              <label htmlFor="minSize" className="block text-sm font-medium text-gray-700 mb-2">
-                Minimálna plocha (m²)
-              </label>
-              <input
-                type="number"
-                id="minSize"
-                value={minSize}
-                onChange={e => setMinSize(e.target.value)}
-                placeholder="Minimálna plocha"
-                className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700 mb-2">
-                Počet izieb
-              </label>
-              <select
-                id="bedrooms"
-                value={bedrooms}
-                onChange={e => setBedrooms(e.target.value)}
-                className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-              >
-                <option value="">Nezáleží</option>
-                <option value="1">1+</option>
-                <option value="2">2+</option>
-                <option value="3">3+</option>
-                <option value="4">4+</option>
-                <option value="5">5+</option>
-              </select>
-            </div>
           </div>
+
+          <div>
+            <label htmlFor="minSize" className="block text-sm font-medium text-gray-700 mb-2">
+              Minimálna plocha (m²)
+            </label>
+            <input
+              type="number"
+              id="minSize"
+              value={minSize}
+              onChange={e => setMinSize(e.target.value)}
+              placeholder="Minimálna plocha"
+              className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-4 text-sm shadow-sm"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700 mb-2">
+              Počet izieb
+            </label>
+            <select
+              id="bedrooms"
+              value={bedrooms}
+              onChange={e => setBedrooms(e.target.value)}
+              className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-4 text-sm shadow-sm"
+            >
+              <option value="">Nezáleží</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+              <option value="5">5+</option>
+            </select>
+          </div>
+        </div>
       </form>
     </div>
   );

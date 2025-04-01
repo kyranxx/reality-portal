@@ -4,15 +4,18 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/utils/FirebaseAuthContext';
+import { useApp } from '@/contexts/AppContext';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { FormInput } from '@/components/auth/FormInput';
 import { PasswordInput } from '@/components/auth/PasswordInput';
 import { AuthButton } from '@/components/auth/AuthButton';
 import { SocialAuthButton } from '@/components/auth/SocialAuthButton';
+import AuthErrorHandler from '@/components/auth/AuthErrorHandler';
 
 type AuthTab = 'login' | 'register' | 'reset';
 
 export default function UnifiedAuthClient() {
+  const { t } = useApp();
   const [activeTab, setActiveTab] = useState<AuthTab>('login');
   
   // Login state
@@ -59,15 +62,15 @@ export default function UnifiedAuthClient() {
     let isValid = true;
 
     if (!loginEmail) {
-      errors.email = 'Email is required';
+      errors.email = t('auth.errors.emailRequired', 'Email je povinný');
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(loginEmail)) {
-      errors.email = 'Email is invalid';
+      errors.email = t('auth.errors.emailInvalid', 'Email je neplatný');
       isValid = false;
     }
 
     if (!loginPassword) {
-      errors.password = 'Password is required';
+      errors.password = t('auth.errors.passwordRequired', 'Heslo je povinné');
       isValid = false;
     }
 
@@ -85,31 +88,31 @@ export default function UnifiedAuthClient() {
     let isValid = true;
 
     if (!registerEmail) {
-      errors.email = 'Email is required';
+      errors.email = t('auth.errors.emailRequired', 'Email je povinný');
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(registerEmail)) {
-      errors.email = 'Email is invalid';
+      errors.email = t('auth.errors.emailInvalid', 'Email je neplatný');
       isValid = false;
     }
 
     if (!registerPassword) {
-      errors.password = 'Password is required';
+      errors.password = t('auth.errors.passwordRequired', 'Heslo je povinné');
       isValid = false;
     } else if (registerPassword.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
+      errors.password = t('auth.errors.passwordTooShort', 'Heslo musí obsahovať minimálne 8 znakov');
       isValid = false;
     }
 
     if (!confirmPassword) {
-      errors.confirmPassword = 'Please confirm your password';
+      errors.confirmPassword = t('auth.errors.confirmPasswordRequired', 'Potvrdenie hesla je povinné');
       isValid = false;
     } else if (registerPassword !== confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+      errors.confirmPassword = t('auth.errors.passwordsDoNotMatch', 'Heslá sa nezhodujú');
       isValid = false;
     }
 
     if (!agreeToTerms) {
-      errors.terms = 'You must agree to the terms and conditions';
+      errors.terms = t('auth.errors.termsRequired', 'Musíte súhlasiť s podmienkami');
       isValid = false;
     }
 
@@ -122,10 +125,10 @@ export default function UnifiedAuthClient() {
     let isValid = true;
 
     if (!resetEmail) {
-      errors.email = 'Email is required';
+      errors.email = t('auth.errors.emailRequired', 'Email je povinný');
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(resetEmail)) {
-      errors.email = 'Email is invalid';
+      errors.email = t('auth.errors.emailInvalid', 'Email je neplatný');
       isValid = false;
     }
 
@@ -179,11 +182,11 @@ export default function UnifiedAuthClient() {
   const getTabTitle = () => {
     switch (activeTab) {
       case 'login':
-        return 'Log in to your account';
+        return t('auth.login', 'Prihlásenie');
       case 'register':
-        return 'Create an account';
+        return t('auth.register', 'Registrácia');
       case 'reset':
-        return 'Reset Password';
+        return t('auth.resetPassword', 'Obnoviť heslo');
       default:
         return '';
     }
@@ -192,11 +195,11 @@ export default function UnifiedAuthClient() {
   const getTabSubtitle = () => {
     switch (activeTab) {
       case 'login':
-        return 'Welcome back! Please enter your details.';
+        return t('auth.signInPrompt', 'Vitajte späť! Prosím, zadajte svoje prihlasovacie údaje.');
       case 'register':
-        return 'Sign up to get started with our platform.';
+        return t('auth.signUpPrompt', 'Registrujte sa a získajte prístup k našej platforme.');
       case 'reset':
-        return 'Enter your email address to reset your password';
+        return t('auth.resetPrompt', 'Zadajte svoj e-mail na obnovenie hesla');
       default:
         return '';
     }
@@ -211,7 +214,7 @@ export default function UnifiedAuthClient() {
             <FormInput
               id="login-email"
               type="email"
-              label="Email address"
+              label={t('auth.email', 'Email')}
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
               required
@@ -222,7 +225,7 @@ export default function UnifiedAuthClient() {
 
             <PasswordInput
               id="login-password"
-              label="Password"
+              label={t('auth.password', 'Heslo')}
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
               required
@@ -236,37 +239,37 @@ export default function UnifiedAuthClient() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                  Remember me
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-600">
+                  {t('auth.rememberMe', 'Zapamätať si ma')}
                 </label>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('reset')}
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                className="text-sm font-medium text-black hover:text-gray-700"
               >
-                Forgot your password?
+                {t('auth.forgotPassword', 'Zabudli ste heslo?')}
               </button>
             </div>
 
             <div>
               <AuthButton type="submit" isLoading={isLoading} fullWidth>
-                Sign in
+                {t('auth.signIn', 'Prihlásiť sa')}
               </AuthButton>
             </div>
 
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                  <span className="px-2 bg-white text-gray-500">{t('auth.orSignInWith', 'alebo sa prihláste cez')}</span>
                 </div>
               </div>
 
@@ -280,13 +283,13 @@ export default function UnifiedAuthClient() {
             </div>
 
             <p className="mt-6 text-center text-sm text-gray-600">
-              Don't have an account?{' '}
+              {t('auth.dontHaveAccount', 'Nemáte účet?')}{' '}
               <button
                 type="button"
                 onClick={() => setActiveTab('register')}
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-black hover:text-gray-700"
               >
-                Sign up
+                {t('auth.createAccount', 'Vytvoriť účet')}
               </button>
             </p>
           </form>
@@ -298,7 +301,7 @@ export default function UnifiedAuthClient() {
             <FormInput
               id="register-email"
               type="email"
-              label="Email address"
+              label={t('auth.email', 'Email')}
               value={registerEmail}
               onChange={(e) => setRegisterEmail(e.target.value)}
               required
@@ -309,7 +312,7 @@ export default function UnifiedAuthClient() {
 
             <PasswordInput
               id="register-password"
-              label="Password"
+              label={t('auth.password', 'Heslo')}
               value={registerPassword}
               onChange={(e) => setRegisterPassword(e.target.value)}
               required
@@ -320,7 +323,7 @@ export default function UnifiedAuthClient() {
 
             <PasswordInput
               id="confirm-password"
-              label="Confirm password"
+              label={t('auth.confirmPassword', 'Potvrdiť heslo')}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -334,20 +337,20 @@ export default function UnifiedAuthClient() {
                   id="terms"
                   name="terms"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
                   checked={agreeToTerms}
                   onChange={(e) => setAgreeToTerms(e.target.checked)}
                 />
               </div>
               <div className="ml-3 text-sm">
                 <label htmlFor="terms" className="font-medium text-gray-700">
-                  I agree to the{' '}
-                  <Link href="/podmienky-pouzitia" className="text-blue-600 hover:text-blue-500">
-                    Terms and Conditions
+                  {t('auth.agreeToTerms', 'Súhlasím s')}{' '}
+                  <Link href="/podmienky-pouzitia" className="text-black hover:text-gray-700">
+                    {t('footer.terms', 'Podmienkami používania')}
                   </Link>{' '}
-                  and{' '}
-                  <Link href="/ochrana-osobnych-udajov" className="text-blue-600 hover:text-blue-500">
-                    Privacy Policy
+                  {t('auth.and', 'a')}{' '}
+                  <Link href="/ochrana-osobnych-udajov" className="text-black hover:text-gray-700">
+                    {t('footer.privacy', 'Ochranou osobných údajov')}
                   </Link>
                 </label>
                 {registerErrors.terms && (
@@ -358,17 +361,17 @@ export default function UnifiedAuthClient() {
 
             <div>
               <AuthButton type="submit" isLoading={isLoading} fullWidth>
-                Create account
+                {t('auth.signUp', 'Registrovať sa')}
               </AuthButton>
             </div>
 
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                  <span className="px-2 bg-white text-gray-500">{t('auth.orSignUpWith', 'alebo sa registrujte cez')}</span>
                 </div>
               </div>
 
@@ -382,13 +385,13 @@ export default function UnifiedAuthClient() {
             </div>
 
             <p className="mt-6 text-center text-sm text-gray-600">
-              Already have an account?{' '}
+              {t('auth.alreadyHaveAccount', 'Už máte účet?')}{' '}
               <button
                 type="button"
                 onClick={() => setActiveTab('login')}
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-black hover:text-gray-700"
               >
-                Sign in
+                {t('auth.signIn', 'Prihlásiť sa')}
               </button>
             </p>
           </form>
@@ -397,25 +400,24 @@ export default function UnifiedAuthClient() {
       case 'reset':
         return resetSubmitted ? (
           <div className="space-y-6">
-            <div className="p-4 bg-green-50 text-green-700 rounded-md">
-              <p className="font-medium">Password reset email sent!</p>
+            <div className="success-message">
+              <p className="font-medium">{t('auth.resetPasswordSuccess', 'Pokyny na obnovenie hesla boli odoslané na váš email')}</p>
               <p className="mt-2 text-sm">
-                If an account exists with the email {resetEmail}, you will receive an email with
-                instructions on how to reset your password.
+                {t('auth.resetPasswordSentTo', 'Ak účet s týmto e-mailom existuje, dostanete e-mail s pokynmi na obnovenie hesla.')}
               </p>
             </div>
             <div className="flex flex-col space-y-4">
               <button
                 onClick={() => setActiveTab('login')}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md"
+                className="btn btn-primary w-full justify-center"
               >
-                Return to login
+                {t('auth.returnToLogin', 'Späť na prihlásenie')}
               </button>
               <button
                 onClick={() => setResetSubmitted(false)}
-                className="text-sm text-blue-600 hover:text-blue-500"
+                className="text-sm text-black hover:text-gray-700"
               >
-                Use a different email
+                {t('auth.useDifferentEmail', 'Použiť iný email')}
               </button>
             </div>
           </div>
@@ -424,7 +426,7 @@ export default function UnifiedAuthClient() {
             <FormInput
               id="reset-email"
               type="email"
-              label="Email address"
+              label={t('auth.email', 'Email')}
               value={resetEmail}
               onChange={(e) => setResetEmail(e.target.value)}
               required
@@ -435,7 +437,7 @@ export default function UnifiedAuthClient() {
 
             <div>
               <AuthButton type="submit" isLoading={isLoading} fullWidth>
-                Send reset link
+                {t('auth.sendResetLink', 'Odoslať link na obnovu hesla')}
               </AuthButton>
             </div>
 
@@ -443,9 +445,9 @@ export default function UnifiedAuthClient() {
               <button
                 type="button"
                 onClick={() => setActiveTab('login')}
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                className="text-sm font-medium text-black hover:text-gray-700"
               >
-                Back to login
+                {t('auth.backToLogin', 'Späť na prihlásenie')}
               </button>
             </div>
           </form>
@@ -459,11 +461,7 @@ export default function UnifiedAuthClient() {
   return (
     <AuthLayout title={getTabTitle()} subtitle={getTabSubtitle()}>
       <div className="mt-8">
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded border border-red-200">
-            {error}
-          </div>
-        )}
+        {error && <AuthErrorHandler error={error} />}
 
         {/* Tab Navigation */}
         <div className="flex border-b border-gray-200 mb-6">
@@ -471,34 +469,34 @@ export default function UnifiedAuthClient() {
             type="button"
             className={`py-2 px-4 text-center w-1/3 font-medium text-sm ${
               activeTab === 'login'
-                ? 'border-b-2 border-blue-500 text-blue-600'
+                ? 'border-b-2 border-black text-black'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             onClick={() => setActiveTab('login')}
           >
-            Sign In
+            {t('auth.signIn', 'Prihlásiť sa')}
           </button>
           <button
             type="button"
             className={`py-2 px-4 text-center w-1/3 font-medium text-sm ${
               activeTab === 'register'
-                ? 'border-b-2 border-blue-500 text-blue-600'
+                ? 'border-b-2 border-black text-black'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             onClick={() => setActiveTab('register')}
           >
-            Register
+            {t('auth.signUp', 'Registrovať sa')}
           </button>
           <button
             type="button"
             className={`py-2 px-4 text-center w-1/3 font-medium text-sm ${
               activeTab === 'reset'
-                ? 'border-b-2 border-blue-500 text-blue-600'
+                ? 'border-b-2 border-black text-black'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             onClick={() => setActiveTab('reset')}
           >
-            Reset
+            {t('auth.resetPassword', 'Obnoviť heslo')}
           </button>
         </div>
 
