@@ -111,9 +111,9 @@ export default function PropertyCard({
 
   return (
     <Link href={`/nehnutelnosti/${id}`} className="block h-full">
-      <div className="border border-gray-100 rounded-lg h-full flex flex-col hover:border-gray-300 transition-colors duration-200">
+      <div className="rounded-lg h-full flex flex-col card-hover-effect">
         <div className="relative">
-          <div className="property-image bg-gray-50 relative overflow-hidden">
+          <div className="property-image bg-gray-50 relative overflow-hidden rounded-t-lg">
             {imageUrl ? (
               <SafeImage
                 src={imageUrl}
@@ -144,38 +144,38 @@ export default function PropertyCard({
           </div>
 
           {/* Type badge */}
-          <div className="absolute top-3 right-3 z-10">
-            <div className="bg-white text-xs font-medium py-1 px-2.5 rounded-full border border-gray-100 flex items-center">
-              <span className="text-black mr-1">{typeIcons[type]}</span>
+          <div className="absolute top-4 right-4 z-10">
+            <div className="bg-white/80 backdrop-blur-sm text-xs font-medium py-1.5 px-3 rounded-full shadow-sm flex items-center">
+              <span className="text-black mr-1.5">{typeIcons[type]}</span>
               <span>{typeLabels[type]}</span>
             </div>
           </div>
 
           {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
+          <div className="absolute top-4 left-4 flex flex-col gap-1.5 z-10">
             {isFeatured && (
-              <span className="badge badge-primary text-xs px-2.5 py-1">Odporúčané</span>
+              <span className="badge badge-primary text-xs px-3 py-1.5 shadow-sm bg-white/80 backdrop-blur-sm">Odporúčané</span>
             )}
             {isNew && (
-              <span className="badge badge-accent text-xs px-2.5 py-1">Nové</span>
+              <span className="badge badge-accent text-xs px-3 py-1.5 shadow-sm bg-white/80 backdrop-blur-sm">Nové</span>
             )}
           </div>
         </div>
 
-        <div className="p-5 flex-grow flex flex-col">
+        <div className="p-6 flex-grow flex flex-col">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-base font-medium text-black">
+              <h2 className="text-lg font-medium text-black">
                 {title}
               </h2>
-              <div className="flex items-center text-gray-500 text-sm mt-1">
+              <div className="flex items-center text-gray-500 text-sm mt-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1 text-gray-400"
+                  className="w-4 h-4 mr-1.5 text-gray-400"
                 >
                   <path
                     strokeLinecap="round"
@@ -191,21 +191,21 @@ export default function PropertyCard({
                 <p>{location}</p>
               </div>
             </div>
-            <div className="bg-gray-100 text-black font-bold text-sm px-3 py-1 rounded-full">
+            <div className="bg-black text-white font-medium text-sm px-4 py-1.5 rounded-full">
               {formattedPrice} €
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-3 text-sm text-gray-600">
+          <div className="mt-5 flex flex-wrap gap-3 text-sm text-gray-600">
             {size && (
-              <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-full">
+              <div className="flex items-center bg-gray-50 px-4 py-2 rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-black"
+                  className="w-4 h-4 mr-2 text-gray-500"
                 >
                   <path
                     strokeLinecap="round"
@@ -213,19 +213,19 @@ export default function PropertyCard({
                     d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
                   />
                 </svg>
-                <span className="font-medium">{size} m²</span>
+                <span>{size} m²</span>
               </div>
             )}
 
             {bedrooms !== undefined && (
-              <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-full">
+              <div className="flex items-center bg-gray-50 px-4 py-2 rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-black"
+                  className="w-4 h-4 mr-2 text-gray-500"
                 >
                   <path
                     strokeLinecap="round"
@@ -233,21 +233,21 @@ export default function PropertyCard({
                     d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
                   />
                 </svg>
-                <span className="font-medium">
+                <span>
                   {bedrooms} {bedrooms === 1 ? 'izba' : bedrooms < 5 ? 'izby' : 'izieb'}
                 </span>
               </div>
             )}
 
             {bathrooms !== undefined && (
-              <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-full">
+              <div className="flex items-center bg-gray-50 px-4 py-2 rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-black"
+                  className="w-4 h-4 mr-2 text-gray-500"
                 >
                   <path
                     strokeLinecap="round"
@@ -255,21 +255,21 @@ export default function PropertyCard({
                     d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span className="font-medium">
+                <span>
                   {bathrooms} {bathrooms === 1 ? 'kúpeľňa' : bathrooms < 5 ? 'kúpeľne' : 'kúpeľní'}
                 </span>
               </div>
             )}
 
             {landSize !== undefined && (
-              <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-full">
+              <div className="flex items-center bg-gray-50 px-4 py-2 rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4 mr-1.5 text-black"
+                  className="w-4 h-4 mr-2 text-gray-500"
                 >
                   <path
                     strokeLinecap="round"
@@ -277,7 +277,7 @@ export default function PropertyCard({
                     d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
                   />
                 </svg>
-                <span className="font-medium">Pozemok: {landSize} m²</span>
+                <span>Pozemok: {landSize} m²</span>
               </div>
             )}
           </div>

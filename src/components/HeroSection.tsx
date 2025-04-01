@@ -11,7 +11,7 @@ export default function HeroSection() {
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
-    }, 6000);
+    }, 7000);
 
     return () => clearInterval(interval);
   }, [currentSlide]);
@@ -36,9 +36,9 @@ export default function HeroSection() {
   const currentProperty = slideProperties[currentSlide];
 
   return (
-    <div className="relative h-[500px] overflow-hidden bg-gradient-to-r from-primary to-secondary text-white">
+    <div className="relative h-[600px] overflow-hidden bg-gray-50 text-black">
       {/* Background overlay */}
-      <div className="absolute inset-0 bg-black/40 z-10"></div>
+      <div className="absolute inset-0 bg-black/10 z-10"></div>
 
       {/* Carousel */}
       <div className="absolute inset-0 z-0">
@@ -56,7 +56,7 @@ export default function HeroSection() {
                 fill
                 priority={index === 0}
                 sizes="100vw"
-                className={`object-cover ${index === currentSlide ? 'animate-slowZoom' : ''}`}
+                className={`object-cover ${index === currentSlide ? 'scale-105' : 'scale-100'} transition-transform duration-10000`}
               />
             </div>
           </div>
@@ -65,87 +65,90 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="container relative z-20 h-full flex items-center">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl mx-auto text-center">
           <div className="animate-fadeIn">
-            <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium mb-3 animate-slideInRight">
-              Objavte dokonalý domov
-            </span>
-            <h1 className="text-3xl md:text-5xl font-bold mb-3 animate-slideInUp">
-              Nájdite si svoj{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-amber-200">
-                vysnívaný domov
-              </span>
+            <h1 className="text-4xl md:text-6xl font-medium mb-4 text-white">
+              Find your dream home
             </h1>
-            <p className="text-base md:text-lg opacity-90 mb-6 animate-slideInUp animation-delay-100">
-              Najväčšia ponuka nehnuteľností na Slovensku. Jednoduché vyhľadávanie, overení
-              predajcovia a kompletný servis.
+            <p className="text-lg md:text-xl text-white/90 mb-10 max-w-xl mx-auto">
+              Largest selection of properties in Slovakia. Simple search, verified sellers, and complete services.
             </p>
-            <div className="flex flex-wrap gap-3 animate-slideInUp animation-delay-200">
+            <div className="flex flex-wrap justify-center gap-4">
               <a
                 href="/nehnutelnosti"
-                className="btn bg-white text-primary hover:bg-gray-100 shadow-md hover:shadow-lg transition-all"
+                className="btn btn-primary px-8 py-4"
               >
-                Prehliadať nehnuteľnosti
+                Browse properties
               </a>
               <a
                 href="/pridat-nehnutelnost"
-                className="btn bg-transparent border border-white text-white hover:bg-white/20 transition-all"
+                className="btn bg-white/20 backdrop-blur-sm text-white border-0 hover:bg-white/30 px-8 py-4"
               >
-                Pridať inzerát
+                Add listing
               </a>
             </div>
           </div>
 
-          {/* Property highlight */}
-          <div className="mt-8 bg-black/30 backdrop-blur-sm rounded-lg p-3 border border-white/10 animate-slideInUp animation-delay-300 hidden md:block">
-            <div className="flex items-center">
-              <div className="w-16 h-16 rounded-md overflow-hidden relative flex-shrink-0">
-                <Image
-                  src={currentProperty.imageUrl}
-                  alt={currentProperty.title}
-                  fill
-                  sizes="64px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="ml-3">
-                <span className="text-amber-300 text-xs font-medium">Odporúčaná nehnuteľnosť</span>
-                <h3 className="font-semibold text-sm">{currentProperty.title}</h3>
-                <p className="text-xs text-white/80">
-                  {currentProperty.location} • {currentProperty.price.toLocaleString()} €
-                </p>
-              </div>
-              <a
-                href={`/nehnutelnosti/${currentProperty.id}`}
-                className="ml-auto bg-white/10 hover:bg-white/20 p-1.5 rounded-full transition-colors"
-              >
+          {/* Search container - Grok style */}
+          <div className="mt-16 search-container">
+            <div className="bg-white/90 backdrop-blur-md rounded-lg p-5 shadow-lg">
+              <div className="flex items-center border border-gray-200 rounded-full bg-white overflow-hidden px-5 py-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4"
+                  className="w-5 h-5 text-gray-400 mr-3"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
                 </svg>
-              </a>
+                <input
+                  type="text"
+                  placeholder="Search for properties..."
+                  className="flex-1 outline-none border-0 focus:ring-0 py-2 text-black"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
+                <select className="bg-gray-50 border border-gray-100 rounded-lg p-3 text-sm">
+                  <option>All types</option>
+                  <option>Apartments</option>
+                  <option>Houses</option>
+                  <option>Land</option>
+                </select>
+                <select className="bg-gray-50 border border-gray-100 rounded-lg p-3 text-sm">
+                  <option>Price range</option>
+                  <option>Under 100,000€</option>
+                  <option>100,000€ - 200,000€</option>
+                  <option>Over 200,000€</option>
+                </select>
+                <select className="bg-gray-50 border border-gray-100 rounded-lg p-3 text-sm">
+                  <option>All locations</option>
+                  <option>Bratislava</option>
+                  <option>Košice</option>
+                  <option>Žilina</option>
+                </select>
+                <button className="bg-black text-white rounded-lg p-3 text-sm font-medium">
+                  Search
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Carousel controls */}
-      <div className="absolute bottom-6 right-6 z-20 flex space-x-1.5">
+      {/* Carousel controls - minimal */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
         {slideProperties.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all ${
+            className={`w-2.5 h-2.5 rounded-full transition-all ${
               index === currentSlide ? 'bg-white scale-100' : 'bg-white/50 scale-75'
             }`}
             aria-label={`Go to slide ${index + 1}`}
@@ -155,7 +158,7 @@ export default function HeroSection() {
 
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full transition-colors"
+        className="absolute left-6 top-1/2 -translate-y-1/2 z-20 bg-black/20 hover:bg-black/30 text-white p-2.5 rounded-full transition-colors"
         aria-label="Previous slide"
       >
         <svg
@@ -164,7 +167,7 @@ export default function HeroSection() {
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="w-4 h-4"
+          className="w-5 h-5"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
@@ -172,7 +175,7 @@ export default function HeroSection() {
 
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full transition-colors"
+        className="absolute right-6 top-1/2 -translate-y-1/2 z-20 bg-black/20 hover:bg-black/30 text-white p-2.5 rounded-full transition-colors"
         aria-label="Next slide"
       >
         <svg
@@ -181,7 +184,7 @@ export default function HeroSection() {
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="w-4 h-4"
+          className="w-5 h-5"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
         </svg>

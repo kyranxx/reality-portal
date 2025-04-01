@@ -3,26 +3,26 @@
 @tailwind utilities;
 
 :root {
-  /* Grok-inspired color system */
+  /* Grok-inspired color system - monochromatic */
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
   --color-primary: #000000;
   --color-primary-rgb: 0, 0, 0;
-  --color-secondary: #374151; /* Darker gray for secondary text */
-  --color-secondary-rgb: 55, 65, 81;
-  --color-accent: #6b7280; /* Medium gray for tertiary elements */
-  --color-accent-rgb: 107, 114, 128;
+  --color-secondary: #333333; /* Darker gray for secondary text */
+  --color-secondary-rgb: 51, 51, 51;
+  --color-accent: #555555; /* Medium gray for tertiary elements */
+  --color-accent-rgb: 85, 85, 85;
   --color-background: #ffffff;
   --color-foreground: #000000;
   --color-card: #ffffff;
-  --color-border: #e5e7eb; /* Slightly darker border */
-  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
-  --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Enhanced hover shadow */
+  --color-border: #f0f0f0; /* Very light border */
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); /* Ultra subtle shadow */
+  --hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle hover shadow */
 
   /* Form and UI element styling */
-  --input-border-radius: 16px;
-  --btn-border-radius: 16px;
-  --card-border-radius: 16px;
+  --input-border-radius: 12px;
+  --btn-border-radius: 12px;
+  --card-border-radius: 12px;
   --transition-duration: 0.2s;
   --transition-timing: ease-in-out;
 }
@@ -42,7 +42,7 @@ body {
     'Open Sans',
     'Helvetica Neue',
     sans-serif;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -73,7 +73,7 @@ body {
   }
 
   h1 {
-    @apply text-3xl md:text-4xl;
+    @apply text-3xl md:text-5xl;
   }
 
   h2 {
@@ -94,80 +94,84 @@ body {
 }
 
 @layer components {
+  /* Increase container width and padding for more breathing room */
   .container {
-    @apply mx-auto px-4 md:px-6 max-w-[960px];
+    @apply mx-auto px-5 md:px-8 max-w-[1100px];
   }
 
+  /* Updated button styles - more minimal */
   .btn {
-    @apply px-4 py-2.5 rounded-[var(--btn-border-radius)] font-medium transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] inline-flex items-center justify-center;
+    @apply px-5 py-3 rounded-[var(--btn-border-radius)] font-medium transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] inline-flex items-center justify-center;
   }
 
   .btn-primary {
-    @apply bg-black text-white hover:bg-gray-900 hover:shadow-md;
+    @apply bg-black text-white hover:opacity-90;
   }
 
   .btn-secondary {
-    @apply bg-gray-100 text-black hover:bg-gray-200;
+    @apply bg-gray-50 text-black hover:bg-gray-100;
   }
 
   .btn-outline {
-    @apply border border-gray-200 hover:bg-gray-50;
+    @apply border border-gray-100 hover:bg-gray-50;
   }
 
+  /* Simplified card with less borders */
   .card {
-    @apply bg-white rounded-[var(--card-border-radius)] overflow-hidden border border-gray-100 shadow-[var(--card-shadow)] transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)];
+    @apply bg-white rounded-[var(--card-border-radius)] overflow-hidden shadow-[var(--card-shadow)] transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)];
   }
 
   .property-image {
-    @apply h-52 w-full object-cover;
+    @apply h-64 w-full object-cover; /* Larger images */
   }
 
+  /* Updated badges - more subtle */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
   }
 
   .badge-primary {
-    @apply bg-gray-100 text-gray-800;
+    @apply bg-gray-50 text-gray-800;
   }
 
   .badge-secondary {
-    @apply bg-gray-100 text-gray-800;
+    @apply bg-gray-50 text-gray-800;
   }
 
   .badge-accent {
-    @apply bg-gray-100 text-gray-800;
+    @apply bg-gray-50 text-gray-800;
   }
 
-  /* Simplified card styles */
+  /* Simplified hover effect */
   .card-hover-effect {
-    @apply transition-all duration-200 hover:border-gray-300;
+    @apply transition-all duration-300 hover:shadow-[var(--hover-shadow)];
   }
 
   /* Form elements */
   .form-input {
-    @apply rounded-[var(--input-border-radius)] border-gray-200 focus:border-black focus:ring focus:ring-gray-100 transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] py-3;
+    @apply rounded-[var(--input-border-radius)] border-gray-100 focus:border-black focus:ring-0 transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] py-3 px-4;
   }
 
   .form-select {
-    @apply rounded-[var(--input-border-radius)] border-gray-200 focus:border-black focus:ring focus:ring-gray-100 transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] py-3;
+    @apply rounded-[var(--input-border-radius)] border-gray-100 focus:border-black focus:ring-0 transition-all duration-[var(--transition-duration)] ease-[var(--transition-timing)] py-3;
   }
 
   /* Search container - Grok style */
   .search-container {
-    @apply max-w-[900px] mx-auto px-4 w-full;
+    @apply max-w-[900px] mx-auto px-6 w-full;
   }
 
   /* Greeting text */
   .greeting-text {
-    @apply text-4xl font-medium text-center mb-2;
+    @apply text-5xl font-medium text-center mb-3;
   }
 
   .greeting-subtext {
-    @apply text-xl text-gray-500 text-center mb-8;
+    @apply text-xl text-gray-500 text-center mb-12;
   }
 
   /* Section spacing */
   .section-spacing {
-    @apply py-12 md:py-16;
+    @apply py-16 md:py-24;
   }
 }
