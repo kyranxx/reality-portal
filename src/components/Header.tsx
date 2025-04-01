@@ -42,22 +42,18 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-200 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md' : 'bg-white'
+      className={`sticky top-0 z-50 transition-all duration-[var(--transition-duration)] ${
+        scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-white'
       }`}
     >
-      <div className="container py-4 flex justify-between items-center">
+      <div className="container py-3 flex justify-between items-center">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-8 h-8 border border-black rounded-full flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-4 h-4 text-black"
-              >
-                <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
-                <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+            <div className="w-8 h-8 flex items-center justify-center">
+              {/* Simple Ø Grok-like logo */}
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="14" cy="14" r="12" stroke="black" strokeWidth="2" />
+                <line x1="5" y1="14" x2="23" y2="14" stroke="black" strokeWidth="2" />
               </svg>
             </div>
             <h1 className="text-lg font-medium text-black">
@@ -66,120 +62,105 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:block">
-          <ul className="flex space-x-10">
-            <li>
-              <Link
-                href="/"
-                className="text-gray-800 hover:text-black font-medium"
-              >
-                {t('nav.home')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/nehnutelnosti"
-                className="text-gray-800 hover:text-black font-medium"
-              >
-                {t('nav.properties')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/o-nas"
-                className="text-gray-800 hover:text-black font-medium"
-              >
-                {t('nav.about')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/kontakt"
-                className="text-gray-800 hover:text-black font-medium"
-              >
-                {t('nav.contact')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/design-showcase"
-                className="text-gray-800 hover:text-black font-medium"
-              >
-                Design Showcase
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Desktop Buttons */}
-        <div className="hidden md:flex space-x-4">
-          <Link href="/pridat-nehnutelnost" className="btn btn-outline">
-            {t('nav.addProperty')}
+        {/* Desktop Navigation - Simplified Grok-style */}
+        <div className="hidden md:flex items-center gap-4">
+          {/* Only show essential nav items */}
+          <Link
+            href="/nehnutelnosti"
+            className="text-gray-800 hover:text-black font-medium"
+          >
+            {t('nav.properties')}
           </Link>
+          
+          {/* Notification bell */}
+          <button className="p-2 text-gray-700 hover:bg-gray-100 rounded-full transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+          </button>
+          
+          {/* Settings/menu button */}
+          <button className="p-2 text-gray-700 hover:bg-gray-100 rounded-full transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </button>
 
+          {/* User avatar or sign in */}
           {user ? (
-            <div className="relative">
-              <div className="flex space-x-2">
-                <Link href="/dashboard" className="btn btn-primary">
-                  {t('nav.myAccount')}
-                </Link>
-                {isAdmin && (
-                  <Link href="/admin" className="btn btn-outline bg-gray-100">
-                    Admin
-                  </Link>
-                )}
-              </div>
-            </div>
+            <Link href="/dashboard" className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm font-medium">{user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'}</span>
+              )}
+            </Link>
           ) : (
-            <Link href="/auth/unified" className="btn btn-primary">
-              {t('nav.signIn')}
+            <Link 
+              href="/auth/unified" 
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 overflow-hidden"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
             </Link>
           )}
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-black p-1 rounded-full hover:bg-gray-100 transition-colors"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-        >
-          {mobileMenuOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
+        {/* Mobile Menu Button - Keep clean and minimal */}
+        <div className="md:hidden flex items-center gap-3">
+          {user && (
+            <Link href="/dashboard" className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm font-medium">{user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'}</span>
+              )}
+            </Link>
           )}
-        </button>
+          
+          <button
+            className="text-black p-2 rounded-full hover:bg-gray-100 transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {mobileMenuOpen ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Simplified */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white py-4 border-t border-gray-100 animate-fadeIn">
           <div className="container">
-            <nav className="mb-6">
-              <ul className="space-y-4">
+            <nav className="mb-4">
+              <ul className="space-y-3">
                 <li>
                   <Link
                     href="/"
@@ -216,63 +197,24 @@ export default function Header() {
                     {t('nav.contact')}
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="/design-showcase"
-                    className="block text-gray-800 hover:text-black font-medium py-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Design Showcase
-                  </Link>
-                </li>
               </ul>
             </nav>
             <div className="flex flex-col space-y-3">
-              <Link
-                href="/pridat-nehnutelnost"
-                className="btn btn-outline w-full justify-center"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t('nav.addProperty')}
-              </Link>
-
-              {user ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="btn btn-primary w-full justify-center"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {t('nav.myAccount')}
-                  </Link>
-                  
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      className="btn btn-outline w-full justify-center bg-gray-100 text-gray-800 border-gray-300"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Admin Portal
-                    </Link>
-                  )}
-                  
-                  <button
-                    onClick={handleSignOut}
-                    className="btn btn-outline w-full justify-center text-black border-gray-200"
-                  >
-                    {t('nav.signOut')}
-                  </button>
-                </>
+              {!user ? (
+                <Link
+                  href="/auth/unified"
+                  className="btn btn-primary w-full justify-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t('nav.signIn')}
+                </Link>
               ) : (
-                <>
-                  <Link
-                    href="/auth/unified"
-                    className="btn btn-primary w-full justify-center"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {t('nav.signIn')}
-                  </Link>
-                </>
+                <button
+                  onClick={handleSignOut}
+                  className="btn btn-outline w-full justify-center text-black border-gray-200"
+                >
+                  {t('nav.signOut')}
+                </button>
               )}
             </div>
           </div>

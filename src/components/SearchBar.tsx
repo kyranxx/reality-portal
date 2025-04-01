@@ -1,261 +1,138 @@
 'use client';
 import { useState } from 'react';
+import { useAuth } from '@/utils/FirebaseAuthContext';
 
 export default function SearchBar() {
-  const [searchType, setSearchType] = useState('buy');
-  const [propertyType, setPropertyType] = useState('all');
-  const [location, setLocation] = useState('');
-  const [priceRange, setPriceRange] = useState([0, 500000]);
-  // Advanced filtering is always visible now
-  const [minSize, setMinSize] = useState('');
-  const [bedrooms, setBedrooms] = useState('');
+  const [query, setQuery] = useState('');
+  const { user } = useAuth();
+  
+  // Get greeting based on time of day
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
+  
+  // Get user's name or default
+  const getUserName = () => {
+    if (user?.displayName) return user.displayName.split(' ')[0];
+    return 'there';
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would redirect to search results
-    console.log('Search:', {
-      searchType,
-      propertyType,
-      location,
-      priceRange,
-      minSize: minSize ? parseInt(minSize) : undefined,
-      bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
-    });
-  };
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (e.target.name === 'minPrice') {
-      setPriceRange([value, priceRange[1]]);
-    } else {
-      setPriceRange([priceRange[0], value]);
-    }
+    console.log('Search query:', query);
+    // In a real app, this would handle the search
   };
 
   return (
-    <div className="glass-effect rounded-xl shadow-md p-6 -mt-16 relative z-10 border border-white/30">
+    <div className="search-container pt-8 md:pt-16">
+      {/* Greeting text */}
+      <h1 className="greeting-text">{getGreeting()}, {getUserName()}.</h1>
+      <p className="greeting-subtext">How can I help you today?</p>
+      
+      {/* Grok-style search input */}
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Typ vyhľadávania</label>
-            <div className="flex rounded-full overflow-hidden border border-gray-200 p-0.5 bg-gray-50">
-              <button
+        <div className="relative mb-6">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="What do you want to know?"
+            className="w-full py-3 px-4 pl-10 border border-gray-200 shadow-[var(--card-shadow)] rounded-[var(--input-border-radius)] focus:border-black focus:ring-1 focus:ring-gray-100 transition-all duration-[var(--transition-duration)]"
+          />
+          
+          {/* Left icon */}
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+            </svg>
+          </div>
+          
+          {/* Search mode and submit buttons */}
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            {/* Search mode toggle */}
+            <div className="relative group">
+              <button 
                 type="button"
-                className={`flex-1 py-2 px-4 text-sm font-medium rounded-full transition-all duration-300 ${
-                  searchType === 'buy'
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => setSearchType('buy')}
+                className="flex items-center text-gray-500 hover:text-gray-700 gap-1 text-sm font-medium"
               >
-                Kúpa
-              </button>
-              <button
-                type="button"
-                className={`flex-1 py-2 px-4 text-sm font-medium rounded-full transition-all duration-300 ${
-                  searchType === 'rent'
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => setSearchType('rent')}
-              >
-                Prenájom
+                <span>DeeperSearch</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
               </button>
             </div>
-          </div>
-
-          <div>
-            <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700 mb-2">
-              Typ nehnuteľnosti
-            </label>
-            <div className="relative">
-              <select
-                id="propertyType"
-                value={propertyType}
-                onChange={e => setPropertyType(e.target.value)}
-                className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-4 pr-10 text-sm bg-white appearance-none"
-              >
-                <option value="all">Všetky typy</option>
-                <option value="apartment">Byty</option>
-                <option value="house">Domy</option>
-                <option value="land">Pozemky</option>
-                <option value="commercial">Komerčné priestory</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-              Lokalita
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={e => setLocation(e.target.value)}
-                placeholder="Mesto, okres alebo PSČ"
-                className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-4 pl-10 text-sm"
-              />
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-end">
+            
+            {/* Think button */}
+            <button 
+              type="button"
+              className="flex items-center text-gray-500 hover:text-gray-700 gap-1 bg-gray-50 rounded-full px-3 py-1 text-sm font-medium"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+              </svg>
+              <span>Think</span>
+            </button>
+            
+            {/* Submit button */}
             <button
               type="submit"
-              className="w-full btn btn-primary py-2.5 px-4 text-sm flex items-center justify-center"
+              className="flex items-center justify-center p-1 hover:bg-gray-50 rounded-full transition-colors"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-4 h-4 mr-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
               </svg>
-              Vyhľadať
             </button>
           </div>
         </div>
-
-        <div className="mt-4 flex">
-          <div className="flex flex-wrap gap-2">
-            <span className="text-xs text-gray-500 mr-1">Populárne:</span>
-            <a
-              href="#"
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
-            >
-              Bratislava
-            </a>
-            <a
-              href="#"
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
-            >
-              Košice
-            </a>
-            <a
-              href="#"
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
-            >
-              Žilina
-            </a>
-          </div>
-        </div>
-
-        {/* Advanced search options - always visible */}
-        <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cenové rozpätie
-              </label>
-              <div className="flex items-center space-x-3">
-                <div className="relative flex-1">
-                  <input
-                    type="number"
-                    name="minPrice"
-                    value={priceRange[0]}
-                    onChange={handlePriceChange}
-                    placeholder="Od"
-                    className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-                  />
-                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400 text-sm">
-                    €
-                  </div>
-                </div>
-                <span className="text-gray-400 text-sm">-</span>
-                <div className="relative flex-1">
-                  <input
-                    type="number"
-                    name="maxPrice"
-                    value={priceRange[1]}
-                    onChange={handlePriceChange}
-                    placeholder="Do"
-                    className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-                  />
-                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400 text-sm">
-                    €
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="minSize" className="block text-sm font-medium text-gray-700 mb-2">
-                Minimálna plocha (m²)
-              </label>
-              <input
-                type="number"
-                id="minSize"
-                value={minSize}
-                onChange={e => setMinSize(e.target.value)}
-                placeholder="Minimálna plocha"
-                className="form-input block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700 mb-2">
-                Počet izieb
-              </label>
-              <select
-                id="bedrooms"
-                value={bedrooms}
-                onChange={e => setBedrooms(e.target.value)}
-                className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-3 text-sm"
-              >
-                <option value="">Nezáleží</option>
-                <option value="1">1+</option>
-                <option value="2">2+</option>
-                <option value="3">3+</option>
-                <option value="4">4+</option>
-                <option value="5">5+</option>
-              </select>
-            </div>
-          </div>
       </form>
+      
+      {/* Action buttons */}
+      <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 md:gap-4 mt-8">
+        <button className="flex items-center gap-2 py-2 px-4 text-sm md:text-base bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+          Research
+        </button>
+        
+        <button className="flex items-center gap-2 py-2 px-4 text-sm md:text-base bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+          </svg>
+          Create images
+        </button>
+        
+        <button className="flex items-center gap-2 py-2 px-4 text-sm md:text-base bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+          </svg>
+          How to
+        </button>
+        
+        <button className="flex items-center gap-2 py-2 px-4 text-sm md:text-base bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+          </svg>
+          Analyze
+        </button>
+        
+        <button className="flex items-center gap-2 py-2 px-4 text-sm md:text-base bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+          </svg>
+          Code
+        </button>
+      </div>
+      
+      {/* Switch to Personas */}
+      <div className="text-center mt-8">
+        <button className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+          Switch to Personas
+        </button>
+      </div>
     </div>
   );
 }
