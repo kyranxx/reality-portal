@@ -1,16 +1,70 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import HeroSection from '@/components/HeroSection';
 import SearchBar from '@/components/SearchBar';
+import StatsSection from '@/components/home/StatsSection';
+import CategorySection from '@/components/home/CategorySection';
+import FeaturedPropertySection from '@/components/home/FeaturedPropertySection';
+import FeaturedPropertiesSection from '@/components/home/FeaturedPropertiesSection';
+import CtaSection from '@/components/home/CtaSection';
+import { Property } from '@/utils/firebase';
+import { getFeaturedProperties } from '@/utils/firestore';
+import { featuredProperties as sampleFeaturedProperties } from '@/data/sampleProperties';
 
 export default function HomeClient() {
-  const [loading, setLoading] = useState(false);
+  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Shows Grok-inspired search interface
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const featured = await getFeaturedProperties(7); // Get 7 featured properties
+        setFeaturedProperties(featured);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+        // Fallback to sample data if Firebase is not configured (now using direct import)
+        setFeaturedProperties(sampleFeaturedProperties as unknown as Property[]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  if (loading || featuredProperties.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 bg-primary/20 rounded-full mb-4"></div>
+          <div className="text-gray-400">Načítava sa...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-white">
-      {/* SearchBar now has its own container inside */}
-      <SearchBar />
-    </main>
+    <>
+      {/* Search Bar */}
+      <div className="container mt-10">
+        <SearchBar />
+      </div>
+
+      {/* Stats Section */}
+      <StatsSection />
+
+      {/* Property Categories */}
+      <CategorySection />
+
+      {/* Featured Property of the Week */}
+      <FeaturedPropertySection property={featuredProperties[0]} />
+
+      {/* Featured Properties */}
+      <FeaturedPropertiesSection properties={featuredProperties.slice(1, 7)} />
+
+      {/* CTA Section */}
+      <CtaSection />
+    </>
   );
 }
