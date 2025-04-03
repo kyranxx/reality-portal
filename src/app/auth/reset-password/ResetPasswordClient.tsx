@@ -11,7 +11,7 @@ export default function ResetPasswordClient() {
   const [email, setEmail] = useState('');
   const [formErrors, setFormErrors] = useState<{ email?: string }>({});
   const [submitted, setSubmitted] = useState(false);
-  const { resetPassword, isLoading, error } = useAuth();
+  const { resetPassword, loading, error } = useAuth();
 
   // Form validation
   const validateForm = () => {
@@ -95,7 +95,7 @@ export default function ResetPasswordClient() {
             />
 
             <div>
-              <AuthButton type="submit" isLoading={isLoading} fullWidth>
+              <AuthButton type="submit" isLoading={loading} fullWidth>
                 Send reset link
               </AuthButton>
             </div>

@@ -31,11 +31,17 @@ export default function PropertyDetailClient() {
         setIsLoading(true);
         setError(null);
 
-        // Fetch the property details
+        // Fetch the property details using proper error handling
         const propertyData = await withFirestoreErrorHandling(
-          async () => await firebaseService.getDocument<Property>('properties', id),
+          async () => {
+            if (typeof firebaseService.getDocument !== 'function') {
+              console.error('getDocument function not available');
+              return null;
+            }
+            return await firebaseService.getDocument<Property>('properties', id);
+          },
           null,
-          `getProperty:${id}`
+          (error) => console.error(`Error fetching property ${id}:`, error)
         );
 
         if (!propertyData) {
@@ -44,18 +50,25 @@ export default function PropertyDetailClient() {
         } else {
           setProperty(propertyData);
 
-          // Fetch similar properties
+          // Fetch similar properties with proper error handling
           const similar = await withFirestoreErrorHandling(
             async () => {
+              if (typeof firebaseService.queryByField !== 'function') {
+                console.error('queryByField function not available');
+                return [];
+              }
+              
               const properties = await firebaseService.queryByField<Property>(
                 'properties',
                 'propertyType',
                 propertyData.propertyType
               );
-              return properties.filter(p => p.id !== id).slice(0, 3);
+              
+              // Filter out current property and limit to 3 results
+              return properties.filter((p: Property) => p.id !== id).slice(0, 3);
             },
-            getFallbackProperties(3),
-            'getSimilarProperties'
+            await getFallbackProperties(),
+            (error) => console.error('Error fetching similar properties:', error)
           );
 
           if (similar) {

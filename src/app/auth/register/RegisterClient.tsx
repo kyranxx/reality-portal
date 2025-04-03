@@ -11,18 +11,20 @@ import { AuthButton } from '@/components/auth/AuthButton';
 import { SocialAuthButton } from '@/components/auth/SocialAuthButton';
 
 export default function RegisterClient() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [formErrors, setFormErrors] = useState<{
+    name?: string;
     email?: string;
     password?: string;
     confirmPassword?: string;
     terms?: string;
   }>({});
   
-  const { signUp, signInWithGoogle, user, isLoading, error } = useAuth();
+  const { signUp, user, loading, error } = useAuth();
   const router = useRouter();
 
   // Redirect if already logged in
@@ -35,12 +37,19 @@ export default function RegisterClient() {
   // Form validation
   const validateForm = () => {
     const errors: {
+      name?: string;
       email?: string;
       password?: string;
       confirmPassword?: string;
       terms?: string;
     } = {};
     let isValid = true;
+
+    // Name validation
+    if (!name) {
+      errors.name = 'Name is required';
+      isValid = false;
+    }
 
     // Email validation
     if (!email) {
@@ -85,7 +94,7 @@ export default function RegisterClient() {
 
     if (validateForm()) {
       try {
-        await signUp(email, password);
+        await signUp(email, password, name);
         // The redirect is handled by the useEffect when user state changes
       } catch (err) {
         console.error('Registration error:', err);
@@ -95,12 +104,8 @@ export default function RegisterClient() {
 
   // Handle Google sign-in
   const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-      // The redirect is handled by the useEffect when user state changes
-    } catch (err) {
-      console.error('Google sign-in error:', err);
-    }
+    console.error('Google sign-in is not available in this build');
+    // This functionality would need to be re-implemented
   };
 
   return (
@@ -116,6 +121,18 @@ export default function RegisterClient() {
         )}
 
         <form className="space-y-6" onSubmit={handleRegister}>
+          <FormInput
+            id="name"
+            type="text"
+            label="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            placeholder="John Doe"
+            error={formErrors.name}
+            autoComplete="name"
+          />
+
           <FormInput
             id="email"
             type="email"
@@ -178,7 +195,7 @@ export default function RegisterClient() {
           </div>
 
           <div>
-            <AuthButton type="submit" isLoading={isLoading} fullWidth>
+            <AuthButton type="submit" isLoading={loading} fullWidth>
               Create account
             </AuthButton>
           </div>
@@ -198,7 +215,7 @@ export default function RegisterClient() {
             <SocialAuthButton
               provider="google"
               onClick={handleGoogleSignIn}
-              isLoading={isLoading}
+              isLoading={loading}
             />
           </div>
         </div>

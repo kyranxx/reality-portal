@@ -1,0 +1,7 @@
+/**
+ * @deprecated Import from '@/utils/firebase' instead.
+ * This file is kept for backward compatibility.
+ */
+
+export * from './firebase/auth';
+export { default } from './firebase/auth';

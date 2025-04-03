@@ -35,21 +35,35 @@ export function useFirebaseListener(
 ): void {
   // Keep track of the cleanup function
   const cleanupFnRef = useRef<(() => void) | void>();
+  // Keep track of the unsubscribe function returned by setupFn
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     console.debug('Setting up Firebase listener');
     
     // Set up the listener through our service to ensure proper cleanup
     try {
-      cleanupFnRef.current = firebaseService.createSafeListener(() => {
-        try {
-          // Call the user-provided setup function
-          return setupFn() || (() => {});
-        } catch (error) {
-          console.error('Error in Firebase listener setup:', error);
-          return () => {}; // Return a no-op cleanup function on error
+      // Create a cleanup function for the listener
+      const cleanupCallback = () => {
+        if (unsubscribeRef.current) {
+          unsubscribeRef.current();
+          unsubscribeRef.current = null;
         }
-      });
+      };
+      
+      // Use the createSafeListener method for backward compatibility
+      if (typeof firebaseService.createSafeListener === 'function') {
+        cleanupFnRef.current = firebaseService.createSafeListener(cleanupCallback);
+      } else {
+        cleanupFnRef.current = cleanupCallback;
+      }
+      
+      // Call the user-provided setup function and store its result
+      try {
+        unsubscribeRef.current = setupFn() || null;
+      } catch (error) {
+        console.error('Error in Firebase listener setup:', error);
+      }
     } catch (error) {
       console.error('Failed to create safe Firebase listener:', error);
     }

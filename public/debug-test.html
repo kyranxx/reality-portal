@@ -196,8 +196,8 @@
   </div>
 
   <script type="module">
-    // Import the diagnostics tools with corrected path for public directory
-    import runDiagnostics, { initializeMonitoring } from '/utils/debug-tools.js';
+    // Import the diagnostics tools from the new consolidated module
+    import { runDiagnostics, initializeMonitoring } from '/utils/debug/index.js';
     
     // Display browser info
     const browserInfoEl = document.getElementById('browser-info');

@@ -41,7 +41,7 @@ export default function UnifiedAuthClient() {
   const [resetErrors, setResetErrors] = useState<{ email?: string }>({});
   const [resetSubmitted, setResetSubmitted] = useState(false);
   
-  const { signIn, signUp, signInWithGoogle, resetPassword, user, isLoading, error } = useAuth();
+  const { signIn, signUp, resetPassword, user, loading, error } = useAuth();
   const router = useRouter();
 
   // Redirect if already logged in
@@ -152,7 +152,8 @@ export default function UnifiedAuthClient() {
     e.preventDefault();
     if (validateRegisterForm()) {
       try {
-        await signUp(registerEmail, registerPassword);
+        // Use the email username part as the name
+        await signUp(registerEmail, registerPassword, registerEmail.split('@')[0]);
       } catch (err) {
         console.error('Registration error:', err);
       }
@@ -172,11 +173,8 @@ export default function UnifiedAuthClient() {
   };
 
   const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (err) {
-      console.error('Google sign-in error:', err);
-    }
+    console.error('Google sign-in is not available in this build');
+    // This functionality would need to be re-implemented
   };
 
   const getTabTitle = () => {
@@ -258,7 +256,7 @@ export default function UnifiedAuthClient() {
             </div>
 
             <div>
-              <AuthButton type="submit" isLoading={isLoading} fullWidth>
+              <AuthButton type="submit" isLoading={loading} fullWidth>
                 {t('auth.signIn', 'Prihlásiť sa')}
               </AuthButton>
             </div>
@@ -277,7 +275,7 @@ export default function UnifiedAuthClient() {
                 <SocialAuthButton
                   provider="google"
                   onClick={handleGoogleSignIn}
-                  isLoading={isLoading}
+                  isLoading={loading}
                 />
               </div>
             </div>
@@ -360,7 +358,7 @@ export default function UnifiedAuthClient() {
             </div>
 
             <div>
-              <AuthButton type="submit" isLoading={isLoading} fullWidth>
+              <AuthButton type="submit" isLoading={loading} fullWidth>
                 {t('auth.signUp', 'Registrovať sa')}
               </AuthButton>
             </div>
@@ -379,7 +377,7 @@ export default function UnifiedAuthClient() {
                 <SocialAuthButton
                   provider="google"
                   onClick={handleGoogleSignIn}
-                  isLoading={isLoading}
+                  isLoading={loading}
                 />
               </div>
             </div>
@@ -436,7 +434,7 @@ export default function UnifiedAuthClient() {
             />
 
             <div>
-              <AuthButton type="submit" isLoading={isLoading} fullWidth>
+              <AuthButton type="submit" isLoading={loading} fullWidth>
                 {t('auth.sendResetLink', 'Odoslať link na obnovu hesla')}
               </AuthButton>
             </div>

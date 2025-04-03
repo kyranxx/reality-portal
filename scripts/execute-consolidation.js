@@ -26,6 +26,10 @@ const consolidationScripts = {
   eslint: path.join(__dirname, 'consolidate-eslint.js'),
   header: path.join(__dirname, 'consolidate-header.js'),
   debugTools: path.join(__dirname, 'consolidate-debug-tools.js'),
+  clientLoaders: path.join(__dirname, 'fix-client-loaders-redundancy.js'),
+  testRedundancies: path.join(__dirname, 'cleanup-test-redundancies.js'),
+  firebaseImports: path.join(__dirname, 'fix-firebase-imports.js'),
+  authErrorBoundaries: path.join(__dirname, 'analyze-auth-error-boundaries.js'),
   // Add more scripts as they are created
 };
 
@@ -44,13 +48,23 @@ const phases = [
   },
   {
     name: 'Component Consolidation',
-    scripts: ['header'],
+    scripts: ['header', 'clientLoaders'],
     description: 'Merge duplicate components and standardize component organization',
   },
   {
     name: 'Utility Reorganization',
-    scripts: ['debugTools'],
+    scripts: ['debugTools', 'firebaseImports'],
     description: 'Create modular utility structure and merge duplicate utilities',
+  },
+  {
+    name: 'Test Files Cleanup',
+    scripts: ['testRedundancies'],
+    description: 'Clean up redundant test files and debug tools',
+  },
+  {
+    name: 'Analysis & Documentation',
+    scripts: ['authErrorBoundaries'],
+    description: 'Analyze components that need careful review before consolidation',
   },
   // Future phases can be added here
 ];
@@ -62,6 +76,10 @@ const options = {
   eslint: args.includes('--eslint'),
   header: args.includes('--header'),
   debugTools: args.includes('--debug-tools'),
+  clientLoaders: args.includes('--client-loaders'),
+  testRedundancies: args.includes('--test-redundancies'),
+  firebaseImports: args.includes('--firebase-imports'),
+  authErrorBoundaries: args.includes('--auth-error-boundaries'),
   execute: args.includes('--execute'),
   report: args.includes('--report'),
 };
@@ -108,6 +126,18 @@ if (options.all) {
   if (options.debugTools) {
     executeScript('debugTools');
   }
+  if (options.clientLoaders) {
+    executeScript('clientLoaders');
+  }
+  if (options.testRedundancies) {
+    executeScript('testRedundancies');
+  }
+  if (options.firebaseImports) {
+    executeScript('firebaseImports');
+  }
+  if (options.authErrorBoundaries) {
+    executeScript('authErrorBoundaries');
+  }
 }
 
 // Print summary
@@ -120,12 +150,16 @@ function printHelp() {
   console.log('This script executes the redundancy consolidation plan.');
   console.log('\nUsage: node scripts/execute-consolidation.js [options]\n');
   console.log('Options:');
-  console.log('  --all             Execute all consolidation scripts');
-  console.log('  --eslint          Consolidate ESLint configurations');
-  console.log('  --header          Consolidate Header components');
-  console.log('  --debug-tools     Consolidate debug tools');
-  console.log('  --execute         Actually perform the changes (otherwise dry run)');
-  console.log('  --report          Generate a consolidation report\n');
+  console.log('  --all                     Execute all consolidation scripts');
+  console.log('  --eslint                  Consolidate ESLint configurations');
+  console.log('  --header                  Consolidate Header components');
+  console.log('  --debug-tools             Consolidate debug tools');
+  console.log('  --client-loaders          Fix client component loader redundancy');
+  console.log('  --test-redundancies       Clean up test file redundancies');
+  console.log('  --firebase-imports        Fix Firebase import issues');
+  console.log('  --auth-error-boundaries   Analyze auth error boundary implementations');
+  console.log('  --execute                 Actually perform the changes (otherwise dry run)');
+  console.log('  --report                  Generate a consolidation report\n');
   
   console.log('Examples:');
   console.log('  node scripts/execute-consolidation.js --all');
@@ -175,7 +209,10 @@ function executeScript(scriptKey) {
     
     // Execute the script and capture output
     const output = execSync(cmd, { encoding: 'utf8' });
-    console.log(output);
+    
+    // Print output but trim repeated console separators
+    const cleanOutput = output.replace(/={10,}\n={10,}/g, '======================================================');
+    console.log(cleanOutput);
     
     results.success.push(scriptKey);
     console.log(`✅ Successfully executed ${scriptKey} consolidation.`);

@@ -17,8 +17,8 @@ This guide explains how to use the diagnostic tools we've implemented to identif
 We've created a comprehensive diagnostic toolkit that can be used in the browser to identify various issues:
 
 - **Run from debug-test.html**: Open `http://localhost:3002/debug-test.html` in your browser to access the diagnostic dashboard
-- **Import in your code**: `import { runDiagnostics } from './utils/debug-tools'`
-- **Run in console**: Add `<script src="/utils/debug-tools.js"></script>` to your page, then use `runDiagnostics()` in console
+- **Import in your code**: `import { runDiagnostics } from './utils/debug'`
+- **Run in console**: Add `<script src="/utils/debug/index.js"></script>` to your page, then use `runDiagnostics()` in console
 
 The diagnostic tool checks for:
 

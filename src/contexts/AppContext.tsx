@@ -180,7 +180,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         // For authenticated users, try to get from Firestore
         if (user && db) {
           try {
-            const userSettingsRef = doc(db, 'userSettings', user.uid);
+            // Safe access to user ID with strong type checking
+            const userID = (user && 'uid' in user) ? user.uid : 
+                           (user && 'id' in user) ? (user as any).id : 
+                           typeof user === 'string' ? user : '';
+            
+            if (!userID) {
+              console.error('Unable to determine user ID');
+              return;
+            }
+            
+            const userSettingsRef = doc(db, 'userSettings', userID);
             const userSettingsSnap = await getDoc(userSettingsRef);
 
             if (userSettingsSnap.exists()) {
@@ -241,7 +251,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       // For authenticated users, save to Firestore
       if (user && db) {
         try {
-          const userSettingsRef = doc(db, 'userSettings', user.uid);
+          // Safe access to user ID with strong type checking
+          const userID = (user && 'uid' in user) ? user.uid : 
+                         (user && 'id' in user) ? (user as any).id : 
+                         typeof user === 'string' ? user : '';
+          
+          if (!userID) {
+            console.error('Unable to determine user ID for language update');
+            return;
+          }
+          
+          const userSettingsRef = doc(db, 'userSettings', userID);
           await setDoc(userSettingsRef, { language: lang }, { merge: true });
         } catch (error) {
           console.error('Error saving language to Firestore:', error);
@@ -270,7 +290,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       // For authenticated users, save to Firestore
       if (user && db) {
         try {
-          const userSettingsRef = doc(db, 'userSettings', user.uid);
+          // Safe access to user ID with strong type checking
+          const userID = (user && 'uid' in user) ? user.uid : 
+                         (user && 'id' in user) ? (user as any).id : 
+                         typeof user === 'string' ? user : '';
+          
+          if (!userID) {
+            console.error('Unable to determine user ID for theme update');
+            return;
+          }
+          
+          const userSettingsRef = doc(db, 'userSettings', userID);
           await setDoc(userSettingsRef, { theme: themeType }, { merge: true });
         } catch (error) {
           console.error('Error saving theme to Firestore:', error);

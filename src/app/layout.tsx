@@ -4,10 +4,10 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 
 // Server-side imports
-import Header from '@/components/Header';
+import Header from '@/components/layouts/Header';
 import Footer from '@/components/Footer';
 import { AppProvider } from '@/contexts/AppContext';
-import { FirebaseAuthProvider } from '@/utils/FirebaseAuthContext';
+import { AuthProvider } from '@/utils/FirebaseAuthContext';
 import { FirebaseProvider } from '@/components/FirebaseProvider';
 import { SWRProvider } from '@/components/SWRProvider';
 import ClientWrapper from './ClientWrapper';
@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex flex-col min-h-screen font-sans">
         <FirebaseProvider fallback={<div className="p-4">Initializing Firebase...</div>}>
           <SWRProvider>
-            <FirebaseAuthProvider>
+            <AuthProvider>
               <AppProvider>
                 <ClientWrapper>
                   <Header />
@@ -86,7 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <Footer />
                 </ClientWrapper>
               </AppProvider>
-            </FirebaseAuthProvider>
+            </AuthProvider>
           </SWRProvider>
         </FirebaseProvider>
       </body>

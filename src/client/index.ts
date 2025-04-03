@@ -1,22 +1,9 @@
 'use client';
 
-// Export the client component registry and types
-export { clientComponentRegistry, type ClientComponentKey } from './registry';
-
-// Export the ClientComponentLoader component
-export { default as ClientComponentLoader } from './ClientComponentLoader';
-
 /**
- * This index file provides a clean export interface for client components.
- * It allows importing from '@/client' instead of individual files.
- *
- * Example usage:
- * ```
- * // Server component
- * import { ClientComponentLoader } from '@/client';
- *
- * export default function Page() {
- *   return <ClientComponentLoader componentKey="DashboardClient" />;
- * }
- * ```
+ * @deprecated This module is deprecated. Use src/app/_components.tsx and src/app/_client-loader.tsx instead.
+ * This adapter is provided for backward compatibility.
  */
+
+export type { ClientComponentKey } from '../app/_components';
+export { UniversalComponentLoader as default } from '../app/_client-loader';

@@ -26,7 +26,7 @@ export default function AdminLoginClientComponent() {
   const [lockedOut, setLockedOut] = useState(false);
   const [lockoutTime, setLockoutTime] = useState(0);
   const [generalError, setGeneralError] = useState<string | null>(null);
-  const { signIn, user, isLoading, error } = useAuth();
+  const { signIn, user, loading, error } = useAuth();
   const router = useRouter();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -254,7 +254,7 @@ export default function AdminLoginClientComponent() {
           <div>
             <AuthButton 
               type="submit" 
-              isLoading={isLoading} 
+              isLoading={loading} 
               fullWidth
               variant="primary"
               disabled={lockedOut}

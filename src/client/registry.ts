@@ -1,27 +1,12 @@
 'use client';
 
-// Import all client components
-import DashboardClient from '../app/dashboard/DashboardClient';
-import ProfileClient from '../app/dashboard/profile/ProfileClient';
-import AdminClient from '../app/admin/AdminClient';
-import HomeClient from '../app/HomeClient';
-import NehnutelnostiClient from '../app/nehnutelnosti/NehnutelnostiClient';
-
 /**
- * Registry of all available client components
- * This approach ensures type safety and prevents accidentally loading server components
+ * @deprecated This registry is deprecated. Use CLIENT_COMPONENTS from src/app/_components.tsx instead.
+ * This adapter is provided for backward compatibility.
  */
-export const clientComponentRegistry = {
-  // Dashboard components
-  DashboardClient: DashboardClient,
-  ProfileClient: ProfileClient,
-  // Admin components
-  AdminClient: AdminClient,
-  // Home page component
-  HomeClient: HomeClient,
-  // Property pages components
-  NehnutelnostiClient: NehnutelnostiClient,
-} as const;
 
-// Create a type from the registry keys for type safety
-export type ClientComponentKey = keyof typeof clientComponentRegistry;
+import { CLIENT_COMPONENTS } from '../app/_components';
+import type { ClientComponentKey } from '../app/_components';
+
+export const clientComponentRegistry = CLIENT_COMPONENTS;
+export type { ClientComponentKey };

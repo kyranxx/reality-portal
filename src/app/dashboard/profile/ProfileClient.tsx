@@ -36,7 +36,18 @@ function ProfileClientContent() {
       if (!user) return;
 
       try {
-        const userData = await getUserById(user.uid);
+        // Safe access to user ID with strong type checking
+        const userID = (user && 'uid' in user) ? user.uid : 
+                       (user && 'id' in user) ? (user as any).id : 
+                       typeof user === 'string' ? user : '';
+        
+        if (!userID) {
+          console.error('Unable to determine user ID');
+          setLoading(false);
+          return;
+        }
+        
+        const userData = await getUserById(userID);
         if (userData) {
           setName(userData.name || '');
           setPhone(userData.phone || '');
@@ -66,7 +77,18 @@ function ProfileClientContent() {
     setSaving(true);
 
     try {
-      await updateUser(user.uid, {
+      // Safe access to user ID with strong type checking
+      const userID = (user && 'uid' in user) ? user.uid : 
+                     (user && 'id' in user) ? (user as any).id : 
+                     typeof user === 'string' ? user : '';
+      
+      if (!userID) {
+        setError('User ID not found');
+        setSaving(false);
+        return;
+      }
+      
+      await updateUser(userID, {
         name,
         phone,
       });

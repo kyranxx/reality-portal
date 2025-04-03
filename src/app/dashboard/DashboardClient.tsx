@@ -32,7 +32,18 @@ function DashboardClientContent() {
       if (!user) return;
 
       try {
-        const userData = await getUserById(user.uid);
+        // Safe access to user ID with strong type checking
+        const userID = (user && 'uid' in user) ? user.uid : 
+                       (user && 'id' in user) ? (user as any).id : 
+                       typeof user === 'string' ? user : '';
+        
+        if (!userID) {
+          console.error('Unable to determine user ID');
+          setLoading(false);
+          return;
+        }
+        
+        const userData = await getUserById(userID);
         if (userData) {
           setProfile({
             name: userData.name,

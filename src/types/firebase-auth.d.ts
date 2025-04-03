@@ -52,4 +52,20 @@ declare module '@firebase/auth' {
     error?: any,
     completed?: any
   ): () => void;
+  
+  export function updateProfile(
+    user: User,
+    profile: { displayName?: string; photoURL?: string }
+  ): Promise<void>;
+}
+
+// Extend User type to include common properties used in the app
+declare global {
+  interface User {
+    uid: string;
+    email: string | null;
+    displayName: string | null;
+    photoURL: string | null;
+    emailVerified: boolean;
+  }
 }

@@ -15,7 +15,7 @@ const isClient = typeof window !== 'undefined';
 
 function AdminClientContent() {
   const router = useRouter();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
