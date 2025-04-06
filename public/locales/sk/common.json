@@ -97,7 +97,12 @@
     "terms": "Podmienky používania",
     "privacy": "Ochrana osobných údajov",
     "cookies": "Cookies",
-    "contactUs": "Kontaktujte nás"
+    "contactUs": "Kontaktujte nás",
+    "about": "O nás",
+    "aboutText": "Reality Portal je váš spoľahlivý partner pri kúpe, predaji a prenájme nehnuteľností na Slovensku. Ponúkame overené inzeráty a profesionálny servis.",
+    "quickLinks": "Rýchle odkazy",
+    "legal": "Právne informácie",
+    "copyright": "Všetky práva vyhradené."
   },
   "auth": {
     "login": "Prihlásenie",

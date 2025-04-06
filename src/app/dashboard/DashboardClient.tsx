@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
-import { getUserById } from '@/utils/firestore';
+import { getUserById } from '@/utils/firebase/firestore';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 
 // Check if we're running on the client side

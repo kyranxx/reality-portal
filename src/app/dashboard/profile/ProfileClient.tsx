@@ -4,7 +4,7 @@ import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
-import { getUserById, updateUser } from '@/utils/firestore';
+import { getUserById, updateUserData } from '@/utils/firebase/firestore';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 
 // Check if we're running on the client side
@@ -88,7 +88,7 @@ function ProfileClientContent() {
         return;
       }
       
-      await updateUser(userID, {
+      await updateUserData(userID, {
         name,
         phone,
       });

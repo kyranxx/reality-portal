@@ -95,18 +95,50 @@ export function setupGlobalErrorHandlers(): void {
   window.fetch = async function (...args) {
     try {
       const response = await originalFetch.apply(this, args);
-
-      // Track API errors (4xx/5xx)
+      
+      // Get the URL from the request
+      let url = 'unknown';
+      if (typeof args[0] === 'string') {
+        url = args[0];
+      } else if (args[0] instanceof Request) {
+        url = args[0].url;
+      } else if (args[0] instanceof URL) {
+        url = args[0].toString();
+      } else if (args[0] && typeof args[0] === 'object') {
+        // Use type assertion for object with url property
+        const requestObj = args[0] as Record<string, any>;
+        if (requestObj.url) url = String(requestObj.url);
+      }
+      
+      // Only track true errors, not expected 404s or auth-related responses
       if (!response.ok) {
-        trackError(
-          new Error(`API Error: ${response.status} ${response.statusText} for ${args[0]}`),
-          'apiError'
-        );
+        // Ignore auth-related routes (common during login workflows)
+        const isAuthRoute = url.includes('/auth/') || 
+                           url.includes('/podmienky-pouzitia') || 
+                           url.includes('/cookies') ||
+                           url.includes('/reset-password');
+        
+        // Ignore 401/403 errors (expected for protected resources when not logged in)
+        const isAuthError = response.status === 401 || response.status === 403;
+        
+        // Ignore 404s for static resources and expected missing routes
+        const is404 = response.status === 404;
+        
+        // Only log true server errors (500s) or unexpected client errors
+        if (!isAuthRoute && !isAuthError && (response.status >= 500 || (!is404 && response.status >= 400))) {
+          trackError(
+            new Error(`API Error: ${response.status} ${response.statusText} for ${url}`),
+            'apiError'
+          );
+        } else {
+          // For expected errors, just log at debug/info level
+          enhancedLog('debug', `Fetch failed loading: ${response.status} for ${url}`);
+        }
       }
 
       return response;
     } catch (error) {
-      // Track network errors
+      // Track actual network errors (not response errors)
       trackError(error instanceof Error ? error : new Error(String(error)), 'fetchError');
       throw error;
     }

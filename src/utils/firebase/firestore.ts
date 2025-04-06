@@ -383,3 +383,15 @@ export const updateProperty = async (id: string, property: Partial<Property>): P
 export const deleteProperty = async (id: string): Promise<void> => {
   return safeDeleteDoc('properties', id);
 };
+
+// Helper Functions for Users Collection
+
+// Get user by ID
+export const getUserById = async (userId: string): Promise<User | null> => {
+  return safeGetDoc<User>('users', userId);
+};
+
+// Update user data
+export const updateUserData = async (userId: string, userData: Partial<User>): Promise<void> => {
+  return safeUpdateDoc<Partial<User>>('users', userId, userData);
+};
