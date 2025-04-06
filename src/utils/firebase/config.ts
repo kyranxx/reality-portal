@@ -13,6 +13,9 @@ export const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  // Add the correct regional database URL
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || 
+               'https://realitny-portal-default-rtdb.europe-west1.firebasedatabase.app',
 };
 
 // Check if Firebase environment variables are properly set
