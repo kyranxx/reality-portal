@@ -128,22 +128,37 @@ export const getImageUrl = (
   type?: 'apartment' | 'house' | 'land' | 'commercial',
   useLocalFallbacks: boolean = USE_LOCAL_FALLBACKS
 ): string => {
+  // Debug information
+  console.log(`Original image URL: ${url}, type: ${type}`);
+  
   // Convert to string URL
   const urlString = imageSourceToString(url);
   
+  // Handle case where URL is /images/logo.svg specifically
+  if (urlString === '/images/logo.svg') {
+    console.log('Using placeholder instead of logo.svg');
+    return '/images/placeholder.jpg';
+  }
+  
   // Always use local fallbacks if configured to do so in .env.local
   if (useLocalFallbacks) {
-    return type ? getSampleImage(type) : '/images/placeholder.jpg';
+    const fallback = type ? getSampleImage(type) : '/images/placeholder.jpg';
+    console.log(`Using local fallback: ${fallback}`);
+    return fallback;
   }
   
   // Handle empty URLs with sample images
   if (!urlString) {
-    return type ? getSampleImage(type) : '/images/placeholder.jpg';
+    const fallback = type ? getSampleImage(type) : '/images/placeholder.jpg';
+    console.log(`Empty URL, using fallback: ${fallback}`);
+    return fallback;
   }
   
   // For Firebase Storage URLs, process them for public access
   if (urlString && urlString.includes('firebasestorage.googleapis.com')) {
-    return processFirebaseStorageUrl(urlString);
+    const processed = processFirebaseStorageUrl(urlString);
+    console.log(`Processed Firebase URL: ${processed}`);
+    return processed;
   }
   
   // Return the URL as is if it's not a Firebase Storage URL and not empty

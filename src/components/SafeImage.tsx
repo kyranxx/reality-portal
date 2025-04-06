@@ -11,7 +11,7 @@ import { StaticImageData } from 'next/image';
 export default function SafeImage({
   src,
   alt,
-  fallbackSrc = '/images/samples/apartment-1.svg',
+  fallbackSrc = '/images/placeholder.jpg',
   propertyType,
   ...props
 }: ImageProps & { 
@@ -33,14 +33,28 @@ export default function SafeImage({
     const srcString = String(src);
     if (srcString.endsWith('.svg') || (typeof src === 'string' && srcString.includes('<svg'))) {
       setIsSvg(true);
+      
+      // For SVG files, fallback to placeholder.jpg immediately to avoid rendering issues
+      if (srcString === '/images/logo.svg' || !srcString.includes('/images/samples/')) {
+        console.log('SVG detected, using placeholder:', srcString);
+        setImgSrc('/images/placeholder.jpg');
+        return;
+      }
     }
     
     // Process the source URL with our utility
     try {
-      // Cast the src to the correct type that getImageUrl expects
-      // Use local fallbacks from .env.local configuration
-      const processedSrc = getImageUrl(src as (string | StaticImageData | undefined | null), propertyType);
-      setImgSrc(processedSrc);
+      // Use the sample images or placeholder for safety
+      if (propertyType) {
+        // Get the appropriate sample image based on property type
+        const sampleImage = `/images/samples/${propertyType}-1.jpg`;
+        console.log('Using sample image for property type:', sampleImage);
+        setImgSrc(sampleImage);
+      } else {
+        // Process the source URL with our utility
+        const processedSrc = getImageUrl(src as (string | StaticImageData | undefined | null), propertyType);
+        setImgSrc(processedSrc);
+      }
     } catch (err) {
       console.error('Error processing image URL:', err);
       setImgSrc(fallbackSrc);
@@ -50,28 +64,45 @@ export default function SafeImage({
 
   // Handle image load error
   const handleError = () => {
+    console.log('Image load error for:', imgSrc);
     if (error) return; // Already in error state
     
-    // For SVG files, use special handling
-    if (isSvg) {
-      // If this is a local SVG, try to use it directly
-      if (typeof src === 'string' && (src.startsWith('/') || src.startsWith('./') || src.startsWith('../'))) {
-        setImgSrc(src);
-        return; // Try with direct path first
-      }
-    }
-    
-    // Use fallback
-    setImgSrc(fallbackSrc);
+    // Always use fallback for errors
+    setImgSrc('/images/placeholder.jpg');
     setError(true);
   };
 
   // Don't render anything until we have a source URL
-  if (!imgSrc) return null;
+  if (!imgSrc) {
+    return (
+      <div className={props.className as string} style={{
+        background: '#f0f0f0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#999',
+        fontSize: '14px',
+        ...(props.style as React.CSSProperties)
+      }}>
+        Loading...
+      </div>
+    );
+  }
 
   // For SVGs that have loading issues with Next.js Image component, use img tag directly
   if (isSvg) {
-    return <img src={imgSrc} alt={alt || 'Image'} className={props.className as string} style={props.style as React.CSSProperties} />;
+    return (
+      <div className={props.className as string} style={{
+        background: '#f0f0f0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#666',
+        ...(props.style as React.CSSProperties)
+      }}>
+        {alt || 'Image'}
+      </div>
+    );
   }
 
   return <Image {...props} src={imgSrc} alt={alt || 'Image'} onError={handleError} />;
