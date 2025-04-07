@@ -1,4 +1,15 @@
-/** @type {import('tailwindcss').Config} */
+/**
+ * @type {import('tailwindcss').Config}
+ * 
+ * !!! IMPORTANT !!!
+ * This application uses a strictly grayscale palette.
+ * Any changes to colors should be made in src/utils/colors.ts
+ * DO NOT add colored values to this file.
+ */
+
+// Import grayscale color definitions
+const colors = require('./src/utils/colors');
+
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,26 +21,8 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        // Grayscale only color palette
-        primary: '#1F2937',   // Changed to gray-800
-        secondary: '#374151', // Changed to gray-700
-        accent: '#4B5563',    // Changed to gray-600
-        background: '#FFFFFF',
-        foreground: '#1F2937',
-        card: '#FFFFFF',
-        border: '#E5E7EB',
-        'gray-50': '#F9FAFB',
-        'gray-100': '#F3F4F6',
-        'gray-200': '#E5E7EB',
-        'gray-300': '#D1D5DB',
-        'gray-400': '#9CA3AF',
-        'gray-500': '#6B7280',
-        'gray-600': '#4B5563',
-        'gray-700': '#374151',
-        'gray-800': '#1F2937',
-        'gray-900': '#111827',
-      },
+      // Colors are locked to grayscale only - refer to src/utils/colors.ts for definitions
+      colors: colors.colors,
       borderRadius: {
         xl: '1rem',
         '2xl': '1.5rem',
