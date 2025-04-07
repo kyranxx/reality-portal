@@ -75,7 +75,7 @@ export default function LoginClient() {
   return (
     <AuthLayout 
       title="Prihláste sa do svojho účtu" 
-      subtitle="Vitajte späť! Prosím, zadajte svoje údaje."
+      subtitle=""
     >
       <div className="mt-8">
         {error && (
@@ -113,7 +113,7 @@ export default function LoginClient() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
               />

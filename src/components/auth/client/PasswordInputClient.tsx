@@ -88,7 +88,7 @@ export function PasswordInputClient({
           required={required}
           className={`appearance-none rounded-md relative block w-full px-3 py-2 border ${
             error ? 'border-red-300' : 'border-gray-300'
-          } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm ${className || ''}`}
+          } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm ${className || ''}`}
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
@@ -99,7 +99,7 @@ export function PasswordInputClient({
           className="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5 text-gray-500 focus:outline-none"
           onClick={togglePasswordVisibility}
         >
-          {showPassword ? 'Hide' : 'Show'}
+          {showPassword ? 'Skryť' : 'Zobraziť'}
         </button>
       </div>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}

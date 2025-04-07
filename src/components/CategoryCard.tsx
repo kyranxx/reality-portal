@@ -16,7 +16,7 @@ export default function CategoryCard({ title, description, icon, href }: Categor
 
         {/* Content */}
         <div className="relative z-10">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md">
+          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 mx-auto group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md">
             {icon}
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-200">
