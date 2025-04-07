@@ -70,17 +70,19 @@ function PropertyCard({ property }: PropertyCardProps) {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="h-48 bg-gray-200 relative">
-        {property.imageUrl ? (
-          <img 
-            src={property.imageUrl} 
-            alt={property.title} 
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-100">
-            <span className="text-gray-400">No image</span>
-          </div>
-        )}
+        <a href={`/nehnutelnosti/${property.id}`} className="block w-full h-full">
+          {property.imageUrl ? (
+            <img 
+              src={property.imageUrl} 
+              alt={property.title} 
+              className="w-full h-full object-cover cursor-pointer transition-all hover:opacity-90"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gray-100 cursor-pointer transition-all hover:bg-gray-200">
+              <span className="text-gray-400">No image</span>
+            </div>
+          )}
+        </a>
       </div>
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
@@ -92,7 +94,7 @@ function PropertyCard({ property }: PropertyCardProps) {
         </div>
         <a 
           href={`/nehnutelnosti/${property.id}`}
-          className="mt-3 block text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          className="mt-3 block text-center bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-900"
         >
           Detail
         </a>

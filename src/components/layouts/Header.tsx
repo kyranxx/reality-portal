@@ -49,13 +49,9 @@ const HeaderComponent = () => {
   return (
     <header className="w-full z-50 relative bg-white py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* Logo - removed text version to have only one logo */}
+        {/* Text logo instead of SVG */}
         <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
-          <img
-            src="/images/logo.svg"
-            alt="Reality Portal"
-            className="h-10 w-auto"
-          />
+          <span className="text-2xl font-bold text-gray-900">Reality Portal</span>
         </Link>
 
         {/* Desktop Navigation */}

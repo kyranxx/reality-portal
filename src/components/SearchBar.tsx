@@ -52,7 +52,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="search-container rounded-xl shadow-lg p-6 -mt-20 relative z-40 border border-gray-100">
+    <div className="search-container rounded-xl shadow-lg p-6 -mt-20 relative z-30 border border-gray-100">
       <form onSubmit={handleSubmit}>
         {/* Main search row - prominently displayed */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -239,6 +239,13 @@ export default function SearchBar() {
             >
               Trnava
             </button>
+            <button
+              type="button"
+              onClick={() => setLocation('Trenčín')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Trenčín
+            </button>
           </div>
         </div>
 
@@ -307,11 +314,11 @@ export default function SearchBar() {
               className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-4 text-sm shadow-sm"
             >
               <option value="">Nezáleží</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-              <option value="5">5+</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
             </select>
           </div>
         </div>

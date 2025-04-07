@@ -74,8 +74,8 @@ export default function LoginClient() {
 
   return (
     <AuthLayout 
-      title="Log in to your account" 
-      subtitle="Welcome back! Please enter your details."
+      title="Prihláste sa do svojho účtu" 
+      subtitle="Vitajte späť! Prosím, zadajte svoje údaje."
     >
       <div className="mt-8">
         {error && (
@@ -88,18 +88,18 @@ export default function LoginClient() {
           <FormInput
             id="email"
             type="email"
-            label="Email address"
+            label="E-mailová adresa"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="your@email.com"
+            placeholder="vas@email.sk"
             error={formErrors.email}
             autoComplete="email"
           />
 
           <PasswordInput
             id="password"
-            label="Password"
+            label="Heslo"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -118,20 +118,20 @@ export default function LoginClient() {
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                Remember me
+                Zapamätať si ma
               </label>
             </div>
 
             <div className="text-sm">
-              <Link href="/auth/reset-password" className="font-medium text-blue-600 hover:text-blue-500">
-                Forgot your password?
+              <Link href="/auth/reset-password" className="font-medium text-gray-600 hover:text-gray-500">
+                Zabudli ste heslo?
               </Link>
             </div>
           </div>
 
           <div>
             <AuthButton type="submit" isLoading={loading} fullWidth>
-              Sign in
+              Prihlásiť sa
             </AuthButton>
           </div>
         </form>
@@ -142,7 +142,7 @@ export default function LoginClient() {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500">Alebo pokračujte s</span>
             </div>
           </div>
 
@@ -156,9 +156,9 @@ export default function LoginClient() {
         </div>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link href="/auth/register" className="font-medium text-blue-600 hover:text-blue-500">
-            Sign up
+          Nemáte účet?{' '}
+          <Link href="/auth/register" className="font-medium text-gray-600 hover:text-gray-500">
+            Registrujte sa
           </Link>
         </p>
       </div>

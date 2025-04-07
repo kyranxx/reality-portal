@@ -11,10 +11,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Simplified color palette
-        primary: '#4F46E5',
-        secondary: '#6366F1',
-        accent: '#F59E0B',
+        // Grayscale only color palette
+        primary: '#1F2937',   // Changed to gray-800
+        secondary: '#374151', // Changed to gray-700
+        accent: '#4B5563',    // Changed to gray-600
         background: '#FFFFFF',
         foreground: '#1F2937',
         card: '#FFFFFF',

@@ -110,8 +110,8 @@ export default function RegisterClient() {
 
   return (
     <AuthLayout 
-      title="Create an account" 
-      subtitle="Sign up to get started with our platform."
+      title="Vytvorte si účet" 
+      subtitle="Zaregistrujte sa a začnite používať našu platformu."
     >
       <div className="mt-8">
         {error && (
@@ -124,11 +124,11 @@ export default function RegisterClient() {
           <FormInput
             id="name"
             type="text"
-            label="Full Name"
+            label="Celé meno"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="John Doe"
+            placeholder="Ján Novák"
             error={formErrors.name}
             autoComplete="name"
           />
@@ -136,18 +136,18 @@ export default function RegisterClient() {
           <FormInput
             id="email"
             type="email"
-            label="Email address"
+            label="E-mailová adresa"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="your@email.com"
+            placeholder="vas@email.sk"
             error={formErrors.email}
             autoComplete="email"
           />
 
           <PasswordInput
             id="password"
-            label="Password"
+            label="Heslo"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -158,7 +158,7 @@ export default function RegisterClient() {
 
           <PasswordInput
             id="confirm-password"
-            label="Confirm password"
+            label="Potvrdiť heslo"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -179,13 +179,13 @@ export default function RegisterClient() {
             </div>
             <div className="ml-3 text-sm">
               <label htmlFor="terms" className="font-medium text-gray-700">
-                I agree to the{' '}
-                <Link href="/podmienky-pouzitia" className="text-blue-600 hover:text-blue-500">
-                  Terms and Conditions
+                Súhlasím s{' '}
+                <Link href="/podmienky-pouzitia" className="text-gray-600 hover:text-gray-500">
+                  Podmienkami používania
                 </Link>{' '}
-                and{' '}
-                <Link href="/ochrana-osobnych-udajov" className="text-blue-600 hover:text-blue-500">
-                  Privacy Policy
+                a{' '}
+                <Link href="/ochrana-osobnych-udajov" className="text-gray-600 hover:text-gray-500">
+                  Ochranou osobných údajov
                 </Link>
               </label>
               {formErrors.terms && (
@@ -196,7 +196,7 @@ export default function RegisterClient() {
 
           <div>
             <AuthButton type="submit" isLoading={loading} fullWidth>
-              Create account
+              Vytvoriť účet
             </AuthButton>
           </div>
         </form>
@@ -207,7 +207,7 @@ export default function RegisterClient() {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500">Alebo pokračujte s</span>
             </div>
           </div>
 
@@ -221,9 +221,9 @@ export default function RegisterClient() {
         </div>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link href="/auth/login" className="font-medium text-blue-600 hover:text-blue-500">
-            Sign in
+          Už máte účet?{' '}
+          <Link href="/auth/login" className="font-medium text-gray-600 hover:text-gray-500">
+            Prihláste sa
           </Link>
         </p>
       </div>
