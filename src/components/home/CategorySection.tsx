@@ -5,7 +5,7 @@ import SectionTitle from '@/components/SectionTitle';
 
 const CategorySection = () => {
   return (
-    <section className="py-16">
+    <section className="py-0">
       <div className="container">
         <SectionTitle
           title="Prehliadajte podľa kategórie"
