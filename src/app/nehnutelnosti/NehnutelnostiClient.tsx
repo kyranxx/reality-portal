@@ -6,12 +6,50 @@ import ServerPropertyProvider from '@/components/ServerPropertyProvider';
 import { SkeletonPropertyCard } from '@/components/skeletons/SkeletonPropertyCard';
 import { useProperties } from '@/hooks/useProperties';
 
-export default function NehnutelnostiClient() {
-  const { properties, isLoading, isError } = useProperties();
+// Map URL path segments to property types in database
+const propertyTypeMap: { [key: string]: string } = {
+  'byty': 'apartment',
+  'domy': 'house',
+  'pozemky': 'land',
+  'komercne': 'commercial'
+};
+
+// Map property types to Slovak titles
+const propertyTypeTitles: { [key: string]: string } = {
+  'apartment': 'Byty na predaj',
+  'house': 'Domy na predaj',
+  'land': 'Pozemky na predaj',
+  'commercial': 'Komerčné priestory'
+};
+
+interface NehnutelnostiClientProps {
+  propertyType?: string;
+}
+
+export default function NehnutelnostiClient({ propertyType }: NehnutelnostiClientProps = {}) {
+  const { properties: allProperties, isLoading, isError } = useProperties();
+  
+  // Filter properties by type if a type is specified
+  const properties = React.useMemo(() => {
+    if (!propertyType || !allProperties) return allProperties;
+    
+    const dbPropertyType = propertyTypeMap[propertyType];
+    if (!dbPropertyType) return allProperties;
+    
+    return allProperties.filter(property => 
+      property.propertyType === dbPropertyType || 
+      property.type === dbPropertyType
+    );
+  }, [allProperties, propertyType]);
 
   if (isLoading) {
     return (
       <div className="container mx-auto p-4">
+        {propertyType && (
+          <h1 className="text-2xl font-bold mb-6 text-gray-900">
+            {propertyTypeTitles[propertyTypeMap[propertyType]] || 'Nehnuteľnosti'}
+          </h1>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
             <SkeletonPropertyCard key={i} />
@@ -24,9 +62,14 @@ export default function NehnutelnostiClient() {
   if (isError) {
     return (
       <div className="container mx-auto p-4">
+        {propertyType && (
+          <h1 className="text-2xl font-bold mb-6 text-gray-900">
+            {propertyTypeTitles[propertyTypeMap[propertyType]] || 'Nehnuteľnosti'}
+          </h1>
+        )}
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <p>Failed to load properties</p>
-          <p>Using fallback data...</p>
+          <p>Nepodarilo sa načítať nehnuteľnosti</p>
+          <p>Používam záložné dáta...</p>
         </div>
         <ServerPropertyProvider>
           {({ allProperties }) => (
@@ -44,8 +87,13 @@ export default function NehnutelnostiClient() {
   if (properties.length === 0) {
     return (
       <div className="container mx-auto p-4">
+        {propertyType && (
+          <h1 className="text-2xl font-bold mb-6 text-gray-900">
+            {propertyTypeTitles[propertyTypeMap[propertyType]] || 'Nehnuteľnosti'}
+          </h1>
+        )}
         <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-          <p>No properties found.</p>
+          <p>Nenašli sa žiadne nehnuteľnosti.</p>
         </div>
       </div>
     );
@@ -53,6 +101,11 @@ export default function NehnutelnostiClient() {
 
   return (
     <div className="container mx-auto p-4">
+      {propertyType && (
+        <h1 className="text-2xl font-bold mb-6 text-gray-900">
+          {propertyTypeTitles[propertyTypeMap[propertyType]] || 'Nehnuteľnosti'}
+        </h1>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {properties.map((property) => (
           <PropertyCard key={property.id} property={property} />

@@ -80,7 +80,7 @@ export function SocialAuthButtonClient({
       type="button"
       onClick={handleClick}
       disabled={disabled || isLoading}
-      className={`w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+      className={`w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 ${
         disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''
       }`}
     >
@@ -108,7 +108,7 @@ export function SocialAuthButtonClient({
       ) : (
         <span className="mr-2">{getProviderIcon()}</span>
       )}
-      <span>{isLoading ? 'Connecting...' : `Continue with ${getProviderName()}`}</span>
+      <span>{isLoading ? 'Pripájanie...' : `Pokračovať s ${getProviderName()}`}</span>
     </button>
   );
 }

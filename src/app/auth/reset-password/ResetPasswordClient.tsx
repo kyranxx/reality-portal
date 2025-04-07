@@ -47,8 +47,8 @@ export default function ResetPasswordClient() {
 
   return (
     <AuthLayout
-      title="Reset Password"
-      subtitle="Enter your email address to reset your password"
+      title="Obnovenie hesla"
+      subtitle="Zadajte vašu e-mailovú adresu na obnovenie hesla"
     >
       <div className="mt-8">
         {error && !submitted && (
@@ -60,23 +60,23 @@ export default function ResetPasswordClient() {
         {submitted ? (
           <div className="space-y-6">
             <div className="p-4 bg-green-50 text-green-700 rounded-md">
-              <p className="font-medium">Password reset email sent!</p>
+              <p className="font-medium">E-mail na obnovenie hesla odoslaný!</p>
               <p className="mt-2 text-sm">
-                If an account exists with the email {email}, you will receive an email with
-                instructions on how to reset your password.
+                Ak účet s e-mailom {email} existuje, dostanete e-mail
+                s pokynmi na obnovenie hesla.
               </p>
             </div>
             <div className="flex flex-col space-y-4">
               <Link href="/auth/login">
                 <AuthButton variant="primary" fullWidth>
-                  Return to login
+                  Návrat na prihlásenie
                 </AuthButton>
               </Link>
               <button
                 onClick={() => setSubmitted(false)}
-                className="text-sm text-blue-600 hover:text-blue-500"
+                className="text-sm text-gray-600 hover:text-gray-500"
               >
-                Use a different email
+                Použiť iný e-mail
               </button>
             </div>
           </div>
@@ -85,27 +85,27 @@ export default function ResetPasswordClient() {
             <FormInput
               id="email"
               type="email"
-              label="Email address"
+              label="E-mailová adresa"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="your@email.com"
+              placeholder="vas@email.sk"
               error={formErrors.email}
               autoComplete="email"
             />
 
             <div>
               <AuthButton type="submit" isLoading={loading} fullWidth>
-                Send reset link
+                Odoslať odkaz na obnovenie
               </AuthButton>
             </div>
 
             <div className="text-center mt-4">
               <Link
                 href="/auth/login"
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                className="text-sm font-medium text-gray-600 hover:text-gray-500"
               >
-                Back to login
+                Späť na prihlásenie
               </Link>
             </div>
           </form>

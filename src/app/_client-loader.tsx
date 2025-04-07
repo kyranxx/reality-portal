@@ -50,6 +50,7 @@ const STATIC_COMPONENTS = {
 
 interface UniversalComponentLoaderProps {
   componentKey: ClientComponentKey;
+  params?: Record<string, any>;
   fallback?: React.ReactNode;
 }
 
@@ -90,7 +91,7 @@ export function UniversalComponentLoader({
 
   return (
     <Suspense fallback={fallback}>
-      <Component />
+      <Component {...(arguments[0].params || {})} />
     </Suspense>
   );
 }
