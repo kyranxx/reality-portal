@@ -107,7 +107,7 @@ export default function HomeClient() {
   return (
     <>
       {/* Search Bar */}
-      <div className="container mt-20 mb-14">
+      <div className="container mt-28 mb-6">
         <SearchBar />
       </div>
 

@@ -52,7 +52,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="search-container rounded-xl shadow-lg p-6 -mt-20 relative z-30 border border-gray-100">
+    <div className="search-container rounded-xl shadow-lg p-6 -mt-10 relative z-30 border border-gray-100">
       <form onSubmit={handleSubmit}>
         {/* Main search row - prominently displayed */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 search-form-main">
