@@ -52,7 +52,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="search-container rounded-xl shadow-lg p-6 -mt-20 relative z-10 border border-gray-100">
+    <div className="search-container rounded-xl shadow-lg p-6 -mt-20 relative z-40 border border-gray-100">
       <form onSubmit={handleSubmit}>
         {/* Main search row - prominently displayed */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -211,6 +211,34 @@ export default function SearchBar() {
             >
               Žilina
             </button>
+            <button
+              type="button"
+              onClick={() => setLocation('Nitra')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Nitra
+            </button>
+            <button
+              type="button"
+              onClick={() => setLocation('Prešov')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Prešov
+            </button>
+            <button
+              type="button"
+              onClick={() => setLocation('Banská Bystrica')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Banská Bystrica
+            </button>
+            <button
+              type="button"
+              onClick={() => setLocation('Trnava')}
+              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full transition-colors"
+            >
+              Trnava
+            </button>
           </div>
         </div>
 
@@ -225,6 +253,7 @@ export default function SearchBar() {
                 <input
                   type="number"
                   name="minPrice"
+                  min="0"
                   value={priceRange[0]}
                   onChange={handlePriceChange}
                   placeholder="Od"
@@ -239,6 +268,7 @@ export default function SearchBar() {
                 <input
                   type="number"
                   name="maxPrice"
+                  min="0"
                   value={priceRange[1]}
                   onChange={handlePriceChange}
                   placeholder="Do"
@@ -257,6 +287,7 @@ export default function SearchBar() {
             </label>
             <input
               type="number"
+              min="0"
               id="minSize"
               value={minSize}
               onChange={e => setMinSize(e.target.value)}

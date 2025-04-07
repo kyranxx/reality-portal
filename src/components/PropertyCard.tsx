@@ -112,7 +112,7 @@ export default function PropertyCard({
   return (
     <Link href={`/nehnutelnosti/${id}`} className="block h-full">
       <div className="rounded-lg h-full flex flex-col card-hover-effect">
-        <div className="relative">
+        <div className="relative cursor-pointer">
           <div className="property-image bg-gray-50 relative overflow-hidden rounded-t-lg">
             {imageUrl ? (
               <SafeImage
@@ -146,7 +146,7 @@ export default function PropertyCard({
           {/* Type badge */}
           <div className="absolute top-4 right-4 z-10">
             <div className="bg-white/80 backdrop-blur-sm text-xs font-medium py-1.5 px-3 rounded-full shadow-sm flex items-center">
-              <span className="text-black mr-1.5">{typeIcons[type]}</span>
+              <span className="text-gray-900 mr-1.5">{typeIcons[type]}</span>
               <span>{typeLabels[type]}</span>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function PropertyCard({
         <div className="p-6 flex-grow flex flex-col">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-lg font-medium text-black">
+              <h2 className="text-lg font-medium text-gray-900">
                 {title}
               </h2>
               <div className="flex items-center text-gray-500 text-sm mt-2">
@@ -191,7 +191,7 @@ export default function PropertyCard({
                 <p>{location}</p>
               </div>
             </div>
-            <div className="bg-black text-white font-medium text-sm px-4 py-1.5 rounded-full whitespace-nowrap">
+            <div className="bg-gray-900 text-white font-medium text-sm px-4 py-1.5 rounded-full whitespace-nowrap">
               {formattedPrice} €
             </div>
           </div>
@@ -274,7 +274,7 @@ export default function PropertyCard({
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
+                    d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159-.69-.159-1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
                   />
                 </svg>
                 <span>Pozemok: {landSize} m²</span>

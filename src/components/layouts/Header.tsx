@@ -42,23 +42,20 @@ const HeaderComponent = () => {
   const getLinkClass = (path: string) => {
     const isActive = pathname === path;
     return isActive
-      ? 'text-blue-600 font-medium'
-      : 'text-gray-700 hover:text-blue-600';
+      ? 'text-gray-900 font-medium'
+      : 'text-gray-700 hover:text-gray-900';
   };
 
   return (
-    <header className="w-full z-20 relative bg-white py-4">
+    <header className="w-full z-50 relative bg-white py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* Logo */}
+        {/* Logo - removed text version to have only one logo */}
         <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
           <img
             src="/images/logo.svg"
             alt="Reality Portal"
-            className="h-10 w-auto mr-3"
+            className="h-10 w-auto"
           />
-          <span className="text-xl font-bold text-blue-600 hidden sm:inline">
-            Reality Portal
-          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -83,12 +80,12 @@ const HeaderComponent = () => {
             <>
               <Link
                 href="/pridat-nehnutelnost"
-                className="text-sm px-4 py-2 rounded-full border border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors"
+                className="text-sm px-4 py-2 rounded-full border border-gray-800 text-gray-800 hover:bg-gray-100 transition-colors"
               >
                 Pridať nehnuteľnosť
               </Link>
               <div className="relative group">
-                <button className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
+                <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900">
                   <span>Môj účet</span>
                   <svg
                     className="w-4 h-4"
@@ -131,13 +128,13 @@ const HeaderComponent = () => {
             <>
               <Link
                 href="/auth/login"
-                className="text-gray-700 hover:text-blue-600"
+                className="text-gray-700 hover:text-gray-900"
               >
                 Prihlásiť sa
               </Link>
               <Link
                 href="/auth/register"
-                className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors"
+                className="bg-gray-800 text-white px-4 py-2 rounded-full hover:bg-gray-900 transition-colors"
               >
                 Registrovať
               </Link>
@@ -179,7 +176,7 @@ const HeaderComponent = () => {
 
       {/* Mobile Navigation */}
       <nav
-        className={`md:hidden absolute w-full bg-white shadow-lg transition-all duration-300 ease-in-out z-10 ${
+        className={`md:hidden absolute w-full bg-white shadow-lg transition-all duration-300 ease-in-out z-30 ${
           isMobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0 overflow-hidden py-0'
         }`}
       >
@@ -218,21 +215,21 @@ const HeaderComponent = () => {
               <>
                 <Link
                   href="/pridat-nehnutelnost"
-                  className="block mb-2 text-center py-2 rounded-full border border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors"
+                  className="block mb-2 text-center py-2 rounded-full border border-gray-800 text-gray-800 hover:bg-gray-100 transition-colors"
                   onClick={closeMobileMenu}
                 >
                   Pridať nehnuteľnosť
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="block py-2 text-gray-700 hover:text-blue-600"
+                  className="block py-2 text-gray-700 hover:text-gray-900"
                   onClick={closeMobileMenu}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/dashboard/profile"
-                  className="block py-2 text-gray-700 hover:text-blue-600"
+                  className="block py-2 text-gray-700 hover:text-gray-900"
                   onClick={closeMobileMenu}
                 >
                   Profil
@@ -242,7 +239,7 @@ const HeaderComponent = () => {
                     if (signOut) signOut();
                     closeMobileMenu();
                   }}
-                  className="block w-full text-left py-2 text-gray-700 hover:text-blue-600"
+                  className="block w-full text-left py-2 text-gray-700 hover:text-gray-900"
                 >
                   Odhlásiť sa
                 </button>
@@ -251,14 +248,14 @@ const HeaderComponent = () => {
               <div className="flex flex-col space-y-2">
                 <Link
                   href="/auth/login"
-                  className="block text-center py-2 text-gray-700 hover:text-blue-600 border border-gray-300 rounded-full"
+                  className="block text-center py-2 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-full"
                   onClick={closeMobileMenu}
                 >
                   Prihlásiť sa
                 </Link>
                 <Link
                   href="/auth/register"
-                  className="block text-center py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                  className="block text-center py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900 transition-colors"
                   onClick={closeMobileMenu}
                 >
                   Registrovať
