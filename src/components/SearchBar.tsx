@@ -187,7 +187,7 @@ export default function SearchBar() {
         </div>
 
         {/* Popular locations */}
-        <div className="mt-4 flex">
+        <div className="mt-8 flex">
           <div className="flex flex-wrap gap-2">
             <span className="text-xs text-gray-500 mr-1">Populárne:</span>
             <button
@@ -250,7 +250,7 @@ export default function SearchBar() {
         </div>
 
         {/* Advanced filters - clearly visible and structured */}
-        <div className="mt-12 pt-5 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
+        <div className="mt-8 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Cenové rozpätie
