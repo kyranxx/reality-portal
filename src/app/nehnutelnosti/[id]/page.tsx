@@ -19,6 +19,13 @@ interface PropertyPageParams {
 
 export default function Page({ params }: PropertyPageParams) {
   const { id } = params;
+  
+  // Check if this is a property type - _type/page.tsx will handle it
+  const validPropertyTypes = ['byty', 'domy', 'pozemky', 'komercne'];
+  if (validPropertyTypes.includes(id)) {
+    // Let the _type/page.tsx handle property type pages
+    return null;
+  }
 
   return (
     <Suspense fallback={
