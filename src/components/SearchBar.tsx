@@ -55,7 +55,7 @@ export default function SearchBar() {
     <div className="search-container rounded-xl shadow-lg p-6 -mt-20 relative z-30 border border-gray-100">
       <form onSubmit={handleSubmit}>
         {/* Main search row - prominently displayed */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 search-form-main">
           {/* Type toggle (Buy/Rent) - 2 columns */}
           <div className="md:col-span-2">
             <div className="flex rounded-full overflow-hidden border border-gray-200 p-0.5 bg-white shadow-sm h-full">
@@ -187,7 +187,7 @@ export default function SearchBar() {
         </div>
 
         {/* Popular locations */}
-        <div className="mt-8 flex">
+        <div className="search-form-popular flex">
           <div className="flex flex-wrap gap-2">
             <span className="text-xs text-gray-500 mr-1">Populárne:</span>
             <button
@@ -250,7 +250,7 @@ export default function SearchBar() {
         </div>
 
         {/* Advanced filters - clearly visible and structured */}
-        <div className="mt-8 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
+        <div className="search-form-filters grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Cenové rozpätie
