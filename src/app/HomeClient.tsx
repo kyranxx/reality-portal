@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import HeroSection from '@/components/HeroSection';
 import SearchBar from '@/components/SearchBar';
-import StatsSection from '@/components/home/StatsSection';
 import CategorySection from '@/components/home/CategorySection';
 import FeaturedPropertySection from '@/components/home/FeaturedPropertySection';
 import FeaturedPropertiesSection from '@/components/home/FeaturedPropertiesSection';
@@ -111,9 +110,6 @@ export default function HomeClient() {
       <div className="container mt-10">
         <SearchBar />
       </div>
-
-      {/* Stats Section */}
-      <StatsSection />
 
       {/* Property Categories */}
       <CategorySection />

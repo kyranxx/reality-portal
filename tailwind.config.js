@@ -11,49 +11,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: 'var(--color-primary, #4F46E5)',
-          // Add opacity variants
-          10: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.1)',
-          20: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.2)',
-          30: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.3)',
-          40: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.4)',
-          50: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.5)',
-          60: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.6)',
-          70: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.7)',
-          80: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.8)',
-          90: 'rgba(var(--color-primary-rgb, 79, 70, 229), 0.9)',
-        },
-        secondary: {
-          DEFAULT: 'var(--color-secondary, #6366F1)',
-          // Add opacity variants
-          10: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.1)',
-          20: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.2)',
-          30: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.3)',
-          40: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.4)',
-          50: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.5)',
-          60: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.6)',
-          70: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.7)',
-          80: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.8)',
-          90: 'rgba(var(--color-secondary-rgb, 99, 102, 241), 0.9)',
-        },
-        accent: {
-          DEFAULT: 'var(--color-accent, #F59E0B)',
-          // Add opacity variants
-          10: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.1)',
-          20: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.2)',
-          30: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.3)',
-          40: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.4)',
-          50: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.5)',
-          60: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.6)',
-          70: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.7)',
-          80: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.8)',
-          90: 'rgba(var(--color-accent-rgb, 245, 158, 11), 0.9)',
-        },
-        background: 'var(--color-background, #FFFFFF)',
-        foreground: 'var(--color-foreground, #1F2937)',
-        card: 'var(--color-card, #FFFFFF)',
-        border: 'var(--color-border, #E5E7EB)',
+        // Simplified color palette
+        primary: '#4F46E5',
+        secondary: '#6366F1',
+        accent: '#F59E0B',
+        background: '#FFFFFF',
+        foreground: '#1F2937',
+        card: '#FFFFFF',
+        border: '#E5E7EB',
         'gray-50': '#F9FAFB',
         'gray-100': '#F3F4F6',
         'gray-200': '#E5E7EB',
@@ -70,12 +35,12 @@ module.exports = {
         '2xl': '1.5rem',
       },
       boxShadow: {
-        card: 'var(--card-shadow)',
-        hover: 'var(--hover-shadow)',
+        card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        hover: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       },
       fontFamily: {
         sans: [
-          'Inter',
+          'Source Sans Pro',
           'ui-sans-serif',
           'system-ui',
           '-apple-system',

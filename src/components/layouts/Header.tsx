@@ -19,26 +19,16 @@ import { useAuth } from '@/utils/FirebaseAuthContext';
  * 
  * Features:
  * - Responsive design with desktop and mobile views
- * - Changes appearance on scroll
  * - Active link highlighting
  * - User authentication integration
  * - Mobile menu functionality
  */
 const HeaderComponent = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user, signOut } = useAuth();
 
-  // Handle scroll event to make header fixed on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Removed scroll event handler to make header non-sticky
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -57,20 +47,14 @@ const HeaderComponent = () => {
   };
 
   return (
-    <header
-      className={`w-full z-20 transition-all duration-300 ${
-        isScrolled
-          ? 'fixed top-0 bg-white shadow-md py-2'
-          : 'relative bg-white/90 py-4'
-      }`}
-    >
+    <header className="w-full z-20 relative bg-white py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
           <img
             src="/images/logo.svg"
             alt="Reality Portal"
-            className="h-8 w-auto mr-2"
+            className="h-10 w-auto mr-3"
           />
           <span className="text-xl font-bold text-blue-600 hidden sm:inline">
             Reality Portal

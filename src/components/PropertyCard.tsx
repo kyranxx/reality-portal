@@ -191,7 +191,7 @@ export default function PropertyCard({
                 <p>{location}</p>
               </div>
             </div>
-            <div className="bg-black text-white font-medium text-sm px-4 py-1.5 rounded-full">
+            <div className="bg-black text-white font-medium text-sm px-4 py-1.5 rounded-full whitespace-nowrap">
               {formattedPrice} €
             </div>
           </div>
