@@ -22,6 +22,8 @@ import UnifiedAuthClientComponent from './auth/unified/UnifiedAuthClient';
 import AdminLoginClientComponent from './auth/admin-login/AdminLoginClientComponent';
 import DesignShowcaseClientComponent from './design-showcase/DesignShowcaseClient';
 import ChatAssistantClientComponent from './chat-assistant/ChatAssistantClient';
+import AddPropertyClientComponent from './pridat-nehnutelnost/AddPropertyClient';
+import EditPropertyClientComponent from './pridat-nehnutelnost/upravit/[id]/EditPropertyClient';
 
 
 // Fallback components map for static build environments
@@ -46,6 +48,8 @@ const STATIC_COMPONENTS = {
   AdminLoginClient: AdminLoginClientComponent,
   DesignShowcaseClient: DesignShowcaseClientComponent,
   ChatAssistantClient: ChatAssistantClientComponent,
+  AddPropertyClient: AddPropertyClientComponent,
+  EditPropertyClient: EditPropertyClientComponent,
 };
 
 interface UniversalComponentLoaderProps {
