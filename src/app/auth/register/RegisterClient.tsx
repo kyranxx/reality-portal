@@ -110,8 +110,7 @@ export default function RegisterClient() {
 
   return (
     <AuthLayout 
-      title="Vytvorte si účet" 
-      subtitle="Zaregistrujte sa a začnite používať našu platformu."
+      title="Vytvorte si účet"
     >
       <div className="mt-8">
         {error && (
