@@ -6,6 +6,7 @@ import { useAuth } from '@/utils/FirebaseAuthContext';
 import SectionTitle from '@/components/SectionTitle';
 import { getUserById } from '@/utils/firebase/firestore';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
+import PropertySection from './PropertySection';
 
 // Check if we're running on the client side
 const isClient = typeof window !== 'undefined';
@@ -15,6 +16,7 @@ function DashboardClientContent() {
   const { user, signOut, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<{ name?: string; phone?: string } | null>(null);
+  const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
     // Skip authentication check during server-side rendering
@@ -41,28 +43,31 @@ function DashboardClientContent() {
         if (!user) return;
 
         // Improved user ID extraction with better logging
-        let userID: string = '';
+        let extractedUserId: string = '';
         
         if (user && typeof user === 'object' && 'uid' in user) {
-          userID = user.uid as string;
+          extractedUserId = user.uid as string;
         } else if (user && typeof user === 'object' && 'id' in user) {
-          userID = (user as any).id as string;
+          extractedUserId = (user as any).id as string;
         } else if (typeof user === 'string') {
-          userID = user;
+          extractedUserId = user;
         } else if (user && typeof user === 'object' && 'email' in user) {
           // Fallback to email-based lookup if needed
           const userWithEmail = user as {email: string};
           console.log('Using email-based user lookup with email:', userWithEmail.email);
         }
         
-        if (!userID) {
+        if (!extractedUserId) {
           console.error('Unable to determine user ID', user);
           setLoading(false);
           return;
         }
         
-        console.log('Fetching profile for user ID:', userID);
-        const userData = await getUserById(userID);
+        // Update the component state with the user ID
+        setUserId(extractedUserId);
+        
+        console.log('Fetching profile for user ID:', extractedUserId);
+        const userData = await getUserById(extractedUserId);
         
         if (userData) {
           setProfile({
@@ -70,7 +75,7 @@ function DashboardClientContent() {
             phone: userData.phone,
           });
         } else {
-          console.log('No user data found for ID:', userID);
+          console.log('No user data found for ID:', extractedUserId);
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -151,23 +156,8 @@ function DashboardClientContent() {
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Moje nehnuteľnosti</h2>
-
-        <div className="flex justify-between items-center">
-          <p className="text-gray-600">Spravujte svoje nehnuteľnosti</p>
-          <button
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors"
-            onClick={() => router.push('/pridat-nehnutelnost')}
-          >
-            Pridať nehnuteľnosť
-          </button>
-        </div>
-
-        <div className="mt-4 text-center py-8 border border-gray-200 rounded">
-          <p className="text-gray-500">Zatiaľ nemáte žiadne nehnuteľnosti</p>
-        </div>
-      </div>
+      {/* Property section with listing and management */}
+      {userId && <PropertySection userId={userId} />}
 
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Obľúbené nehnuteľnosti</h2>
