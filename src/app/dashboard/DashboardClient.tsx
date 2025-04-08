@@ -23,32 +23,53 @@ function DashboardClientContent() {
       return;
     }
 
-    if (!user && !authLoading) {
+    // Check if authentication is still loading
+    if (authLoading) {
+      return; // Wait for auth to finish loading before making decisions
+    }
+
+    // If user is not authenticated and auth loading is complete, redirect to login
+    if (!user) {
+      console.log('No authenticated user found, redirecting to login');
       router.push('/auth/login');
       return;
     }
 
     const fetchProfile = async () => {
-      if (!user) return;
-
       try {
-        // Safe access to user ID with strong type checking
-        const userID = (user && 'uid' in user) ? user.uid : 
-                       (user && 'id' in user) ? (user as any).id : 
-                       typeof user === 'string' ? user : '';
+        // First, make sure we have a user object
+        if (!user) return;
+
+        // Improved user ID extraction with better logging
+        let userID = '';
+        
+        if (user && 'uid' in user) {
+          userID = user.uid;
+        } else if (user && 'id' in user) {
+          userID = (user as any).id;
+        } else if (typeof user === 'string') {
+          userID = user;
+        } else if (user && typeof user === 'object' && 'email' in user) {
+          // Fallback to email-based lookup if needed
+          console.log('Using email-based user lookup with email:', user.email);
+        }
         
         if (!userID) {
-          console.error('Unable to determine user ID');
+          console.error('Unable to determine user ID', user);
           setLoading(false);
           return;
         }
         
+        console.log('Fetching profile for user ID:', userID);
         const userData = await getUserById(userID);
+        
         if (userData) {
           setProfile({
             name: userData.name,
             phone: userData.phone,
           });
+        } else {
+          console.log('No user data found for ID:', userID);
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -57,10 +78,9 @@ function DashboardClientContent() {
       }
     };
 
+    // Only try to fetch the profile if we have a user
     if (user) {
       fetchProfile();
-    } else if (!authLoading) {
-      setLoading(false);
     }
   }, [user, router, authLoading]);
 
@@ -88,6 +108,18 @@ function DashboardClientContent() {
     return null; // Will redirect in useEffect
   }
 
+  // Safe way to extract email from user object which may have different shapes
+  const getUserEmail = () => {
+    if (!user) return 'N/A';
+    
+    if (typeof user === 'object') {
+      if ('email' in user) return user.email as string;
+      if ('emailAddress' in user) return (user as any).emailAddress;
+    }
+    
+    return 'N/A';
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <SectionTitle title="Používateľský panel" subtitle="Správa vášho účtu a nehnuteľností" />
@@ -97,7 +129,7 @@ function DashboardClientContent() {
 
         <div className="mb-4">
           <p className="text-gray-600">Email:</p>
-          <p className="font-medium">{user.email}</p>
+          <p className="font-medium">{getUserEmail()}</p>
         </div>
 
         <div className="mb-4">
