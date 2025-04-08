@@ -24,7 +24,7 @@ import RegisterClientComponent from './auth/register/RegisterClient';
 import ResetPasswordClientComponent from './auth/reset-password/ResetPasswordClient';
 import UnifiedAuthClientComponent from './auth/unified/UnifiedAuthClient';
 import AdminLoginClientComponent from './auth/admin-login/AdminLoginClientComponent';
-import AddPropertyClientComponent from './pridat-nehnutelnost/AddPropertyClient';
+import AddPropertyClientComponent from '../app/pridat-nehnutelnost/AddPropertyClient';
 import EditPropertyClientComponent from './pridat-nehnutelnost/upravit/[id]/EditPropertyClient';
 
 
