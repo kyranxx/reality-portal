@@ -15,7 +15,7 @@ export default function LoginClient() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
-  const { signIn, user, loading, error } = useAuth();
+  const { signIn, user, loading, error, signInWithGoogle } = useAuth();
   const router = useRouter();
 
   // Redirect if already logged in
@@ -68,8 +68,12 @@ export default function LoginClient() {
 
   // Handle Google sign-in
   const handleGoogleSignIn = async () => {
-    console.error('Google sign-in is not available in this build');
-    // This functionality would need to be re-implemented
+    try {
+      await signInWithGoogle();
+      // Redirect handled by the useEffect when user state changes
+    } catch (err) {
+      console.error('Google login error:', err);
+    }
   };
 
   return (

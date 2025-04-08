@@ -16,6 +16,7 @@ import {
   sendPasswordResetEmail,
   signOut,
   updateProfile,
+  signInWithGoogle,
   User
 } from './index';
 import { ADMIN_EMAILS } from './config';
@@ -45,6 +46,7 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (name: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   // Alias for loading to maintain compatibility with existing components
   isLoading: boolean;
 }
@@ -60,6 +62,7 @@ const AuthContext = createContext<AuthContextType>({
   resetPassword: async () => {},
   signOut: async () => {},
   updateProfile: async () => {},
+  signInWithGoogle: async () => {},
   isLoading: true // Alias for loading property
 });
 
@@ -197,6 +200,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
     }
   };
+  
+  // Handle Google sign-in
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      await signInWithGoogle(auth);
+    } catch (error: any) {
+      setError(error.message || 'Google sign in failed');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Create context value
   const contextValue = useMemo(
@@ -210,6 +228,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       resetPassword: handleResetPassword,
       signOut: handleSignOut,
       updateProfile: handleUpdateProfile,
+      signInWithGoogle: handleGoogleSignIn,
       isLoading: loading // Alias for loading property to maintain compatibility
     }),
     [user, loading, error, isAdmin]

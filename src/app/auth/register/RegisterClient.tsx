@@ -24,7 +24,7 @@ export default function RegisterClient() {
     terms?: string;
   }>({});
   
-  const { signUp, user, loading, error } = useAuth();
+  const { signUp, user, loading, error, signInWithGoogle } = useAuth();
   const router = useRouter();
 
   // Redirect if already logged in
@@ -104,8 +104,12 @@ export default function RegisterClient() {
 
   // Handle Google sign-in
   const handleGoogleSignIn = async () => {
-    console.error('Google sign-in is not available in this build');
-    // This functionality would need to be re-implemented
+    try {
+      await signInWithGoogle();
+      // Redirect handled by the useEffect when user state changes
+    } catch (err) {
+      console.error('Google registration error:', err);
+    }
   };
 
   return (

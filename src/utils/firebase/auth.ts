@@ -14,6 +14,8 @@ import {
   signOut as signOutOriginal,
   onAuthStateChanged as onAuthStateChangedOriginal,
   updateProfile as updateProfileOriginal,
+  GoogleAuthProvider,
+  signInWithPopup,
   User,
   UserCredential,
   connectAuthEmulator as connectAuthEmulatorOriginal
@@ -221,6 +223,26 @@ export function onAuthStateChanged(
     console.error('Auth state listener error:', error);
     // Return a no-op unsubscribe
     return () => {};
+  }
+}
+
+/**
+ * Sign in with Google
+ */
+export async function signInWithGoogle(auth: Auth): Promise<UserCredential> {
+  if (!isClient) {
+    throw new Error('Cannot sign in with Google on server-side');
+  }
+  
+  try {
+    const provider = new GoogleAuthProvider();
+    return await signInWithPopup(auth, provider);
+  } catch (error: any) {
+    console.error('Google sign in error:', error);
+    throw {
+      code: error.code || 'auth/unknown',
+      message: error.message || 'An unknown error occurred during Google sign in'
+    };
   }
 }
 
