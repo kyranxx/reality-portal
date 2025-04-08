@@ -41,17 +41,18 @@ function DashboardClientContent() {
         if (!user) return;
 
         // Improved user ID extraction with better logging
-        let userID = '';
+        let userID: string = '';
         
-        if (user && 'uid' in user) {
-          userID = user.uid;
-        } else if (user && 'id' in user) {
-          userID = (user as any).id;
+        if (user && typeof user === 'object' && 'uid' in user) {
+          userID = user.uid as string;
+        } else if (user && typeof user === 'object' && 'id' in user) {
+          userID = (user as any).id as string;
         } else if (typeof user === 'string') {
           userID = user;
         } else if (user && typeof user === 'object' && 'email' in user) {
           // Fallback to email-based lookup if needed
-          console.log('Using email-based user lookup with email:', user.email);
+          const userWithEmail = user as {email: string};
+          console.log('Using email-based user lookup with email:', userWithEmail.email);
         }
         
         if (!userID) {
