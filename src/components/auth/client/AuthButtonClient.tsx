@@ -25,22 +25,22 @@ export function AuthButtonClient({
   const handleClick = onClick || (() => {});
   
   const getButtonClasses = () => {
-    const baseClasses = 'flex justify-center items-center py-2 px-4 border text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500';
+    const baseClasses = 'flex justify-center items-center py-2 px-4 border text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800';
     const widthClasses = fullWidth ? 'w-full' : '';
     
     let variantClasses = '';
     switch (variant) {
       case 'primary':
-        variantClasses = 'text-white bg-blue-600 hover:bg-blue-700 border-transparent';
+        variantClasses = 'text-white bg-gray-800 hover:bg-gray-900 border-transparent';
         break;
       case 'secondary':
         variantClasses = 'text-white bg-gray-600 hover:bg-gray-700 border-transparent';
         break;
       case 'outline':
-        variantClasses = 'text-blue-700 bg-white hover:bg-gray-50 border-blue-300';
+        variantClasses = 'text-gray-800 bg-white hover:bg-gray-50 border-gray-300';
         break;
       default:
-        variantClasses = 'text-white bg-blue-600 hover:bg-blue-700 border-transparent';
+        variantClasses = 'text-white bg-gray-800 hover:bg-gray-900 border-transparent';
     }
     
     const disabledClasses = (disabled || isLoading) ? 'opacity-50 cursor-not-allowed' : '';

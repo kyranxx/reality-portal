@@ -16,7 +16,7 @@ export function AuthLayout({
   children, 
   title, 
   subtitle, 
-  showLogo = true,
+  showLogo = false,
   adminMode = false
 }: AuthLayoutProps) {
   return (
@@ -25,7 +25,7 @@ export function AuthLayout({
         {showLogo && (
           <div className="flex justify-center">
             <Link href="/" className="flex items-center">
-              <span className={`text-2xl font-bold ${adminMode ? 'text-gray-800' : 'text-blue-600'}`}>
+              <span className={`text-2xl font-bold ${adminMode ? 'text-gray-800' : 'text-gray-800'}`}>
                 {adminMode ? 'Admin Portal' : 'Reality Portal'}
               </span>
             </Link>

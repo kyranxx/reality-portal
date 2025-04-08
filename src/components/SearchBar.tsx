@@ -58,13 +58,22 @@ export default function SearchBar() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 search-form-main">
           {/* Type toggle (Buy/Rent) - 2 columns */}
           <div className="md:col-span-2">
-            <div className="flex rounded-full overflow-hidden border border-gray-200 p-0.5 bg-white shadow-sm h-full">
+            <div className="relative flex rounded-full overflow-hidden border border-gray-200 p-0.5 bg-white shadow-sm h-full">
+              {/* Sliding background element */}
+              <div 
+                className={`absolute top-0.5 bottom-0.5 w-1/2 bg-gray-800 rounded-full transition-transform duration-300 ease-in-out transform ${
+                  searchType === 'rent' ? 'translate-x-full' : 'translate-x-0'
+                }`}
+                aria-hidden="true"
+              ></div>
+              
+              {/* Buttons */}
               <button
                 type="button"
-                className={`flex-1 py-2.5 px-3 text-sm font-medium rounded-full transition-all duration-300 ${
+                className={`relative flex-1 py-2.5 px-3 text-sm font-medium rounded-full z-10 transition-colors duration-300 ${
                   searchType === 'buy'
-                    ? 'bg-black text-white'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-50'
+                    ? 'text-white'
+                    : 'text-gray-700 hover:text-gray-900'
                 }`}
                 onClick={() => setSearchType('buy')}
               >
@@ -72,10 +81,10 @@ export default function SearchBar() {
               </button>
               <button
                 type="button"
-                className={`flex-1 py-2.5 px-3 text-sm font-medium rounded-full transition-all duration-300 ${
+                className={`relative flex-1 py-2.5 px-3 text-sm font-medium rounded-full z-10 transition-colors duration-300 ${
                   searchType === 'rent'
-                    ? 'bg-black text-white'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-50'
+                    ? 'text-white'
+                    : 'text-gray-700 hover:text-gray-900'
                 }`}
                 onClick={() => setSearchType('rent')}
               >
@@ -86,7 +95,7 @@ export default function SearchBar() {
           
           {/* Property Type - 3 columns */}
           <div className="md:col-span-3">
-            <div className="relative h-full">
+            <div className="relative h-full select-container-mobile">
               <select
                 id="propertyType"
                 value={propertyType}
@@ -307,19 +316,21 @@ export default function SearchBar() {
             <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700 mb-2">
               Počet izieb
             </label>
-            <select
-              id="bedrooms"
-              value={bedrooms}
-              onChange={e => setBedrooms(e.target.value)}
-              className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-4 text-sm shadow-sm"
-            >
-              <option value="">Nezáleží</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
+            <div className="select-container-mobile">
+              <select
+                id="bedrooms"
+                value={bedrooms}
+                onChange={e => setBedrooms(e.target.value)}
+                className="form-select block w-full rounded-lg border-gray-200 py-2.5 px-4 text-sm shadow-sm"
+              >
+                <option value="">Nezáleží</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
           </div>
         </div>
       </form>
