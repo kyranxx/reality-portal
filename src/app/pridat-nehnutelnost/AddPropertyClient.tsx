@@ -216,18 +216,15 @@ export default function AddPropertyClient() {
       }
       
       // Convert numeric fields
-      const propertyData = {
+      const propertyData: any = {
         title: formData.title,
         description: formData.description,
         price: parseFloat(formData.price),
         location: formData.location,
         area: parseFloat(formData.area),
-        rooms: formData.rooms ? parseInt(formData.rooms) : undefined,
-        bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : undefined,
         propertyType: formData.propertyType as 'apartment' | 'house' | 'land' | 'commercial',
         userId: userId,
         images: imageUrls,
-        landSize: formData.landSize ? parseFloat(formData.landSize) : undefined,
         features: formData.features,
         contactName: formData.contactName,
         contactPhone: formData.contactPhone,
@@ -235,6 +232,19 @@ export default function AddPropertyClient() {
         contactVisibility: formData.contactVisibility,
         isNew: true, // Mark as new property
       };
+
+      // Only add fields that have values
+      if (formData.rooms) {
+        propertyData.rooms = parseInt(formData.rooms);
+      }
+      
+      if (formData.bathrooms) {
+        propertyData.bathrooms = parseInt(formData.bathrooms);
+      }
+      
+      if (formData.landSize) {
+        propertyData.landSize = parseFloat(formData.landSize);
+      }
       
       // Add property to database
       const propertyId = await addProperty(propertyData);
